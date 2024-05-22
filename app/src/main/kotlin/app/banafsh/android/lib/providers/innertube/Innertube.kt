@@ -18,6 +18,7 @@ import io.ktor.http.contentType
 import io.ktor.http.parameters
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 object Innertube {
@@ -75,6 +76,7 @@ object Innertube {
     internal fun HttpRequestBuilder.mask(value: String = "*") =
         header("X-Goog-FieldMask", value)
 
+    @Serializable
     data class Info<T : NavigationEndpoint.Endpoint>(
         val name: String?,
         val endpoint: T?
@@ -102,6 +104,7 @@ object Innertube {
         abstract val key: String
     }
 
+    @Serializable
     data class SongItem(
         val info: Info<NavigationEndpoint.Endpoint.Watch>?,
         val authors: List<Info<NavigationEndpoint.Endpoint.Browse>>?,
@@ -134,6 +137,7 @@ object Innertube {
         companion object
     }
 
+    @Serializable
     data class AlbumItem(
         val info: Info<NavigationEndpoint.Endpoint.Browse>?,
         val authors: List<Info<NavigationEndpoint.Endpoint.Browse>>?,
@@ -145,6 +149,7 @@ object Innertube {
         companion object
     }
 
+    @Serializable
     data class ArtistItem(
         val info: Info<NavigationEndpoint.Endpoint.Browse>?,
         val subscribersCountText: String?,
@@ -155,6 +160,7 @@ object Innertube {
         companion object
     }
 
+    @Serializable
     data class PlaylistItem(
         val info: Info<NavigationEndpoint.Endpoint.Browse>?,
         val channel: Info<NavigationEndpoint.Endpoint.Browse>?,
@@ -200,6 +206,7 @@ object Innertube {
         val playlistSetVideoId: String? = null
     )
 
+    @Serializable
     data class RelatedPage(
         val songs: List<SongItem>? = null,
         val playlists: List<PlaylistItem>? = null,

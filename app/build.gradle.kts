@@ -132,6 +132,7 @@ dependencies {
     implementation(libs.kotlin.immutable)
     implementation(libs.kotlin.datetime)
     api(libs.kotlin.datetime)
+    api(libs.ktor.serialization.json)
 
     implementation(libs.room)
     ksp(libs.room.compiler)

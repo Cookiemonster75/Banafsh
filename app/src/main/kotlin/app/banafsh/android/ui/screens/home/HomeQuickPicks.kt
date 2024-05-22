@@ -44,6 +44,11 @@ import app.banafsh.android.R
 import app.banafsh.android.lib.compose.persist.persist
 import app.banafsh.android.lib.core.ui.Dimensions
 import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.lib.core.ui.utils.isLandscape
+import app.banafsh.android.lib.providers.innertube.Innertube
+import app.banafsh.android.lib.providers.innertube.models.NavigationEndpoint
+import app.banafsh.android.lib.providers.innertube.models.bodies.NextBody
+import app.banafsh.android.lib.providers.innertube.requests.relatedPage
 import app.banafsh.android.models.Song
 import app.banafsh.android.preferences.DataPreferences
 import app.banafsh.android.query
@@ -68,11 +73,6 @@ import app.banafsh.android.utils.forcePlay
 import app.banafsh.android.utils.rememberSnapLayoutInfoProvider
 import app.banafsh.android.utils.secondary
 import app.banafsh.android.utils.semiBold
-import app.banafsh.android.lib.core.ui.utils.isLandscape
-import app.banafsh.android.lib.providers.innertube.Innertube
-import app.banafsh.android.lib.providers.innertube.models.NavigationEndpoint
-import app.banafsh.android.lib.providers.innertube.models.bodies.NextBody
-import app.banafsh.android.lib.providers.innertube.requests.relatedPage
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -93,7 +93,19 @@ fun QuickPicks(
 
     var relatedPageResult by persist<Result<Innertube.RelatedPage?>?>(tag = "home/relatedPageResult")
 
+    LaunchedEffect(relatedPageResult, DataPreferences.shouldCacheQuickPicks) {
+        if (DataPreferences.shouldCacheQuickPicks)
+            relatedPageResult?.getOrNull()?.let { DataPreferences.cachedQuickPicks = it }
+        else DataPreferences.cachedQuickPicks = Innertube.RelatedPage()
+    }
+
     LaunchedEffect(DataPreferences.quickPicksSource) {
+        if (
+            DataPreferences.shouldCacheQuickPicks && !DataPreferences.cachedQuickPicks.let {
+                it.albums.isNullOrEmpty() && it.artists.isNullOrEmpty() && it.playlists.isNullOrEmpty() && it.songs.isNullOrEmpty()
+            }
+        ) relatedPageResult = Result.success(DataPreferences.cachedQuickPicks)
+
         suspend fun handleSong(song: Song?) {
             if (relatedPageResult == null || trending?.id != song?.id) relatedPageResult =
                 Innertube.relatedPage(

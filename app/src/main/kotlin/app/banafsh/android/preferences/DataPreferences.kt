@@ -6,6 +6,7 @@ import app.banafsh.android.GlobalPreferencesHolder
 import app.banafsh.android.R
 import app.banafsh.android.lib.core.data.enums.CoilDiskCacheSize
 import app.banafsh.android.lib.core.data.enums.ExoPlayerDiskCacheSize
+import app.banafsh.android.lib.providers.innertube.Innertube
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
@@ -22,6 +23,8 @@ object DataPreferences : GlobalPreferencesHolder() {
     var topListPeriod by topListPeriodProperty
     var quickPicksSource by enum(QuickPicksSource.Trending)
     var versionCheckPeriod by enum(VersionCheckPeriod.Off)
+    var shouldCacheQuickPicks by boolean(true)
+    var cachedQuickPicks by json(Innertube.RelatedPage())
 
     enum class TopListPeriod(
         val displayName: @Composable () -> String,

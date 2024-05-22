@@ -37,6 +37,8 @@ import app.banafsh.android.Database
 import app.banafsh.android.DatabaseInitializer
 import app.banafsh.android.LocalPlayerServiceBinder
 import app.banafsh.android.R
+import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid12
+import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid6
 import app.banafsh.android.preferences.AppearancePreferences
 import app.banafsh.android.preferences.DataPreferences
 import app.banafsh.android.preferences.PlayerPreferences
@@ -50,8 +52,6 @@ import app.banafsh.android.utils.findActivity
 import app.banafsh.android.utils.isIgnoringBatteryOptimizations
 import app.banafsh.android.utils.smoothScrollToBottom
 import app.banafsh.android.utils.toast
-import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid12
-import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid6
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -155,6 +155,13 @@ fun OtherSettings() {
                 selectedValue = DataPreferences.quickPicksSource,
                 onValueSelected = { DataPreferences.quickPicksSource = it },
                 valueText = { it.displayName() }
+            )
+
+            SwitchSettingsEntry(
+                title = stringResource(R.string.quick_picks_cache),
+                text = stringResource(R.string.quick_picks_cache_description),
+                isChecked = DataPreferences.shouldCacheQuickPicks,
+                onCheckedChange = { DataPreferences.shouldCacheQuickPicks = it }
             )
         }
         SettingsGroup(title = stringResource(R.string.dynamic_thumbnails)) {
