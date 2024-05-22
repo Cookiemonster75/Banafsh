@@ -1,10 +1,5 @@
 package app.banafsh.android.ui.screens.settings
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
-import android.media.audiofx.AudioEffect
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
@@ -20,28 +15,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import app.banafsh.android.LocalPlayerServiceBinder
 import app.banafsh.android.R
+import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid6
 import app.banafsh.android.preferences.PlayerPreferences
 import app.banafsh.android.ui.components.themed.SecondaryTextButton
 import app.banafsh.android.ui.screens.Route
-import app.banafsh.android.utils.toast
-import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid6
+import app.banafsh.android.utils.rememberEqualizerLauncher
 
 @OptIn(UnstableApi::class)
 @Route
 @Composable
 fun PlayerSettings() = with(PlayerPreferences) {
-    val context = LocalContext.current
     val binder = LocalPlayerServiceBinder.current
-
-    val activityResultLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { }
+    val launchEqualizer by rememberEqualizerLauncher(audioSessionId = { binder?.player?.audioSessionId })
 
     SettingsCategoryScreen(title = stringResource(R.string.player)) {
         SettingsGroup(title = stringResource(R.string.player)) {
@@ -172,19 +162,7 @@ fun PlayerSettings() = with(PlayerPreferences) {
             SettingsEntry(
                 title = stringResource(R.string.equalizer),
                 text = stringResource(R.string.equalizer_description),
-                onClick = {
-                    val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
-                        putExtra(AudioEffect.EXTRA_AUDIO_SESSION, binder?.player?.audioSessionId)
-                        putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
-                        putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
-                    }
-
-                    try {
-                        activityResultLauncher.launch(intent)
-                    } catch (e: ActivityNotFoundException) {
-                        context.toast(context.getString(R.string.no_equalizer_installed))
-                    }
-                }
+                onClick = launchEqualizer
             )
         }
     }

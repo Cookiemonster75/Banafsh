@@ -1,5 +1,10 @@
 package app.banafsh.android.utils
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.media.audiofx.AudioEffect
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -7,12 +12,15 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.Timeline
 import app.banafsh.android.LocalPlayerServiceBinder
+import app.banafsh.android.R
 import app.banafsh.android.service.PlayerService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -108,4 +116,28 @@ fun windowState(
     }
 
     return window to error
+}
+
+@Composable
+fun rememberEqualizerLauncher(
+    audioSessionId: () -> Int?,
+    contentType: Int = AudioEffect.CONTENT_TYPE_MUSIC
+): State<() -> Unit> {
+    val context = LocalContext.current
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+
+    return rememberUpdatedState {
+        try {
+            launcher.launch(
+                Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
+                    putExtra(AudioEffect.EXTRA_AUDIO_SESSION, audioSessionId())
+                    putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
+                    putExtra(AudioEffect.EXTRA_CONTENT_TYPE, contentType)
+                }
+            )
+        } catch (e: ActivityNotFoundException) {
+            context.toast(context.getString(R.string.no_equalizer_installed))
+        }
+    }
 }

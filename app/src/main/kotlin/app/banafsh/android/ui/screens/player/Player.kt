@@ -1,8 +1,5 @@
 package app.banafsh.android.ui.screens.player
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
-import android.media.audiofx.AudioEffect
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -51,7 +48,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.coerceAtMost
@@ -68,6 +64,10 @@ import app.banafsh.android.lib.core.ui.Dimensions
 import app.banafsh.android.lib.core.ui.LocalAppearance
 import app.banafsh.android.lib.core.ui.ThumbnailRoundness
 import app.banafsh.android.lib.core.ui.collapsedPlayerProgressBar
+import app.banafsh.android.lib.core.ui.utils.isLandscape
+import app.banafsh.android.lib.core.ui.utils.px
+import app.banafsh.android.lib.core.ui.utils.roundedShape
+import app.banafsh.android.lib.providers.innertube.models.NavigationEndpoint
 import app.banafsh.android.models.ui.toUiMedia
 import app.banafsh.android.preferences.PlayerPreferences
 import app.banafsh.android.service.PlayerService
@@ -85,20 +85,15 @@ import app.banafsh.android.ui.modifiers.PinchDirection
 import app.banafsh.android.ui.modifiers.onSwipe
 import app.banafsh.android.ui.modifiers.pinchToToggle
 import app.banafsh.android.utils.DisposableListener
-import app.banafsh.android.utils.findActivity
 import app.banafsh.android.utils.forceSeekToNext
 import app.banafsh.android.utils.forceSeekToPrevious
 import app.banafsh.android.utils.positionAndDurationState
+import app.banafsh.android.utils.rememberEqualizerLauncher
 import app.banafsh.android.utils.seamlessPlay
 import app.banafsh.android.utils.secondary
 import app.banafsh.android.utils.semiBold
 import app.banafsh.android.utils.shouldBePlaying
 import app.banafsh.android.utils.thumbnail
-import app.banafsh.android.utils.toast
-import app.banafsh.android.lib.core.ui.utils.isLandscape
-import app.banafsh.android.lib.core.ui.utils.px
-import app.banafsh.android.lib.core.ui.utils.roundedShape
-import app.banafsh.android.lib.providers.innertube.models.NavigationEndpoint
 import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlin.math.absoluteValue
@@ -532,7 +527,7 @@ private fun PlayerMenu(
     onShowSpeedDialog: (() -> Unit)? = null,
     onShowNormalizationDialog: (() -> Unit)? = null
 ) {
-    val context = LocalContext.current
+    val launchEqualizer by rememberEqualizerLauncher(audioSessionId = { binder.player.audioSessionId })
 
     BaseMediaItemMenu(
         mediaItem = mediaItem,
@@ -541,19 +536,7 @@ private fun PlayerMenu(
             binder.player.seamlessPlay(mediaItem)
             binder.setupRadio(NavigationEndpoint.Endpoint.Watch(videoId = mediaItem.mediaId))
         },
-        onGoToEqualizer = {
-            try {
-                context.findActivity().startActivity(
-                    Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
-                        putExtra(AudioEffect.EXTRA_AUDIO_SESSION, binder.player.audioSessionId)
-                        putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
-                        putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
-                    }
-                )
-            } catch (e: ActivityNotFoundException) {
-                context.toast(context.getString(R.string.no_equalizer_installed))
-            }
-        },
+        onGoToEqualizer = launchEqualizer,
         onShowSleepTimer = {},
         onDismiss = onDismiss,
         onShowSpeedDialog = onShowSpeedDialog,
