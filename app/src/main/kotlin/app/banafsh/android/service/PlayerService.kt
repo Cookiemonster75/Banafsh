@@ -71,6 +71,20 @@ import app.banafsh.android.Database
 import app.banafsh.android.MainActivity
 import app.banafsh.android.R
 import app.banafsh.android.lib.core.data.enums.ExoPlayerDiskCacheSize
+import app.banafsh.android.lib.core.data.utils.RingBuffer
+import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid10
+import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid12
+import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid13
+import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid6
+import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid8
+import app.banafsh.android.lib.core.ui.utils.streamVolumeFlow
+import app.banafsh.android.lib.providers.innertube.Innertube
+import app.banafsh.android.lib.providers.innertube.models.NavigationEndpoint
+import app.banafsh.android.lib.providers.innertube.models.bodies.PlayerBody
+import app.banafsh.android.lib.providers.innertube.models.bodies.SearchBody
+import app.banafsh.android.lib.providers.innertube.requests.player
+import app.banafsh.android.lib.providers.innertube.requests.searchPage
+import app.banafsh.android.lib.providers.innertube.utils.from
 import app.banafsh.android.models.Event
 import app.banafsh.android.models.Format
 import app.banafsh.android.models.QueuedMediaItem
@@ -98,20 +112,6 @@ import app.banafsh.android.utils.shouldBePlaying
 import app.banafsh.android.utils.thumbnail
 import app.banafsh.android.utils.timer
 import app.banafsh.android.utils.toast
-import app.banafsh.android.lib.core.data.utils.RingBuffer
-import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid10
-import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid12
-import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid13
-import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid6
-import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid8
-import app.banafsh.android.lib.core.ui.utils.streamVolumeFlow
-import app.banafsh.android.lib.providers.innertube.Innertube
-import app.banafsh.android.lib.providers.innertube.models.NavigationEndpoint
-import app.banafsh.android.lib.providers.innertube.models.bodies.PlayerBody
-import app.banafsh.android.lib.providers.innertube.models.bodies.SearchBody
-import app.banafsh.android.lib.providers.innertube.requests.player
-import app.banafsh.android.lib.providers.innertube.requests.searchPage
-import app.banafsh.android.lib.providers.innertube.utils.from
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -1301,8 +1301,12 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
                             .setUri(url.toUri())
                             .build()
                             .let { spec ->
-                                (chunkLength ?: format.contentLength)?.let {
-                                    spec.subrange(dataSpec.uriPositionOffset, it)
+                                (chunkLength ?: format.contentLength)?.let { length ->
+                                    val start = dataSpec.uriPositionOffset
+
+                                    spec
+                                        .subrange(start, length)
+                                        .withAdditionalHeaders(mapOf("Range" to "$start-${start + length}"))
                                 } ?: spec
                             }
                     }
