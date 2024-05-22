@@ -9,9 +9,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    target-branch: "banafsh"
     groups:
       gradle-dependencies:
         patterns:
           - "*"
     open-pull-requests-limit: 5
+
