@@ -4,8 +4,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Left
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Right
 import androidx.compose.animation.ContentTransform
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -13,7 +11,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -38,6 +35,7 @@ import app.banafsh.android.LocalPlayerServiceBinder
 import app.banafsh.android.R
 import app.banafsh.android.lib.core.ui.Dimensions
 import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.lib.core.ui.utils.px
 import app.banafsh.android.service.LoginRequiredException
 import app.banafsh.android.service.PlayableFormatNotFoundException
 import app.banafsh.android.service.UnplayableException
@@ -48,7 +46,6 @@ import app.banafsh.android.utils.forceSeekToNext
 import app.banafsh.android.utils.forceSeekToPrevious
 import app.banafsh.android.utils.thumbnail
 import app.banafsh.android.utils.windowState
-import app.banafsh.android.lib.core.ui.utils.px
 import coil.compose.AsyncImage
 import java.net.UnknownHostException
 import java.nio.channels.UnresolvedAddressException
@@ -74,10 +71,11 @@ fun Thumbnail(
     AnimatedContent(
         targetState = window,
         transitionSpec = {
-            if (initialState.mediaItem.mediaId == targetState.mediaItem.mediaId)
-                return@AnimatedContent EnterTransition.None togetherWith ExitTransition.None
-
             val duration = 500
+            val sizeTransform = SizeTransform(clip = false) { _, _ ->
+                tween(durationMillis = duration, delayMillis = duration)
+            }
+
             val direction =
                 if (targetState.firstPeriodIndex > initialState.firstPeriodIndex) Left else Right
 
@@ -88,12 +86,7 @@ fun Thumbnail(
                 initialContentExit = slideOutOfContainer(direction, tween(duration)) +
                         fadeOut(tween(duration)) +
                         scaleOut(tween(duration), 0.85f),
-                sizeTransform = SizeTransform(clip = false) { _, _ ->
-                    tween(
-                        durationMillis = duration,
-                        delayMillis = 500
-                    )
-                }
+                sizeTransform = sizeTransform
             )
         },
         modifier = modifier.onSwipe(
