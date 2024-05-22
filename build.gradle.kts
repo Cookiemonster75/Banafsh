@@ -1,5 +1,4 @@
 import io.gitlab.arturbosch.detekt.Detekt
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.kotlin.jvm) apply false
@@ -14,22 +13,6 @@ plugins {
 
 val clean by tasks.registering(Delete::class) {
     delete(rootProject.layout.buildDirectory.asFile)
-}
-
-subprojects {
-    tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions {
-            if (project.findProperty("enableComposeCompilerReports") != "true") return@kotlinOptions
-            arrayOf("reports", "metrics").forEach {
-                freeCompilerArgs = freeCompilerArgs + listOf(
-                    "-P",
-                    "plugin:androidx.compose.compiler.plugins.kotlin:${it}Destination=${
-                        layout.buildDirectory.asFile.get().absolutePath
-                    }/compose_metrics"
-                )
-            }
-        }
-    }
 }
 
 allprojects {
