@@ -1270,20 +1270,22 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
                                             Database.updateDurationText(videoId, durationText)
                                         }
 
-                                query {
-                                    mediaItem?.let(Database::insert)
+                                transaction {
+                                    runCatching {
+                                        mediaItem?.let(Database::insert)
 
-                                    Database.insert(
-                                        Format(
-                                            songId = videoId,
-                                            itag = format.itag,
-                                            mimeType = format.mimeType,
-                                            bitrate = format.bitrate,
-                                            loudnessDb = body.playerConfig?.audioConfig?.normalizedLoudnessDb,
-                                            contentLength = format.contentLength,
-                                            lastModified = format.lastModified
+                                        Database.insert(
+                                            Format(
+                                                songId = videoId,
+                                                itag = format.itag,
+                                                mimeType = format.mimeType,
+                                                bitrate = format.bitrate,
+                                                loudnessDb = body.playerConfig?.audioConfig?.normalizedLoudnessDb,
+                                                contentLength = format.contentLength,
+                                                lastModified = format.lastModified
+                                            )
                                         )
-                                    )
+                                    }
                                 }
 
                                 format.url

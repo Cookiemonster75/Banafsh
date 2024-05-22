@@ -23,6 +23,7 @@ import app.banafsh.android.R
 import app.banafsh.android.transaction
 import app.banafsh.android.utils.intent
 import app.banafsh.android.utils.toast
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -57,10 +58,13 @@ private val coroutineScope = CoroutineScope(
 private val mutableDownloadState = MutableStateFlow(false)
 val downloadState = mutableDownloadState.asStateFlow()
 
+private const val DOWNLOAD_NOTIFICATION_UPDATE_INTERVAL = 1000L // default
+private const val DOWNLOAD_WORK_NAME = "precacher-work"
+
 @OptIn(UnstableApi::class)
 class PrecacheService : DownloadService(
     /* foregroundNotificationId             = */ DOWNLOAD_NOTIFICATION_ID,
-    /* foregroundNotificationUpdateInterval = */ 1000L, // default
+    /* foregroundNotificationUpdateInterval = */ DOWNLOAD_NOTIFICATION_UPDATE_INTERVAL,
     /* channelId                            = */ DOWNLOAD_NOTIFICATION_CHANNEL_ID,
     /* channelNameResourceId                = */ R.string.pre_cache,
     /* channelDescriptionResourceId         = */ 0
@@ -167,7 +171,7 @@ class PrecacheService : DownloadService(
         }
     }
 
-    override fun getScheduler() = WorkManagerScheduler(this, "precacher-work")
+    override fun getScheduler() = WorkManagerScheduler(this, DOWNLOAD_WORK_NAME)
 
     override fun getForegroundNotification(
         downloads: MutableList<Download>,
@@ -204,7 +208,10 @@ class PrecacheService : DownloadService(
                 .build()
 
             transaction {
-                Database.insert(mediaItem)
+                runCatching {
+                    Database.insert(mediaItem)
+                }.also { if (it.isFailure) return@transaction }
+
                 coroutineScope.launch {
                     runCatching {
                         sendAddDownload(
@@ -220,7 +227,10 @@ class PrecacheService : DownloadService(
                             /* downloadRequest = */ downloadRequest,
                             /* foreground      = */ false
                         )
-                    }.exceptionOrNull()?.printStackTrace()?.also {
+                    }.exceptionOrNull()?.let {
+                        if (it is CancellationException) throw it
+
+                        it.printStackTrace()
                         context.toast(context.getString(R.string.error_pre_cache))
                     }
                 }
