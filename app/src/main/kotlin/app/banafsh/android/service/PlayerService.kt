@@ -8,7 +8,6 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -31,7 +30,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startForegroundService
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
@@ -95,6 +93,7 @@ import app.banafsh.android.preferences.DataPreferences
 import app.banafsh.android.preferences.PlayerPreferences
 import app.banafsh.android.query
 import app.banafsh.android.transaction
+import app.banafsh.android.utils.ActionReceiver
 import app.banafsh.android.utils.ConditionalCacheDataSourceFactory
 import app.banafsh.android.utils.InvincibleService
 import app.banafsh.android.utils.TimerJob
@@ -140,6 +139,7 @@ import kotlin.system.exitProcess
 import android.os.Binder as AndroidBinder
 
 const val LOCAL_KEY_PREFIX = "local:"
+private const val TAG = "PlayerService"
 
 @get:OptIn(UnstableApi::class)
 val DataSpec.isLocal get() = key?.startsWith(LOCAL_KEY_PREFIX) == true
@@ -179,7 +179,6 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
         )
 
     private val playbackStateMutex = Mutex()
-
     private val metadataBuilder = MediaMetadata.Builder()
 
     private var notificationManager: NotificationManager? = null
@@ -190,7 +189,6 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO + Job())
     private var preferenceUpdaterJob: Job? = null
-
     private var volumeNormalizationJob: Job? = null
 
     override var isInvincibilityEnabled = false
@@ -202,12 +200,10 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
     private var bassBoost: BassBoost? = null
 
     private val binder = Binder()
-
     private var isNotificationStarted = false
 
     override val notificationId get() = NOTIFICATION_ID
-
-    private lateinit var notificationActionReceiver: NotificationActionReceiver
+    private val notificationActionReceiver = NotificationActionReceiver()
 
     private val mediaItemState = MutableStateFlow<MediaItem?>(null)
     private val isLikedState = mediaItemState
@@ -249,7 +245,6 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
         createNotificationChannel()
 
         cache = createCache(this)
-
         player = ExoPlayer.Builder(this, createRendersFactory(), createMediaSourceFactory())
             .setHandleAudioBecomingNoisy(true)
             .setWakeMode(C.WAKE_MODE_LOCAL)
@@ -262,20 +257,27 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
             )
             .setUsePlatformDiagnostics(false)
             .build()
+            .apply {
+                skipSilenceEnabled = PlayerPreferences.skipSilence
+                addListener(this@PlayerService)
+                addAnalyticsListener(
+                    PlaybackStatsListener(
+                        /* keepHistory = */ false,
+                        /* callback = */ this@PlayerService
+                    )
+                )
+            }
 
         updateRepeatMode()
 
-        player.skipSilenceEnabled = PlayerPreferences.skipSilence
-        player.addListener(this)
-        player.addAnalyticsListener(PlaybackStatsListener(false, this))
-
         maybeRestorePlayerQueue()
 
-        mediaSession = MediaSession(baseContext, "PlayerService")
-        mediaSession.setCallback(SessionCallback())
-        mediaSession.setPlaybackState(stateBuilder.build())
-        mediaSession.setSessionActivity(activityPendingIntent<MainActivity>())
-        mediaSession.isActive = true
+        mediaSession = MediaSession(baseContext, TAG).apply {
+            setCallback(SessionCallback())
+            setPlaybackState(stateBuilder.build())
+            setSessionActivity(activityPendingIntent<MainActivity>())
+            isActive = true
+        }
 
         coroutineScope.launch {
             var first = true
@@ -299,32 +301,16 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
             }.collect()
         }
 
-        notificationActionReceiver = NotificationActionReceiver()
-
-        val filter = IntentFilter().apply {
-            addAction(Action.play.value)
-            addAction(Action.pause.value)
-            addAction(Action.next.value)
-            addAction(Action.previous.value)
-            addAction(Action.like.value)
-        }
-
-        ContextCompat.registerReceiver(
-            /* context  = */ this,
-            /* receiver = */ notificationActionReceiver,
-            /* filter   = */ filter,
-            /* flags    = */ ContextCompat.RECEIVER_NOT_EXPORTED
-        )
+        notificationActionReceiver.register(this)
 
         maybeResumePlaybackWhenDeviceConnected()
 
         fun <T> CoroutineScope.subscribe(
             state: StateFlow<T>,
-            runner: (() -> Unit) -> Unit = { handler.post(it) },
             callback: suspend (T) -> () -> Unit
         ) = launch {
             state.collectLatest {
-                runner(callback(it))
+                handler.post(callback(it))
             }
         }
 
@@ -857,12 +843,6 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
     override fun notification(): Notification? {
         if (player.currentMediaItem == null) return null
 
-        val playIntent = Action.play.pendingIntent
-        val pauseIntent = Action.pause.pendingIntent
-        val nextIntent = Action.next.pendingIntent
-        val prevIntent = Action.previous.pendingIntent
-        val likeIntent = Action.like.pendingIntent
-
         val mediaMetadata = player.mediaMetadata
 
         @Suppress("DEPRECATION") // support for SDK < 26
@@ -895,17 +875,32 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
                     .setShowActionsInCompactView(0, 1, 2)
                     .setMediaSession(mediaSession.sessionToken)
             )
-            .addAction(R.drawable.play_skip_back, getString(R.string.skip_back), prevIntent)
             .addAction(
-                if (player.shouldBePlaying) R.drawable.pause else R.drawable.play,
-                if (player.shouldBePlaying) getString(R.string.pause) else getString(R.string.play),
-                if (player.shouldBePlaying) pauseIntent else playIntent
+                R.drawable.play_skip_back,
+                getString(R.string.skip_back),
+                notificationActionReceiver.previous.pendingIntent
             )
-            .addAction(R.drawable.play_skip_forward, getString(R.string.skip_forward), nextIntent)
+            .let {
+                if (player.shouldBePlaying) it.addAction(
+                    R.drawable.pause,
+                    getString(R.string.pause),
+                    notificationActionReceiver.pause.pendingIntent
+                )
+                else it.addAction(
+                    R.drawable.play,
+                    getString(R.string.play),
+                    notificationActionReceiver.play.pendingIntent
+                )
+            }
+            .addAction(
+                R.drawable.play_skip_forward,
+                getString(R.string.skip_forward),
+                notificationActionReceiver.next.pendingIntent
+            )
             .addAction(
                 if (isLikedState.value) R.drawable.heart else R.drawable.heart_outline,
                 getString(R.string.like),
-                likeIntent
+                notificationActionReceiver.like.pendingIntent
             )
 
         bitmapProvider.load(mediaMetadata.artworkUri) { bitmap ->
@@ -1111,10 +1106,12 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
 
     private fun likeAction() = mediaItemState.value?.let { mediaItem ->
         transaction {
-            Database.like(
-                songId = mediaItem.mediaId,
-                likedAt = if (isLikedState.value) null else System.currentTimeMillis()
-            )
+            runCatching {
+                Database.like(
+                    songId = mediaItem.mediaId,
+                    likedAt = if (isLikedState.value) null else System.currentTimeMillis()
+                )
+            }
         }
     }.let { }
 
@@ -1144,42 +1141,28 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
         }
     }
 
-    inner class NotificationActionReceiver internal constructor() : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            when (intent.action) {
-                Action.pause.value -> player.pause()
-                Action.play.value -> player.play()
-                Action.next.value -> player.forceSeekToNext()
-                Action.previous.value -> player.forceSeekToPrevious()
-                Action.like.value -> likeAction()
-            }
+    inner class NotificationActionReceiver internal constructor() :
+        ActionReceiver("app.vitune.android") {
+        val pause by action { _, _ ->
+            player.pause()
+        }
+        val play by action { _, _ ->
+            player.play()
+        }
+        val next by action { _, _ ->
+            player.forceSeekToNext()
+        }
+        val previous by action { _, _ ->
+            player.forceSeekToPrevious()
+        }
+        val like by action { _, _ ->
+            likeAction()
         }
     }
 
     class NotificationDismissReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             context.stopService(context.intent<PlayerService>())
-        }
-    }
-
-    @JvmInline
-    private value class Action(val value: String) {
-        context(Context)
-        val pendingIntent: PendingIntent
-            get() = PendingIntent.getBroadcast(
-                /* context = */ this@Context,
-                /* requestCode = */ 100,
-                /* intent = */ Intent(value).setPackage(packageName),
-                /* flags = */ PendingIntent.FLAG_UPDATE_CURRENT or
-                        (if (isAtLeastAndroid6) PendingIntent.FLAG_IMMUTABLE else 0)
-            )
-
-        companion object {
-            val pause = Action("app.banafsh.android.pause")
-            val play = Action("app.banafsh.android.play")
-            val next = Action("app.banafsh.android.next")
-            val previous = Action("app.banafsh.android.previous")
-            val like = Action("app.banafsh.android.like")
         }
     }
 

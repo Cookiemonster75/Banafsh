@@ -14,6 +14,9 @@ import android.widget.Toast
 import androidx.core.app.PendingIntentCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import androidx.media3.exoplayer.offline.DownloadRequest
+import androidx.media3.exoplayer.offline.DownloadService
+import androidx.media3.exoplayer.offline.DownloadService.sendAddDownload
 import app.banafsh.android.BuildConfig
 import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid11
 import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid6
@@ -108,3 +111,20 @@ fun Context.hasPermission(permission: String) = ContextCompat.checkSelfPermissio
     applicationContext,
     permission
 ) == PackageManager.PERMISSION_GRANTED
+
+
+inline fun <reified T : DownloadService> Context.download(request: DownloadRequest) = runCatching {
+    sendAddDownload(
+        /* context         = */ this,
+        /* clazz           = */ T::class.java,
+        /* downloadRequest = */ request,
+        /* foreground      = */ true
+    )
+}.recoverCatching {
+    sendAddDownload(
+        /* context         = */ this,
+        /* clazz           = */ T::class.java,
+        /* downloadRequest = */ request,
+        /* foreground      = */ false
+    )
+}

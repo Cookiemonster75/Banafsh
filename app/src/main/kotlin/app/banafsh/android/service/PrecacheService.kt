@@ -6,6 +6,7 @@ import android.content.ServiceConnection
 import android.net.Uri
 import android.os.IBinder
 import androidx.annotation.OptIn
+import androidx.core.app.NotificationCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
@@ -21,6 +22,8 @@ import androidx.media3.exoplayer.workmanager.WorkManagerScheduler
 import app.banafsh.android.Database
 import app.banafsh.android.R
 import app.banafsh.android.transaction
+import app.banafsh.android.utils.ActionReceiver
+import app.banafsh.android.utils.download
 import app.banafsh.android.utils.intent
 import app.banafsh.android.utils.toast
 import kotlinx.coroutines.CancellationException
@@ -79,6 +82,8 @@ class PrecacheService : DownloadService(
         )
     }
 
+    private val notificationActionReceiver = NotificationActionReceiver()
+
     private val waiters = mutableListOf<() -> Unit>()
 
     private val serviceConnection = object : ServiceConnection {
@@ -98,12 +103,37 @@ class PrecacheService : DownloadService(
         }
     }
 
+    inner class NotificationActionReceiver : ActionReceiver("app.vitune.android.precache") {
+        val cancel by action { context, _ ->
+            runCatching {
+                sendPauseDownloads(
+                    /* context         = */ context,
+                    /* clazz           = */ PrecacheService::class.java,
+                    /* foreground      = */ true
+                )
+            }.recoverCatching {
+                sendPauseDownloads(
+                    /* context         = */ context,
+                    /* clazz           = */ PrecacheService::class.java,
+                    /* foreground      = */ false
+                )
+            }
+        }
+    }
+
     @get:Synchronized
     @set:Synchronized
     private var bound = false
     private var binder: PlayerService.Binder? = null
 
     private var progressUpdaterJob: Job? = null
+
+    override fun onCreate() {
+        super.onCreate()
+
+        notificationActionReceiver.register(this)
+        mutableDownloadState.update { false }
+    }
 
     @kotlin.OptIn(FlowPreview::class)
     override fun getDownloadManager(): DownloadManager {
@@ -176,14 +206,27 @@ class PrecacheService : DownloadService(
     override fun getForegroundNotification(
         downloads: MutableList<Download>,
         notMetRequirements: Int
-    ) = downloadNotificationHelper.buildProgressNotification(
-        /* context            = */ this,
-        /* smallIcon          = */ R.drawable.download,
-        /* contentIntent      = */ null,
-        /* message            = */ null,
-        /* downloads          = */ downloads,
-        /* notMetRequirements = */ notMetRequirements
-    )
+    ) = NotificationCompat
+        .Builder(
+            this,
+            downloadNotificationHelper.buildProgressNotification(
+                /* context            = */ this,
+                /* smallIcon          = */ R.drawable.download,
+                /* contentIntent      = */ null,
+                /* message            = */ null,
+                /* downloads          = */ downloads,
+                /* notMetRequirements = */ notMetRequirements
+            )
+        )
+        .setChannelId(DOWNLOAD_NOTIFICATION_CHANNEL_ID)
+        .addAction(
+            NotificationCompat.Action.Builder(
+                /* icon = */ R.drawable.close,
+                /* title = */ getString(R.string.cancel),
+                /* intent = */ notificationActionReceiver.cancel.pendingIntent
+            ).build()
+        )
+        .build()
 
     override fun onDestroy() {
         super.onDestroy()
@@ -191,6 +234,9 @@ class PrecacheService : DownloadService(
         runCatching {
             if (bound) unbindService(serviceConnection)
         }
+
+        unregisterReceiver(notificationActionReceiver)
+        mutableDownloadState.update { false }
     }
 
     companion object {
@@ -213,21 +259,7 @@ class PrecacheService : DownloadService(
                 }.also { if (it.isFailure) return@transaction }
 
                 coroutineScope.launch {
-                    runCatching {
-                        sendAddDownload(
-                            /* context         = */ context,
-                            /* clazz           = */ PrecacheService::class.java,
-                            /* downloadRequest = */ downloadRequest,
-                            /* foreground      = */ true
-                        )
-                    }.recoverCatching {
-                        sendAddDownload(
-                            /* context         = */ context,
-                            /* clazz           = */ PrecacheService::class.java,
-                            /* downloadRequest = */ downloadRequest,
-                            /* foreground      = */ false
-                        )
-                    }.exceptionOrNull()?.let {
+                    context.download<PrecacheService>(downloadRequest).exceptionOrNull()?.let {
                         if (it is CancellationException) throw it
 
                         it.printStackTrace()
