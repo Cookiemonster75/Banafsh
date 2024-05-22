@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.android.lint) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.detekt)
+    alias(libs.plugins.compose.compiler) apply false
 }
 
 val clean by tasks.registering(Delete::class) {
