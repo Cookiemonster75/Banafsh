@@ -136,16 +136,16 @@ fun Lyrics(
         shouldShowSynchronizedLyrics && lyrics?.synced?.isBlank() != true
     }
 
-    var isEditing by remember(mediaId, showSynchronizedLyrics) { mutableStateOf(false) }
-    var isPicking by remember(mediaId, showSynchronizedLyrics) { mutableStateOf(false) }
-    var isError by remember(mediaId, showSynchronizedLyrics) { mutableStateOf(false) }
-    var invalidLrc by remember(mediaId, showSynchronizedLyrics) { mutableStateOf(false) }
+    var isEditing by remember(mediaId, shouldShowSynchronizedLyrics) { mutableStateOf(false) }
+    var isPicking by remember(mediaId, shouldShowSynchronizedLyrics) { mutableStateOf(false) }
+    var isError by remember(mediaId, shouldShowSynchronizedLyrics) { mutableStateOf(false) }
+    var invalidLrc by remember(mediaId, shouldShowSynchronizedLyrics) { mutableStateOf(false) }
 
     val text = remember(lyrics, showSynchronizedLyrics) {
         if (showSynchronizedLyrics) lyrics?.synced else lyrics?.fixed
     }
 
-    LaunchedEffect(mediaId, showSynchronizedLyrics) {
+    LaunchedEffect(mediaId, shouldShowSynchronizedLyrics) {
         runCatching {
             withContext(Dispatchers.IO) {
                 Database
@@ -167,6 +167,7 @@ fun Lyrics(
 
                         if (currentLyrics?.fixed == null || currentLyrics.synced == null) {
                             lyrics = null
+                            isError = false
 
                             Lyrics(
                                 songId = mediaId,
@@ -214,8 +215,10 @@ fun Lyrics(
                             }
                         } else lyrics = currentLyrics
 
-                        if ((shouldShowSynchronizedLyrics && lyrics?.synced?.isBlank() == true) || lyrics?.fixed?.isBlank() == true)
-                            isError = true
+                        if (
+                            (shouldShowSynchronizedLyrics && lyrics?.synced?.isBlank() == true) ||
+                            (!shouldShowSynchronizedLyrics && lyrics?.fixed?.isBlank() == true)
+                        ) isError = true
                     }
             }
         }.exceptionOrNull()
@@ -341,26 +344,7 @@ fun Lyrics(
             .background(colorPalette.overlay)
     ) {
         AnimatedVisibility(
-            visible = isError && text == null,
-            enter = slideInVertically { -it },
-            exit = slideOutVertically { -it },
-            modifier = Modifier.align(Alignment.TopCenter)
-        ) {
-            BasicText(
-                text = stringResource(
-                    if (showSynchronizedLyrics) R.string.error_load_synchronized_lyrics
-                    else R.string.error_load_lyrics
-                ),
-                style = typography.xs.center.medium.color(colorPalette.onOverlay),
-                modifier = Modifier
-                    .background(Color.Black.copy(0.4f))
-                    .padding(all = 8.dp)
-                    .fillMaxWidth()
-            )
-        }
-
-        AnimatedVisibility(
-            visible = text?.isEmpty() ?: false,
+            visible = isError,
             enter = slideInVertically { -it },
             exit = slideOutVertically { -it },
             modifier = Modifier.align(Alignment.TopCenter)

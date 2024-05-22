@@ -143,8 +143,6 @@
     <string name="enter_lyrics">Enter the lyrics</string>
     <string name="no_lyrics_found">No lyric tracks could be found</string>
     <string name="choose_lyric_track">Choose lyric track</string>
-    <string name="error_load_synchronized_lyrics">An error has occurred while fetching the synchronized lyrics</string>
-    <string name="error_load_lyrics">An error has occurred while fetching the lyrics</string>
     <string name="synchronized_lyrics_not_available">Synchronized lyrics are not available for this song</string>
     <string name="lyrics_not_available">Lyrics are not available for this song</string>
     <string name="invalid_synchronized_lyrics">Invalid synchronized lyrics, refetch or edit the lyrics and try again</string>
