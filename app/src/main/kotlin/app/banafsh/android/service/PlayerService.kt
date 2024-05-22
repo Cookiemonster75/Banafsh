@@ -272,7 +272,7 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
         maybeRestorePlayerQueue()
 
         mediaSession = MediaSession(baseContext, "PlayerService")
-        mediaSession.setCallback(SessionCallback(player))
+        mediaSession.setCallback(SessionCallback())
         mediaSession.setPlaybackState(stateBuilder.build())
         mediaSession.setSessionActivity(activityPendingIntent<MainActivity>())
         mediaSession.isActive = true
@@ -598,32 +598,36 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
     private fun maybeRestorePlayerQueue() {
         if (!PlayerPreferences.persistentQueue) return
 
-        query {
-            val queuedSong = Database.queue()
+        transaction {
+            val queue = Database.queue()
+            if (queue.isEmpty()) return@transaction
             Database.clearQueue()
 
-            if (queuedSong.isEmpty()) return@query
+            val index = queue
+                .indexOfFirst { it.position != null }
+                .coerceAtLeast(0)
 
-            val index = queuedSong.indexOfFirst { it.position != null }.coerceAtLeast(0)
+            handler.post {
+                runCatching {
+                    player.setMediaItems(
+                        /* mediaItems = */ queue.map { item ->
+                            item.mediaItem.buildUpon()
+                                .setUri(item.mediaItem.mediaId)
+                                .setCustomCacheKey(item.mediaItem.mediaId)
+                                .build()
+                                .apply {
+                                    mediaMetadata.extras?.putBoolean("isFromPersistentQueue", true)
+                                }
+                        },
+                        /* startIndex = */ index,
+                        /* startPositionMs = */ queue[index].position ?: C.TIME_UNSET
+                    )
+                    player.prepare()
 
-            runBlocking(Dispatchers.Main) {
-                player.setMediaItems(
-                    queuedSong.map { mediaItem ->
-                        mediaItem.mediaItem.buildUpon()
-                            .setUri(mediaItem.mediaItem.mediaId)
-                            .setCustomCacheKey(mediaItem.mediaItem.mediaId)
-                            .build().apply {
-                                mediaMetadata.extras?.putBoolean("isFromPersistentQueue", true)
-                            }
-                    },
-                    index,
-                    queuedSong[index].position ?: C.TIME_UNSET
-                )
-                player.prepare()
-
-                isNotificationStarted = true
-                startForegroundService(this@PlayerService, intent<PlayerService>())
-                startForeground(NOTIFICATION_ID, notification())
+                    isNotificationStarted = true
+                    startForegroundService(this@PlayerService, intent<PlayerService>())
+                    startForeground(NOTIFICATION_ID, notification())
+                }
             }
         }
     }
@@ -1114,7 +1118,7 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
         }
     }.let { }
 
-    private inner class SessionCallback(private val player: Player) : MediaSession.Callback() {
+    private inner class SessionCallback : MediaSession.Callback() {
         override fun onPlay() = player.play()
         override fun onPause() = player.pause()
         override fun onSkipToPrevious() = runCatching(player::forceSeekToPrevious).let { }
