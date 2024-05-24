@@ -71,7 +71,7 @@ body:
     attributes:
       label: Banafsh version
       placeholder: |
-        Example: "v1.0.4"
+        Example: "v0.1.0"
     validations:
       required: true
 
