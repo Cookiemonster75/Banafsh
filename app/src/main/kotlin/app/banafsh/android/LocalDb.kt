@@ -1,6 +1,7 @@
 package app.banafsh.android
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -11,7 +12,6 @@ import androidx.room.Transaction
 import app.banafsh.android.lib.core.data.enums.SongSortBy
 import app.banafsh.android.lib.core.data.enums.SortOrder
 import app.banafsh.android.models.LocalSong
-import app.banafsh.android.models.SortedSongPlaylistMap
 import app.banafsh.android.service.LOCAL_KEY_PREFIX
 import kotlinx.coroutines.flow.Flow
 
@@ -68,6 +68,12 @@ interface LocalDB {
             SortOrder.Descending -> localSongsByPlayTimeDesc()
         }
     }
+
+    @Query("SELECT * FROM LocalSong WHERE title LIKE :query OR artistsText LIKE :query")
+    fun search(query: String): Flow<List<LocalSong>>
+
+    @Delete
+    fun delete(song: LocalSong)
 
 }
 

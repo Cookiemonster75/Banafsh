@@ -6,31 +6,11 @@ import app.banafsh.android.lib.core.ui.ColorMode
 import app.banafsh.android.lib.core.ui.ColorSource
 import app.banafsh.android.lib.core.ui.Darkness
 import app.banafsh.android.lib.core.ui.ThumbnailRoundness
-import app.banafsh.android.preferences.OldPreferences.ColorPaletteMode
-import app.banafsh.android.preferences.OldPreferences.ColorPaletteName
 
 object AppearancePreferences : GlobalPreferencesHolder() {
-    var colorSource by enum(
-        when (OldPreferences.oldColorPaletteName) {
-            ColorPaletteName.Default, ColorPaletteName.PureBlack -> ColorSource.Default
-            ColorPaletteName.Dynamic, ColorPaletteName.AMOLED -> ColorSource.Dynamic
-            ColorPaletteName.MaterialYou -> ColorSource.MaterialYou
-        }
-    )
-    var colorMode by enum(
-        when (OldPreferences.oldColorPaletteMode) {
-            ColorPaletteMode.Light -> ColorMode.Light
-            ColorPaletteMode.Dark -> ColorMode.Dark
-            ColorPaletteMode.System -> ColorMode.System
-        }
-    )
-    var darkness by enum(
-        when (OldPreferences.oldColorPaletteName) {
-            ColorPaletteName.Default, ColorPaletteName.Dynamic, ColorPaletteName.MaterialYou -> Darkness.Normal
-            ColorPaletteName.PureBlack -> Darkness.PureBlack
-            ColorPaletteName.AMOLED -> Darkness.AMOLED
-        }
-    )
+    var colorSource by enum(ColorSource.Dynamic)
+    var colorMode by enum(ColorMode.System)
+    var darkness by enum(Darkness.Normal)
     var thumbnailRoundness by enum(ThumbnailRoundness.Medium)
     var fontFamily by enum(BuiltInFontFamily.Poppins)
     var applyFontPadding by boolean(false)
