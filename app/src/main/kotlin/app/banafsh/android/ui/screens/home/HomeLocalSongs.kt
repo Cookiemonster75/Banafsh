@@ -40,6 +40,8 @@ import app.banafsh.android.utils.hasPermission
 import app.banafsh.android.utils.medium
 import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid13
 import app.banafsh.android.lib.core.ui.utils.isCompositionLaunched
+import app.banafsh.android.models.LocalSong
+import app.banafsh.android.utils.toSong
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -82,11 +84,14 @@ fun HomeLocalSongs(onSearchClick: () -> Unit) = with(OrderPreferences) {
     if (hasPermission) HomeSongs(
         onSearchClick = onSearchClick,
         songProvider = {
-            Database.songs(
+            Database.localSongs(
                 sortBy = localSongSortBy,
-                sortOrder = localSongSortOrder,
-                isLocal = true
-            ).map { songs -> songs.filter { it.durationText != "0:00" } }
+                sortOrder = localSongSortOrder
+            ).map { songs ->
+                songs
+                    .filter { it.durationText != "0:00" }
+                    .map { song -> song.toSong() }
+            }
         },
         sortBy = localSongSortBy,
         setSortBy = { localSongSortBy = it },
@@ -122,7 +127,7 @@ fun HomeLocalSongs(onSearchClick: () -> Unit) = with(OrderPreferences) {
 }
 
 private val mediaScope = CoroutineScope(Dispatchers.IO + CoroutineName("MediaStore worker"))
-fun Context.musicFilesAsFlow(): StateFlow<List<Song>> = flow {
+fun Context.musicFilesAsFlow(): StateFlow<List<LocalSong>> = flow {
     var version: String? = null
 
     while (currentCoroutineContext().isActive) {
@@ -136,13 +141,14 @@ fun Context.musicFilesAsFlow(): StateFlow<List<Song>> = flow {
                     while (next()) {
                         if (!isMusic || duration == 0) continue
                         add(
-                            Song(
+                            LocalSong(
                                 id = "$LOCAL_KEY_PREFIX$id",
                                 title = title,
                                 artistsText = artist,
                                 durationText = duration.milliseconds.toComponents { minutes, seconds, _ ->
                                     "$minutes:${seconds.toString().padStart(2, '0')}"
                                 },
+                                dateModified = dateModified,
                                 thumbnailUrl = albumUri.toString()
                             )
                         )

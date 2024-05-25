@@ -57,6 +57,7 @@ import app.banafsh.android.lib.core.data.enums.ArtistSortBy
 import app.banafsh.android.lib.core.data.enums.PlaylistSortBy
 import app.banafsh.android.lib.core.data.enums.SongSortBy
 import app.banafsh.android.lib.core.data.enums.SortOrder
+import app.banafsh.android.models.LocalSong
 import io.ktor.http.Url
 import kotlinx.coroutines.flow.Flow
 
@@ -109,50 +110,66 @@ interface Database {
     fun songsByPlayTimeDesc(limit: Int = -1): Flow<List<Song>>
 
     @Transaction
-    @Query("SELECT * FROM Song WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY ROWID ASC")
+    @Query("SELECT * FROM LocalSong WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY title ASC")
     @RewriteQueriesToDropUnusedColumns
-    fun localSongsByRowIdAsc(): Flow<List<Song>>
+    fun localSongsByTitleAsc(): Flow<List<LocalSong>>
 
     @Transaction
-    @Query("SELECT * FROM Song WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY ROWID DESC")
+    @Query("SELECT * FROM LocalSong WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY title DESC")
     @RewriteQueriesToDropUnusedColumns
-    fun localSongsByRowIdDesc(): Flow<List<Song>>
+    fun localSongsByTitleDesc(): Flow<List<LocalSong>>
 
     @Transaction
-    @Query("SELECT * FROM Song WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY title ASC")
+    @Query("SELECT * FROM LocalSong WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY dateModified ASC")
     @RewriteQueriesToDropUnusedColumns
-    fun localSongsByTitleAsc(): Flow<List<Song>>
+    fun localSongsByDateAsc(): Flow<List<LocalSong>>
 
     @Transaction
-    @Query("SELECT * FROM Song WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY title DESC")
+    @Query("SELECT * FROM LocalSong WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY dateModified DESC")
     @RewriteQueriesToDropUnusedColumns
-    fun localSongsByTitleDesc(): Flow<List<Song>>
+    fun localSongsByDateDesc(): Flow<List<LocalSong>>
 
     @Transaction
-    @Query("SELECT * FROM Song WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY totalPlayTimeMs ASC")
+    @Query("SELECT * FROM LocalSong WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY totalPlayTimeMs ASC")
     @RewriteQueriesToDropUnusedColumns
-    fun localSongsByPlayTimeAsc(): Flow<List<Song>>
+    fun localSongsByPlayTimeAsc(): Flow<List<LocalSong>>
 
     @Transaction
-    @Query("SELECT * FROM Song WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY totalPlayTimeMs DESC")
+    @Query("SELECT * FROM LocalSong WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY totalPlayTimeMs DESC")
     @RewriteQueriesToDropUnusedColumns
-    fun localSongsByPlayTimeDesc(): Flow<List<Song>>
+    fun localSongsByPlayTimeDesc(): Flow<List<LocalSong>>
 
-    @Suppress("CyclomaticComplexMethod")
-    fun songs(sortBy: SongSortBy, sortOrder: SortOrder, isLocal: Boolean = false) = when (sortBy) {
+    fun songs(sortBy: SongSortBy, sortOrder: SortOrder) = when (sortBy) {
         SongSortBy.PlayTime -> when (sortOrder) {
-            SortOrder.Ascending -> if (isLocal) localSongsByPlayTimeAsc() else songsByPlayTimeAsc()
-            SortOrder.Descending -> if (isLocal) localSongsByPlayTimeDesc() else songsByPlayTimeDesc()
+            SortOrder.Ascending -> songsByPlayTimeAsc()
+            SortOrder.Descending -> songsByPlayTimeDesc()
         }
 
         SongSortBy.Title -> when (sortOrder) {
-            SortOrder.Ascending -> if (isLocal) localSongsByTitleAsc() else songsByTitleAsc()
-            SortOrder.Descending -> if (isLocal) localSongsByTitleDesc() else songsByTitleDesc()
+            SortOrder.Ascending -> songsByTitleAsc()
+            SortOrder.Descending -> songsByTitleDesc()
         }
 
         SongSortBy.DateAdded -> when (sortOrder) {
-            SortOrder.Ascending -> if (isLocal) localSongsByRowIdAsc() else songsByRowIdAsc()
-            SortOrder.Descending -> if (isLocal) localSongsByRowIdDesc() else songsByRowIdDesc()
+            SortOrder.Ascending -> songsByRowIdAsc()
+            SortOrder.Descending -> songsByRowIdDesc()
+        }
+    }
+
+    fun localSongs(sortBy: SongSortBy, sortOrder: SortOrder) = when (sortBy) {
+        SongSortBy.Title -> when (sortOrder) {
+            SortOrder.Ascending -> localSongsByTitleAsc()
+            SortOrder.Descending -> localSongsByTitleDesc()
+        }
+
+        SongSortBy.DateAdded -> when (sortOrder) {
+            SortOrder.Ascending -> localSongsByDateAsc()
+            SortOrder.Descending -> localSongsByDateDesc()
+        }
+
+        SongSortBy.PlayTime -> when (sortOrder) {
+            SortOrder.Ascending -> localSongsByPlayTimeAsc()
+            SortOrder.Descending -> localSongsByPlayTimeDesc()
         }
     }
 
@@ -513,6 +530,9 @@ interface Database {
     @Query("DELETE FROM Event WHERE songId = :songId")
     fun clearEventsFor(songId: String)
 
+    @Query("DELETE FROM LocalSong")
+    fun clearLocalSongs()
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     @Throws(SQLException::class)
     fun insert(event: Event)
@@ -532,8 +552,11 @@ interface Database {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insert(songArtistMap: SongArtistMap): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(song: Song): Long
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(song: LocalSong): Long
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insert(queuedMediaItems: List<QueuedMediaItem>)
@@ -630,6 +653,7 @@ interface Database {
 @androidx.room.Database(
     entities = [
         Song::class,
+        LocalSong::class,
         SongPlaylistMap::class,
         Playlist::class,
         Artist::class,
@@ -644,7 +668,7 @@ interface Database {
         PipedSession::class
     ],
     views = [SortedSongPlaylistMap::class],
-    version = 30,
+    version = 31,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
@@ -671,7 +695,8 @@ interface Database {
         AutoMigration(from = 26, to = 27),
         AutoMigration(from = 27, to = 28),
         AutoMigration(from = 28, to = 29),
-        AutoMigration(from = 29, to = 30)
+        AutoMigration(from = 29, to = 30),
+        AutoMigration(from = 30, to = 31)
     ]
 )
 @TypeConverters(Converters::class)
@@ -693,7 +718,8 @@ abstract class DatabaseInitializer protected constructor() : RoomDatabase() {
                 From10To11Migration(),
                 From14To15Migration(),
                 From22To23Migration(),
-                From23To24Migration()
+                From23To24Migration(),
+                From30To31Migration()
             )
             .build()
 
@@ -938,6 +964,29 @@ abstract class DatabaseInitializer protected constructor() : RoomDatabase() {
     class From23To24Migration : Migration(23, 24) {
         override fun migrate(db: SupportSQLiteDatabase) =
             db.execSQL("ALTER TABLE Song ADD COLUMN loudnessBoost REAL")
+    }
+
+    class From30To31Migration : Migration(30, 31) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                """
+                    CREATE TABLE IF NOT EXISTS LocalSong (
+                        `id` TEXT NOT NULL,
+                        `title` TEXT NOT NULL,
+                        `artistsText` TEXT,
+                        `durationText` TEXT,
+                        `thumbnailUrl` TEXT,
+                        `dateModified` INTEGER,
+                        `likedAt` INTEGER,
+                        `totalPlayTimeMs` INTEGER NOT NULL,
+                        `loudnessBoost` REAL,
+                        `blacklisted` INTEGER NOT NULL DEFAULT false,
+                        `explicit` INTEGER NOT NULL DEFAULT false,
+                        PRIMARY KEY(`id`)
+                    )
+                """.trimIndent()
+            )
+        }
     }
 }
 

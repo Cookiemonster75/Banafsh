@@ -28,6 +28,7 @@ import app.banafsh.android.utils.forcePlayAtIndex
 import app.banafsh.android.utils.forceSeekToNext
 import app.banafsh.android.utils.forceSeekToPrevious
 import app.banafsh.android.utils.intent
+import app.banafsh.android.utils.toSong
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.cancellable
@@ -313,12 +314,15 @@ class PlayerMediaBrowserService : MediaBrowserService(), ServiceConnection {
 
                     MediaId.LOCAL ->
                         Database
-                            .songs(
+                            .localSongs(
                                 sortBy = OrderPreferences.localSongSortBy,
                                 sortOrder = OrderPreferences.localSongSortOrder,
-                                isLocal = true
                             )
-                            .map { songs -> songs.filter { it.durationText != "0:00" } }
+                            .map { songs ->
+                                songs
+                                    .filter { it.durationText != "0:00" }
+                                    .map { song -> song.toSong() }
+                            }
                             .first()
 
                     MediaId.PLAYLISTS ->
