@@ -16,6 +16,7 @@ import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.media3.common.util.UnstableApi
 import app.banafsh.android.Database
+import app.banafsh.android.LocalDB
 import app.banafsh.android.R
 import app.banafsh.android.models.Album
 import app.banafsh.android.models.PlaylistPreview
@@ -313,7 +314,7 @@ class PlayerMediaBrowserService : MediaBrowserService(), ServiceConnection {
                     }
 
                     MediaId.LOCAL ->
-                        Database
+                        LocalDB
                             .localSongs(
                                 sortBy = OrderPreferences.localSongSortBy,
                                 sortOrder = OrderPreferences.localSongSortOrder,

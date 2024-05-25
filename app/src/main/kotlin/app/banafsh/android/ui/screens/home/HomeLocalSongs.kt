@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.banafsh.android.Database
+import app.banafsh.android.LocalDB
 import app.banafsh.android.R
 import app.banafsh.android.lib.core.ui.LocalAppearance
 import app.banafsh.android.models.Song
@@ -84,7 +85,7 @@ fun HomeLocalSongs(onSearchClick: () -> Unit) = with(OrderPreferences) {
     if (hasPermission) HomeSongs(
         onSearchClick = onSearchClick,
         songProvider = {
-            Database.localSongs(
+            LocalDB.localSongs(
                 sortBy = localSongSortBy,
                 sortOrder = localSongSortOrder
             ).map { songs ->
@@ -159,5 +160,5 @@ fun Context.musicFilesAsFlow(): StateFlow<List<LocalSong>> = flow {
         delay(5.seconds)
     }
 }.distinctUntilChanged()
-    .onEach { songs -> transaction { songs.forEach(Database::insert) } }
+    .onEach { songs -> transaction { songs.forEach(LocalDB::insert) } }
     .stateIn(mediaScope, SharingStarted.Eagerly, listOf())

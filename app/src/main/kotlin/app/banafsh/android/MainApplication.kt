@@ -400,11 +400,6 @@ class MainApplication : Application(), ImageLoaderFactory, Configuration.Provide
         MonetCompat.enablePaletteCompat()
     }
 
-    override fun onTerminate() {
-        Database.clearLocalSongs()
-        super.onTerminate()
-    }
-
     override fun newImageLoader() = ImageLoader.Builder(this)
         .crossfade(true)
         .respectCacheHeaders(false)
@@ -431,6 +426,7 @@ object Dependencies {
     internal fun init(application: MainApplication) {
         this.application = application
         DatabaseInitializer()
+        LocalDBInitializer()
     }
 }
 
