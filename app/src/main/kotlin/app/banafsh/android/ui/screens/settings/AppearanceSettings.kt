@@ -19,13 +19,13 @@ import app.banafsh.android.lib.core.ui.Darkness
 import app.banafsh.android.lib.core.ui.LocalAppearance
 import app.banafsh.android.lib.core.ui.ThumbnailRoundness
 import app.banafsh.android.lib.core.ui.googleFontsAvailable
+import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid13
 import app.banafsh.android.preferences.AppearancePreferences
 import app.banafsh.android.preferences.PlayerPreferences
 import app.banafsh.android.ui.screens.Route
 import app.banafsh.android.utils.currentLocale
 import app.banafsh.android.utils.findActivity
 import app.banafsh.android.utils.startLanguagePicker
-import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid13
 
 @Route
 @Composable

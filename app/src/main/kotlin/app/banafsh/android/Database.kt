@@ -1,24 +1,16 @@
 package app.banafsh.android
 
-import android.content.ContentValues
 import android.database.SQLException
-import android.database.sqlite.SQLiteDatabase.CONFLICT_IGNORE
 import android.os.Parcel
 import androidx.annotation.OptIn
-import androidx.core.database.getFloatOrNull
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
-import androidx.room.AutoMigration
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.DeleteColumn
-import androidx.room.DeleteTable
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RawQuery
-import androidx.room.RenameColumn
-import androidx.room.RenameTable
 import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -27,11 +19,13 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import androidx.room.Update
 import androidx.room.Upsert
-import androidx.room.migration.AutoMigrationSpec
-import androidx.room.migration.Migration
 import androidx.sqlite.db.SimpleSQLiteQuery
-import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteQuery
+import app.banafsh.android.lib.core.data.enums.AlbumSortBy
+import app.banafsh.android.lib.core.data.enums.ArtistSortBy
+import app.banafsh.android.lib.core.data.enums.PlaylistSortBy
+import app.banafsh.android.lib.core.data.enums.SongSortBy
+import app.banafsh.android.lib.core.data.enums.SortOrder
 import app.banafsh.android.models.Album
 import app.banafsh.android.models.Artist
 import app.banafsh.android.models.Event
@@ -52,11 +46,6 @@ import app.banafsh.android.models.SongPlaylistMap
 import app.banafsh.android.models.SongWithContentLength
 import app.banafsh.android.models.SortedSongPlaylistMap
 import app.banafsh.android.service.LOCAL_KEY_PREFIX
-import app.banafsh.android.lib.core.data.enums.AlbumSortBy
-import app.banafsh.android.lib.core.data.enums.ArtistSortBy
-import app.banafsh.android.lib.core.data.enums.PlaylistSortBy
-import app.banafsh.android.lib.core.data.enums.SongSortBy
-import app.banafsh.android.lib.core.data.enums.SortOrder
 import io.ktor.http.Url
 import kotlinx.coroutines.flow.Flow
 

@@ -29,6 +29,9 @@ import app.banafsh.android.LocalPlayerServiceBinder
 import app.banafsh.android.R
 import app.banafsh.android.lib.core.ui.Dimensions
 import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.lib.core.ui.utils.isLandscape
+import app.banafsh.android.lib.providers.innertube.Innertube
+import app.banafsh.android.lib.providers.innertube.models.NavigationEndpoint
 import app.banafsh.android.ui.components.LocalMenuState
 import app.banafsh.android.ui.components.ShimmerHost
 import app.banafsh.android.ui.components.themed.Attribution
@@ -46,9 +49,6 @@ import app.banafsh.android.utils.forcePlay
 import app.banafsh.android.utils.medium
 import app.banafsh.android.utils.secondary
 import app.banafsh.android.utils.semiBold
-import app.banafsh.android.lib.core.ui.utils.isLandscape
-import app.banafsh.android.lib.providers.innertube.Innertube
-import app.banafsh.android.lib.providers.innertube.models.NavigationEndpoint
 
 private val sectionTextModifier = Modifier
     .padding(horizontal = 16.dp)

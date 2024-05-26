@@ -40,6 +40,8 @@ import app.banafsh.android.Database
 import app.banafsh.android.R
 import app.banafsh.android.lib.core.ui.LocalAppearance
 import app.banafsh.android.lib.core.ui.favoritesIcon
+import app.banafsh.android.lib.core.ui.utils.px
+import app.banafsh.android.lib.core.ui.utils.roundedShape
 import app.banafsh.android.models.Info
 import app.banafsh.android.models.Song
 import app.banafsh.android.models.ui.UiMedia
@@ -55,8 +57,6 @@ import app.banafsh.android.utils.forceSeekToNext
 import app.banafsh.android.utils.forceSeekToPrevious
 import app.banafsh.android.utils.secondary
 import app.banafsh.android.utils.semiBold
-import app.banafsh.android.lib.core.ui.utils.px
-import app.banafsh.android.lib.core.ui.utils.roundedShape
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.withContext

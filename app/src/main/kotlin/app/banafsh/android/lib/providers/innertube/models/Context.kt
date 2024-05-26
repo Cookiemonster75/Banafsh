@@ -104,7 +104,8 @@ val validCountryCodes =
 
 @Suppress("MaximumLineLength")
 object UserAgents {
-    const val DESKTOP = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36"
+    const val DESKTOP =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36"
     const val ANDROID = "com.google.android.apps.youtube.music/5.28.1 (Linux; U; Android 11) gzip"
     const val PLAYSTATION = "Mozilla/5.0 (PlayStation 4 5.55) AppleWebKit/601.2 (KHTML, like Gecko)"
 }

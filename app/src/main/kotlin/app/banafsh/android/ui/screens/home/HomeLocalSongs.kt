@@ -26,11 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import app.banafsh.android.Database
 import app.banafsh.android.LocalDB
 import app.banafsh.android.R
 import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.models.Song
+import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid13
+import app.banafsh.android.lib.core.ui.utils.isCompositionLaunched
+import app.banafsh.android.models.LocalSong
 import app.banafsh.android.preferences.OrderPreferences
 import app.banafsh.android.service.LOCAL_KEY_PREFIX
 import app.banafsh.android.transaction
@@ -39,9 +40,6 @@ import app.banafsh.android.ui.screens.Route
 import app.banafsh.android.utils.AudioMediaCursor
 import app.banafsh.android.utils.hasPermission
 import app.banafsh.android.utils.medium
-import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid13
-import app.banafsh.android.lib.core.ui.utils.isCompositionLaunched
-import app.banafsh.android.models.LocalSong
 import app.banafsh.android.utils.toSong
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -118,7 +116,7 @@ fun HomeLocalSongs(onSearchClick: () -> Unit) = with(OrderPreferences) {
                 onClick = {
                     context.startActivity(
                         Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                            setData(Uri.fromParts("package", context.packageName, null))
+                            data = Uri.fromParts("package", context.packageName, null)
                         }
                     )
                 }

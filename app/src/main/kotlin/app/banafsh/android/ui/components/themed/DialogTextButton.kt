@@ -10,10 +10,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.lib.core.ui.utils.roundedShape
 import app.banafsh.android.utils.disabled
 import app.banafsh.android.utils.medium
 import app.banafsh.android.utils.primary
-import app.banafsh.android.lib.core.ui.utils.roundedShape
 
 @Composable
 fun DialogTextButton(

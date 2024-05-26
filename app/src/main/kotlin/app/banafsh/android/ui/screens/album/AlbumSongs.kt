@@ -21,6 +21,7 @@ import app.banafsh.android.LocalPlayerServiceBinder
 import app.banafsh.android.R
 import app.banafsh.android.lib.core.ui.Dimensions
 import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.lib.core.ui.utils.isLandscape
 import app.banafsh.android.models.Song
 import app.banafsh.android.ui.components.LocalMenuState
 import app.banafsh.android.ui.components.ShimmerHost
@@ -35,7 +36,6 @@ import app.banafsh.android.utils.asMediaItem
 import app.banafsh.android.utils.enqueue
 import app.banafsh.android.utils.forcePlayAtIndex
 import app.banafsh.android.utils.forcePlayFromBeginning
-import app.banafsh.android.lib.core.ui.utils.isLandscape
 import kotlinx.collections.immutable.toImmutableList
 
 // TODO: migrate to single impl for all 'song lists'

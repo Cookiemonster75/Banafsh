@@ -15,9 +15,9 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import app.banafsh.android.lib.core.ui.LocalAppearance
 import app.banafsh.android.lib.core.ui.shimmer
-import app.banafsh.android.utils.thumbnail
 import app.banafsh.android.lib.core.ui.utils.isLandscape
 import app.banafsh.android.lib.core.ui.utils.px
+import app.banafsh.android.utils.thumbnail
 import coil.compose.AsyncImage
 import com.valentinilk.shimmer.shimmer
 

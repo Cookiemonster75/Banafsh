@@ -95,7 +95,11 @@ private fun BoxScope.FloatingActions(
     modifier = modifier
         .align(Alignment.BottomEnd)
         .padding(end = 16.dp)
-        .padding(insets.only(WindowInsetsSides.End).asPaddingValues())
+        .padding(
+            insets
+                .only(WindowInsetsSides.End)
+                .asPaddingValues()
+        )
 ) {
     val transition = updateTransition(state, "")
     val bottomPaddingValues = insets.only(WindowInsetsSides.Bottom).asPaddingValues()

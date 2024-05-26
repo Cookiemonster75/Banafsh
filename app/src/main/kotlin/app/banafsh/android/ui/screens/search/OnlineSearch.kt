@@ -49,6 +49,8 @@ import app.banafsh.android.lib.compose.persist.persist
 import app.banafsh.android.lib.compose.persist.persistList
 import app.banafsh.android.lib.core.ui.LocalAppearance
 import app.banafsh.android.lib.providers.innertube.Innertube
+import app.banafsh.android.lib.providers.innertube.models.bodies.SearchSuggestionsBody
+import app.banafsh.android.lib.providers.innertube.requests.searchSuggestions
 import app.banafsh.android.models.SearchQuery
 import app.banafsh.android.preferences.DataPreferences
 import app.banafsh.android.query
@@ -60,8 +62,6 @@ import app.banafsh.android.utils.center
 import app.banafsh.android.utils.disabled
 import app.banafsh.android.utils.medium
 import app.banafsh.android.utils.secondary
-import app.banafsh.android.lib.providers.innertube.models.bodies.SearchSuggestionsBody
-import app.banafsh.android.lib.providers.innertube.requests.searchSuggestions
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 

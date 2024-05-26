@@ -41,6 +41,7 @@ import app.banafsh.android.lib.core.data.enums.SortOrder
 import app.banafsh.android.lib.core.ui.Dimensions
 import app.banafsh.android.lib.core.ui.LocalAppearance
 import app.banafsh.android.lib.providers.piped.Piped
+import app.banafsh.android.lib.providers.piped.models.Session
 import app.banafsh.android.models.PipedSession
 import app.banafsh.android.models.Playlist
 import app.banafsh.android.models.PlaylistPreview
@@ -56,7 +57,6 @@ import app.banafsh.android.ui.items.PlaylistItem
 import app.banafsh.android.ui.screens.Route
 import app.banafsh.android.ui.screens.settings.SettingsEntryGroupText
 import app.banafsh.android.ui.screens.settings.SettingsGroupSpacer
-import app.banafsh.android.lib.providers.piped.models.Session
 import kotlinx.coroutines.async
 import app.banafsh.android.lib.providers.piped.models.PlaylistPreview as PipedPlaylistPreview
 

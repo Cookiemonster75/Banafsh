@@ -38,11 +38,11 @@ import app.banafsh.android.lib.core.ui.LocalAppearance
 import app.banafsh.android.lib.core.ui.onOverlay
 import app.banafsh.android.lib.core.ui.overlay
 import app.banafsh.android.lib.providers.innertube.Innertube
+import app.banafsh.android.lib.providers.innertube.models.bodies.PlayerBody
+import app.banafsh.android.lib.providers.innertube.requests.player
 import app.banafsh.android.models.Format
 import app.banafsh.android.utils.color
 import app.banafsh.android.utils.medium
-import app.banafsh.android.lib.providers.innertube.models.bodies.PlayerBody
-import app.banafsh.android.lib.providers.innertube.requests.player
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest

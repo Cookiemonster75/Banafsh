@@ -1,10 +1,11 @@
 package app.banafsh.android.lib.core.data.utils
 
-inline val String.version get() = Version(
-    removePrefix("v")
-        .split(".")
-        .mapNotNull { it.toIntOrNull() }
-)
+inline val String.version
+    get() = Version(
+        removePrefix("v")
+            .split(".")
+            .mapNotNull { it.toIntOrNull() }
+    )
 
 @JvmInline
 value class Version(private val parts: List<Int>) {

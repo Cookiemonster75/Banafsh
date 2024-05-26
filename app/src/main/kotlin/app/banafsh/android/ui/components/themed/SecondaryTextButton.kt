@@ -11,8 +11,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.banafsh.android.lib.core.ui.LocalAppearance
 import app.banafsh.android.lib.core.ui.primaryButton
-import app.banafsh.android.utils.medium
 import app.banafsh.android.lib.core.ui.utils.roundedShape
+import app.banafsh.android.utils.medium
 
 @Composable
 fun SecondaryTextButton(

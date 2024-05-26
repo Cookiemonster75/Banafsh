@@ -23,6 +23,11 @@ import app.banafsh.android.lib.compose.routing.RouteHandler
 import app.banafsh.android.lib.core.ui.Dimensions
 import app.banafsh.android.lib.core.ui.LocalAppearance
 import app.banafsh.android.lib.providers.innertube.Innertube
+import app.banafsh.android.lib.providers.innertube.models.bodies.BrowseBody
+import app.banafsh.android.lib.providers.innertube.models.bodies.ContinuationBody
+import app.banafsh.android.lib.providers.innertube.requests.artistPage
+import app.banafsh.android.lib.providers.innertube.requests.itemsPage
+import app.banafsh.android.lib.providers.innertube.utils.from
 import app.banafsh.android.models.Artist
 import app.banafsh.android.preferences.UIStatePreferences
 import app.banafsh.android.preferences.UIStatePreferences.artistScreenTabIndexProperty
@@ -44,11 +49,6 @@ import app.banafsh.android.ui.screens.albumRoute
 import app.banafsh.android.ui.screens.searchresult.ItemsPage
 import app.banafsh.android.utils.asMediaItem
 import app.banafsh.android.utils.forcePlay
-import app.banafsh.android.lib.providers.innertube.models.bodies.BrowseBody
-import app.banafsh.android.lib.providers.innertube.models.bodies.ContinuationBody
-import app.banafsh.android.lib.providers.innertube.requests.artistPage
-import app.banafsh.android.lib.providers.innertube.requests.itemsPage
-import app.banafsh.android.lib.providers.innertube.utils.from
 import com.valentinilk.shimmer.shimmer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine

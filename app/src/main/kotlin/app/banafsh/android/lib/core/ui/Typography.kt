@@ -103,7 +103,9 @@ enum class BuiltInFontFamily(internal val googleFont: GoogleFont?) : Parcelable 
     override fun describeContents() = 0
 
     companion object CREATOR : Parcelable.Creator<BuiltInFontFamily> {
-        override fun createFromParcel(parcel: Parcel) = BuiltInFontFamily.valueOf(parcel.readString()!!)
+        override fun createFromParcel(parcel: Parcel) =
+            BuiltInFontFamily.valueOf(parcel.readString()!!)
+
         override fun newArray(size: Int): Array<BuiltInFontFamily?> = arrayOfNulls(size)
     }
 }

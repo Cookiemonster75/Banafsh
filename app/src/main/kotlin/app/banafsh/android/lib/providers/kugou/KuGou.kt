@@ -132,7 +132,10 @@ object KuGou {
         val startIndex = indexOf(startDelimiter).takeIf { it != -1 } ?: return this to ""
         val endIndex = indexOf(endDelimiter, startIndex).takeIf { it != -1 } ?: return this to ""
 
-        return removeRange(startIndex, endIndex + 1) to substring(startIndex + startDelimiter.length, endIndex)
+        return removeRange(
+            startIndex,
+            endIndex + 1
+        ) to substring(startIndex + startDelimiter.length, endIndex)
     }
 
     @JvmInline

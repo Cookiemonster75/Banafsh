@@ -18,8 +18,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.banafsh.android.R
 import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.utils.medium
 import app.banafsh.android.lib.core.ui.utils.roundedShape
+import app.banafsh.android.utils.medium
 
 @Composable
 fun TextToggle(

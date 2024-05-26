@@ -44,11 +44,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import app.banafsh.android.R
 import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.lib.core.ui.utils.roundedShape
 import app.banafsh.android.utils.center
 import app.banafsh.android.utils.drawCircle
 import app.banafsh.android.utils.medium
 import app.banafsh.android.utils.semiBold
-import app.banafsh.android.lib.core.ui.utils.roundedShape
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
 

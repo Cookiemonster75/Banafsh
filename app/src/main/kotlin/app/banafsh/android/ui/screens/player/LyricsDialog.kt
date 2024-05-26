@@ -21,6 +21,7 @@ import androidx.compose.ui.window.Dialog
 import app.banafsh.android.Database
 import app.banafsh.android.LocalPlayerServiceBinder
 import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.lib.core.ui.utils.px
 import app.banafsh.android.service.isLocal
 import app.banafsh.android.ui.modifiers.PinchDirection
 import app.banafsh.android.ui.modifiers.onSwipe
@@ -29,7 +30,6 @@ import app.banafsh.android.utils.forceSeekToNext
 import app.banafsh.android.utils.forceSeekToPrevious
 import app.banafsh.android.utils.thumbnail
 import app.banafsh.android.utils.windowState
-import app.banafsh.android.lib.core.ui.utils.px
 import coil.compose.AsyncImage
 
 @Composable

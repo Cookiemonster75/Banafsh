@@ -12,7 +12,6 @@ import android.provider.MediaStore
 import android.provider.MediaStore.Audio.Media.ALBUM_ID
 import android.provider.MediaStore.Audio.Media.ARTIST
 import android.provider.MediaStore.Audio.Media.DATE_MODIFIED
-import android.provider.MediaStore.Audio.Media.DISPLAY_NAME
 import android.provider.MediaStore.Audio.Media.DURATION
 import android.provider.MediaStore.Audio.Media.IS_MUSIC
 import android.provider.MediaStore.Audio.Media.TITLE

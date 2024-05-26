@@ -22,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import app.banafsh.android.Database
 import app.banafsh.android.LocalDB
 import app.banafsh.android.LocalPlayerAwareWindowInsets
 import app.banafsh.android.LocalPlayerServiceBinder
@@ -30,6 +29,7 @@ import app.banafsh.android.R
 import app.banafsh.android.lib.compose.persist.persistList
 import app.banafsh.android.lib.core.ui.Dimensions
 import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.lib.providers.innertube.models.NavigationEndpoint
 import app.banafsh.android.models.Song
 import app.banafsh.android.ui.components.LocalMenuState
 import app.banafsh.android.ui.components.themed.FloatingActionsContainerWithScrollToTop
@@ -41,7 +41,6 @@ import app.banafsh.android.utils.align
 import app.banafsh.android.utils.asMediaItem
 import app.banafsh.android.utils.forcePlay
 import app.banafsh.android.utils.medium
-import app.banafsh.android.lib.providers.innertube.models.NavigationEndpoint
 import app.banafsh.android.utils.toSong
 
 @OptIn(ExperimentalFoundationApi::class)

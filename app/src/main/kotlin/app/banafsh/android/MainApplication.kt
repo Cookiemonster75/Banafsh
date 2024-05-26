@@ -57,9 +57,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.work.Configuration
-import app.banafsh.android.lib.compose.preferences.PreferencesHolder
 import app.banafsh.android.lib.compose.persist.LocalPersistMap
 import app.banafsh.android.lib.compose.persist.PersistMap
+import app.banafsh.android.lib.compose.preferences.PreferencesHolder
 import app.banafsh.android.lib.core.ui.Darkness
 import app.banafsh.android.lib.core.ui.Dimensions
 import app.banafsh.android.lib.core.ui.LocalAppearance
@@ -69,6 +69,9 @@ import app.banafsh.android.lib.core.ui.appearance
 import app.banafsh.android.lib.core.ui.rippleTheme
 import app.banafsh.android.lib.core.ui.shimmerTheme
 import app.banafsh.android.lib.providers.innertube.Innertube
+import app.banafsh.android.lib.providers.innertube.models.bodies.BrowseBody
+import app.banafsh.android.lib.providers.innertube.requests.playlistPage
+import app.banafsh.android.lib.providers.innertube.requests.song
 import app.banafsh.android.preferences.AppearancePreferences
 import app.banafsh.android.preferences.DataPreferences
 import app.banafsh.android.service.PlayerService
@@ -90,9 +93,6 @@ import app.banafsh.android.utils.intent
 import app.banafsh.android.utils.invokeOnReady
 import app.banafsh.android.utils.setDefaultPalette
 import app.banafsh.android.utils.toast
-import app.banafsh.android.lib.providers.innertube.models.bodies.BrowseBody
-import app.banafsh.android.lib.providers.innertube.requests.playlistPage
-import app.banafsh.android.lib.providers.innertube.requests.song
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache

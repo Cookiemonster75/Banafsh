@@ -30,9 +30,10 @@ abstract class ActionReceiver(private val base: String) : BroadcastReceiver() {
     private val mutableActions = hashMapOf<String, Action>()
     val all get() = mutableActions.toMap()
 
-    val intentFilter get() = IntentFilter().apply {
-        mutableActions.keys.forEach { addAction(it) }
-    }
+    val intentFilter
+        get() = IntentFilter().apply {
+            mutableActions.keys.forEach { addAction(it) }
+        }
 
     internal fun action(onReceive: (Context, Intent) -> Unit) =
         readOnlyProvider<ActionReceiver, Action> { thisRef, property ->
