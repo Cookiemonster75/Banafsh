@@ -23,32 +23,32 @@ interface LocalDB {
     fun insert(song: LocalSong): Long
 
     @Transaction
-    @Query("SELECT * FROM LocalSong WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY title ASC")
+    @Query("SELECT * FROM LocalSong ORDER BY title ASC")
     @RewriteQueriesToDropUnusedColumns
     fun localSongsByTitleAsc(): Flow<List<LocalSong>>
 
     @Transaction
-    @Query("SELECT * FROM LocalSong WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY title DESC")
+    @Query("SELECT * FROM LocalSong ORDER BY title DESC")
     @RewriteQueriesToDropUnusedColumns
     fun localSongsByTitleDesc(): Flow<List<LocalSong>>
 
     @Transaction
-    @Query("SELECT * FROM LocalSong WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY dateModified ASC")
+    @Query("SELECT * FROM LocalSong ORDER BY dateModified ASC")
     @RewriteQueriesToDropUnusedColumns
     fun localSongsByDateAsc(): Flow<List<LocalSong>>
 
     @Transaction
-    @Query("SELECT * FROM LocalSong WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY dateModified DESC")
+    @Query("SELECT * FROM LocalSong ORDER BY dateModified DESC")
     @RewriteQueriesToDropUnusedColumns
     fun localSongsByDateDesc(): Flow<List<LocalSong>>
 
     @Transaction
-    @Query("SELECT * FROM LocalSong WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY totalPlayTimeMs ASC")
+    @Query("SELECT * FROM LocalSong ORDER BY totalPlayTimeMs ASC")
     @RewriteQueriesToDropUnusedColumns
     fun localSongsByPlayTimeAsc(): Flow<List<LocalSong>>
 
     @Transaction
-    @Query("SELECT * FROM LocalSong WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY totalPlayTimeMs DESC")
+    @Query("SELECT * FROM LocalSong ORDER BY totalPlayTimeMs DESC")
     @RewriteQueriesToDropUnusedColumns
     fun localSongsByPlayTimeDesc(): Flow<List<LocalSong>>
 

@@ -1,6 +1,8 @@
 package app.banafsh.android.ui.components.themed
 
+import android.content.ContentUris
 import android.content.Intent
+import android.provider.MediaStore
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Left
@@ -84,6 +86,7 @@ import app.banafsh.android.utils.semiBold
 import app.banafsh.android.utils.toast
 import app.banafsh.android.lib.core.ui.utils.roundedShape
 import app.banafsh.android.lib.providers.innertube.models.NavigationEndpoint
+import app.banafsh.android.service.LOCAL_KEY_PREFIX
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -211,6 +214,7 @@ fun BaseMediaItemMenu(
     onShowNormalizationDialog: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
+    val isLocal by remember { derivedStateOf { mediaItem.isLocal } }
 
     MediaItemMenu(
         mediaItem = mediaItem,
@@ -238,13 +242,28 @@ fun BaseMediaItemMenu(
         onGoToAlbum = albumRoute::global,
         onGoToArtist = artistRoute::global,
         onShare = {
-            val sendIntent = Intent().apply {
-                action = Intent.ACTION_SEND
-                type = "text/plain"
-                putExtra(
-                    Intent.EXTRA_TEXT,
-                    "https://music.youtube.com/watch?v=${mediaItem.mediaId}"
-                )
+            val sendIntent = if (isLocal) {
+                Intent().apply {
+                    action = Intent.ACTION_SEND
+                    type = "audio/*"
+                    putExtra(
+                        Intent.EXTRA_STREAM,
+                        ContentUris.withAppendedId(
+                            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                            mediaItem.mediaId.substringAfter(LOCAL_KEY_PREFIX).toLong()
+                        )
+                    )
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+            } else {
+                Intent().apply {
+                    action = Intent.ACTION_SEND
+                    type = "text/plain"
+                    putExtra(
+                        Intent.EXTRA_TEXT,
+                        "https://music.youtube.com/watch?v=${mediaItem.mediaId}"
+                    )
+                }
             }
 
             context.startActivity(Intent.createChooser(sendIntent, null))
@@ -439,7 +458,7 @@ fun MediaItemMenu(
                             .size(18.dp)
                     )
 
-                    if (!isLocal) IconButton(
+                    IconButton(
                         icon = R.drawable.share_social,
                         color = colorPalette.text,
                         onClick = onShare,
