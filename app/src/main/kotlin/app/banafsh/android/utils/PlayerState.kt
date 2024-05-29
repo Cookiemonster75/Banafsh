@@ -36,6 +36,7 @@ inline fun Player.DisposableListener(
     val listener = listenerProvider()
 
     addListener(listener)
+    listener.onMediaItemTransition(currentMediaItem, Player.MEDIA_ITEM_TRANSITION_REASON_AUTO)
     onDispose { removeListener(listener) }
 }
 

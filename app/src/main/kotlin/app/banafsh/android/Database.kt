@@ -46,7 +46,7 @@ import app.banafsh.android.models.SongPlaylistMap
 import app.banafsh.android.models.SongWithContentLength
 import app.banafsh.android.models.SortedSongPlaylistMap
 import app.banafsh.android.service.LOCAL_KEY_PREFIX
-import app.banafsh.android.utils.SongBundleAccessor
+import app.banafsh.android.utils.songBundle
 import io.ktor.http.Url
 import kotlinx.coroutines.flow.Flow
 
@@ -511,7 +511,7 @@ interface Database {
 
     @Transaction
     fun insert(mediaItem: MediaItem, block: (Song) -> Song = { it }) {
-        val extras = mediaItem.mediaMetadata.extras?.let { SongBundleAccessor(it) }
+        val extras = mediaItem.mediaMetadata.extras?.songBundle
         val song = Song(
             id = mediaItem.mediaId,
             title = mediaItem.mediaMetadata.title?.toString().orEmpty(),

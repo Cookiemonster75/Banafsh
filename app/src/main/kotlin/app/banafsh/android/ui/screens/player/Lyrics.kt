@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -342,6 +343,11 @@ fun Lyrics(
             .fillMaxSize()
             .background(colorPalette.overlay)
     ) {
+        val animatedHeight by animateDpAsState(
+            targetValue = maxHeight,
+            label = ""
+        )
+
         AnimatedVisibility(
             visible = isError,
             enter = slideInVertically { -it },
@@ -398,9 +404,9 @@ fun Lyrics(
                     }
                 }
 
-                LaunchedEffect(synchronizedLyrics, density) {
+                LaunchedEffect(synchronizedLyrics, density, animatedHeight) {
                     val currentSynchronizedLyrics = synchronizedLyrics ?: return@LaunchedEffect
-                    val centerOffset = with(density) { (-maxHeight / 3).roundToPx() }
+                    val centerOffset = with(density) { (-animatedHeight / 3).roundToPx() }
 
                     lazyListState.animateScrollToItem(
                         index = currentSynchronizedLyrics.index + 1,

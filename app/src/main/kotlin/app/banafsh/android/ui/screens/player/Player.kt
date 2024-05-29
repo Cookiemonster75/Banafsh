@@ -168,7 +168,7 @@ fun Player(
                             animateOffset = true,
                             onSwipeOut = { animationJob ->
                                 animationJob.join()
-                                layoutState.dismiss()
+                                layoutState.dismissSoft()
                                 onDismiss(binder)
                             }
                         ) else it

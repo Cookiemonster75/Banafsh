@@ -31,10 +31,10 @@ import app.banafsh.android.lib.core.ui.utils.px
 import app.banafsh.android.lib.providers.innertube.Innertube
 import app.banafsh.android.models.Song
 import app.banafsh.android.ui.components.themed.TextPlaceholder
-import app.banafsh.android.utils.SongBundleAccessor
 import app.banafsh.android.utils.medium
 import app.banafsh.android.utils.secondary
 import app.banafsh.android.utils.semiBold
+import app.banafsh.android.utils.songBundle
 import app.banafsh.android.utils.thumbnail
 import coil.compose.AsyncImage
 
@@ -64,9 +64,7 @@ fun SongItem(
     trailingContent: (@Composable () -> Unit)? = null,
     showDuration: Boolean = true
 ) {
-    val extras = remember(song) {
-        song.mediaMetadata.extras?.let { SongBundleAccessor(it) }
-    }
+    val extras = remember(song) { song.mediaMetadata.extras?.songBundle }
 
     SongItem(
         modifier = modifier,

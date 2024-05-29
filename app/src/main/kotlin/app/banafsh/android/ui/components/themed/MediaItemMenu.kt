@@ -74,7 +74,6 @@ import app.banafsh.android.ui.items.SongItem
 import app.banafsh.android.ui.screens.albumRoute
 import app.banafsh.android.ui.screens.artistRoute
 import app.banafsh.android.ui.screens.home.HideSongDialog
-import app.banafsh.android.utils.SongBundleAccessor
 import app.banafsh.android.utils.addNext
 import app.banafsh.android.utils.asMediaItem
 import app.banafsh.android.utils.createShareLocalSongIndent
@@ -85,6 +84,7 @@ import app.banafsh.android.utils.isCached
 import app.banafsh.android.utils.launchYouTubeMusic
 import app.banafsh.android.utils.medium
 import app.banafsh.android.utils.semiBold
+import app.banafsh.android.utils.songBundle
 import app.banafsh.android.utils.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -298,9 +298,7 @@ fun MediaItemMenu(
     var likedAt by remember { mutableStateOf<Long?>(null) }
     var isBlacklisted by remember { mutableStateOf(false) }
 
-    val extras = remember(mediaItem) {
-        mediaItem.mediaMetadata.extras?.let { SongBundleAccessor(it) }
-    }
+    val extras = remember(mediaItem) { mediaItem.mediaMetadata.extras?.songBundle }
 
     var albumInfo by remember {
         mutableStateOf(

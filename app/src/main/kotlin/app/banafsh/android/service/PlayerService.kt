@@ -97,7 +97,6 @@ import app.banafsh.android.transaction
 import app.banafsh.android.utils.ActionReceiver
 import app.banafsh.android.utils.ConditionalCacheDataSourceFactory
 import app.banafsh.android.utils.InvincibleService
-import app.banafsh.android.utils.SongBundleAccessor
 import app.banafsh.android.utils.TimerJob
 import app.banafsh.android.utils.YouTubeRadio
 import app.banafsh.android.utils.activityPendingIntent
@@ -110,6 +109,7 @@ import app.banafsh.android.utils.intent
 import app.banafsh.android.utils.mediaItems
 import app.banafsh.android.utils.setPlaybackPitch
 import app.banafsh.android.utils.shouldBePlaying
+import app.banafsh.android.utils.songBundle
 import app.banafsh.android.utils.thumbnail
 import app.banafsh.android.utils.timer
 import app.banafsh.android.utils.toast
@@ -604,11 +604,9 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
                                 .setCustomCacheKey(item.mediaItem.mediaId)
                                 .build()
                                 .apply {
-                                    mediaMetadata.extras
-                                        ?.let { SongBundleAccessor(it) }
-                                        ?.apply {
-                                            isFromPersistentQueue = true
-                                        }
+                                    mediaMetadata.extras?.songBundle?.apply {
+                                        isFromPersistentQueue = true
+                                    }
                                 }
                         },
                         /* startIndex = */ index,
@@ -868,9 +866,7 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
             )
             .setOngoing(false)
             .setContentIntent(
-                activityPendingIntent<MainActivity>(flags = PendingIntent.FLAG_UPDATE_CURRENT) {
-                    putExtra("fromNotification", true)
-                }
+                activityPendingIntent<MainActivity>(flags = PendingIntent.FLAG_UPDATE_CURRENT)
             )
             .setDeleteIntent(broadcastPendingIntent<NotificationDismissReceiver>())
             .setVisibility(Notification.VISIBILITY_PUBLIC)
@@ -1247,8 +1243,7 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
                         val url = when (val status = body.playabilityStatus?.status) {
                             "OK" -> format?.let { _ ->
                                 val mediaItem = runCatching { findMediaItem(videoId) }.getOrNull()
-                                val extras = mediaItem?.mediaMetadata?.extras
-                                    ?.let { SongBundleAccessor(it) }
+                                val extras = mediaItem?.mediaMetadata?.extras?.songBundle
 
                                 if (extras?.durationText == null) format.approxDurationMs
                                     ?.div(1000)
