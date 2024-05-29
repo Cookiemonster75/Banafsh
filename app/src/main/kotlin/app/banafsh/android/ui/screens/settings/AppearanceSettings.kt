@@ -71,7 +71,7 @@ fun AppearanceSettings() = with(AppearancePreferences) {
                                 shape = thumbnailRoundness.shape
                             )
                             .background(
-                                color = colorPalette.background1,
+                                color = colorPalette.surfaceContainer,
                                 shape = thumbnailRoundness.shape
                             )
                             .size(36.dp)

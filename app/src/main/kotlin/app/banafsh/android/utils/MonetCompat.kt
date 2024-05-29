@@ -26,7 +26,7 @@ inline fun MonetCompat.invokeOnReady(
 
 fun MonetCompat.setDefaultPalette(palette: ColorPalette = defaultLightPalette) {
     defaultAccentColor = palette.accent.toArgb()
-    defaultBackgroundColor = palette.background0.toArgb()
-    defaultPrimaryColor = palette.background1.toArgb()
-    defaultSecondaryColor = palette.background2.toArgb()
+    defaultBackgroundColor = palette.surface.toArgb()
+    defaultPrimaryColor = palette.surfaceContainer.toArgb()
+    defaultSecondaryColor = palette.primaryContainer.toArgb()
 }

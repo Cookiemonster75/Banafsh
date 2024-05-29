@@ -27,7 +27,7 @@ fun Switch(
     val transition = updateTransition(targetState = isChecked, label = null)
 
     val backgroundColor by transition.animateColor(label = "") {
-        if (it) colorPalette.accent else colorPalette.background1
+        if (it) colorPalette.accent else colorPalette.surfaceContainer
     }
 
     val color by transition.animateColor(label = "") {

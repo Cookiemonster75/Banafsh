@@ -83,7 +83,7 @@ fun LyricsDialog(
                 .padding(vertical = 32.dp)
                 .clip(thumbnailShape)
                 .fillMaxSize()
-                .background(colorPalette.background1)
+                .background(colorPalette.surfaceContainer)
                 .pinchToToggle(
                     direction = PinchDirection.In,
                     threshold = 0.9f,
@@ -107,7 +107,7 @@ fun LyricsDialog(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(colorPalette.background0)
+                    .background(colorPalette.surface)
                     .blur(radius = 8.dp)
             )
 

@@ -36,7 +36,7 @@ fun TextToggle(
         modifier = modifier
             .clip(16.dp.roundedShape)
             .clickable(onClick = toggleState)
-            .background(colorPalette.background1)
+            .background(colorPalette.surfaceContainer)
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .animateContentSize()
     ) {

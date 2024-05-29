@@ -121,7 +121,7 @@ fun HomePlaylists(
             ),
             modifier = Modifier
                 .fillMaxSize()
-                .background(colorPalette.background0)
+                .background(colorPalette.surface)
         ) {
             item(key = "header", contentType = 0, span = { GridItemSpan(maxLineSpan) }) {
                 Header(title = stringResource(R.string.playlists)) {

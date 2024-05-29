@@ -174,7 +174,7 @@ fun Player(
                         ) else it
                     }
                     .clip(shape)
-                    .background(colorPalette.background1)
+                    .background(colorPalette.surfaceContainer)
                     .fillMaxSize()
                     .drawBehind {
                         drawRect(
@@ -202,7 +202,7 @@ fun Player(
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .clip(thumbnailCornerSize.coerceAtMost(ThumbnailRoundness.Heavy.dp).roundedShape)
-                            .background(colorPalette.background0)
+                            .background(colorPalette.surface)
                             .size(48.dp)
                     )
                 }
@@ -310,8 +310,8 @@ fun Player(
             .clip(shape)
             .background(
                 Brush.verticalGradient(
-                    0.5f to colorPalette.background1,
-                    1f to colorPalette.background0
+                    0.5f to colorPalette.surfaceContainer,
+                    1f to colorPalette.surface
                 )
             )
             .padding(

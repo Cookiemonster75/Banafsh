@@ -69,7 +69,7 @@ fun SeekBar(
     media: UiMedia,
     modifier: Modifier = Modifier,
     color: Color = LocalAppearance.current.colorPalette.text,
-    backgroundColor: Color = LocalAppearance.current.colorPalette.background2,
+    backgroundColor: Color = LocalAppearance.current.colorPalette.primaryContainer,
     shape: Shape = 8.dp.roundedShape,
     isActive: Boolean = binder.player.isPlaying,
     alwaysShowDuration: Boolean = false,

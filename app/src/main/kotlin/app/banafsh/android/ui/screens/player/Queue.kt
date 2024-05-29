@@ -220,7 +220,7 @@ fun Queue(
             Row(
                 modifier = Modifier
                     .clip(shape)
-                    .background(colorPalette.background2)
+                    .background(colorPalette.primaryContainer)
                     .fillMaxSize()
                     .then(innerModifier)
                     .padding(horizontalBottomPaddingValues),
@@ -253,7 +253,7 @@ fun Queue(
             Box(
                 modifier = Modifier
                     .clip(shape)
-                    .background(colorPalette.background1)
+                    .background(colorPalette.surfaceContainer)
                     .weight(1f)
             ) {
                 LookaheadScope {
@@ -334,7 +334,7 @@ fun Queue(
                                         reorderingState = reorderingState,
                                         index = i
                                     )
-                                    .background(colorPalette.background1)
+                                    .background(colorPalette.surfaceContainer)
                                     .let {
                                         if (PlayerPreferences.horizontalSwipeToRemoveItem && !isPlayingThisMediaItem)
                                             it.swipeToClose(
@@ -440,7 +440,7 @@ fun Queue(
             Row(
                 modifier = Modifier
                     .clickable(onClick = layoutState::collapseSoft)
-                    .background(colorPalette.background2)
+                    .background(colorPalette.primaryContainer)
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp)
                     .padding(horizontalBottomPaddingValues)
@@ -566,7 +566,7 @@ fun Queue(
                                 }
                             }
                         }
-                        .background(colorPalette.background1)
+                        .background(colorPalette.surfaceContainer)
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }

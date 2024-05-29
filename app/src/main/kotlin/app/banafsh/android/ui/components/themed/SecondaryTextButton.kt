@@ -30,7 +30,7 @@ fun SecondaryTextButton(
         modifier = modifier
             .clip(16.dp.roundedShape)
             .clickable(enabled = enabled, onClick = onClick)
-            .background(if (alternative) colorPalette.background0 else colorPalette.primaryButton)
+            .background(if (alternative) colorPalette.surface else colorPalette.primaryButton)
             .padding(all = 8.dp)
             .padding(horizontal = 8.dp)
     )

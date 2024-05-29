@@ -27,7 +27,7 @@ fun BigIconButton(
     modifier: Modifier = Modifier,
     onPress: (() -> Unit)? = null,
     onCancel: (() -> Unit)? = null,
-    backgroundColor: Color = LocalAppearance.current.colorPalette.background2,
+    backgroundColor: Color = LocalAppearance.current.colorPalette.primaryContainer,
     contentColor: Color = LocalAppearance.current.colorPalette.text,
     shape: Shape = 32.dp.roundedShape
 ) = Box(

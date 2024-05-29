@@ -40,7 +40,7 @@ inline fun Menu(
         .fillMaxWidth()
         .clip(shape)
         .verticalScroll(rememberScrollState())
-        .background(LocalAppearance.current.colorPalette.background1)
+        .background(LocalAppearance.current.colorPalette.surfaceContainer)
         .padding(top = 2.dp)
         .padding(vertical = 8.dp)
         .navigationBarsPadding(),

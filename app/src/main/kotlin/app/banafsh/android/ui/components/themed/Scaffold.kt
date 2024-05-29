@@ -30,7 +30,7 @@ fun Scaffold(
 
     Row(
         modifier = modifier
-            .background(colorPalette.background0)
+            .background(colorPalette.surface)
             .fillMaxSize()
     ) {
         NavigationRail(

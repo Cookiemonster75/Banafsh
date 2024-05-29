@@ -330,7 +330,7 @@ fun SettingsCategoryScreen(
 
     Column(
         modifier = modifier
-            .background(colorPalette.background0)
+            .background(colorPalette.surface)
             .fillMaxSize()
             .let { if (scrollState != null) it.verticalScroll(state = scrollState) else it }
             .padding(

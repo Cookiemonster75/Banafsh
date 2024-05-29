@@ -134,7 +134,7 @@ fun LocalPlaylistSongs(
                     .only(WindowInsetsSides.Vertical + WindowInsetsSides.End)
                     .asPaddingValues(),
                 modifier = Modifier
-                    .background(colorPalette.background0)
+                    .background(colorPalette.surface)
                     .fillMaxSize()
             ) {
                 item(
@@ -290,7 +290,7 @@ fun LocalPlaylistSongs(
                                 reorderingState = reorderingState,
                                 index = index
                             )
-                            .background(colorPalette.background0),
+                            .background(colorPalette.surface),
                         song = song,
                         thumbnailSize = Dimensions.thumbnails.song,
                         trailingContent = {

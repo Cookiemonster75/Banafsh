@@ -9,9 +9,9 @@ import androidx.palette.graphics.Palette
 
 @Immutable
 data class ColorPalette(
-    val background0: Color,
-    val background1: Color,
-    val background2: Color,
+    val surface: Color,
+    val surfaceContainer: Color,
+    val primaryContainer: Color,
     val accent: Color,
     val onAccent: Color,
     val red: Color = Color(0xffbf4040),
@@ -24,9 +24,9 @@ data class ColorPalette(
 ) {
     object Saver : androidx.compose.runtime.saveable.Saver<ColorPalette, List<Any>> {
         override fun restore(value: List<Any>) = ColorPalette(
-            background0 = Color(value[0] as Int),
-            background1 = Color(value[1] as Int),
-            background2 = Color(value[2] as Int),
+            surface = Color(value[0] as Int),
+            surfaceContainer = Color(value[1] as Int),
+            primaryContainer = Color(value[2] as Int),
             accent = Color(value[3] as Int),
             onAccent = Color(value[4] as Int),
             red = Color(value[5] as Int),
@@ -39,9 +39,9 @@ data class ColorPalette(
         )
 
         override fun SaverScope.save(value: ColorPalette) = listOf(
-            value.background0.toArgb(),
-            value.background1.toArgb(),
-            value.background2.toArgb(),
+            value.surface.toArgb(),
+            value.surfaceContainer.toArgb(),
+            value.primaryContainer.toArgb(),
             value.accent.toArgb(),
             value.onAccent.toArgb(),
             value.red.toArgb(),
@@ -61,9 +61,9 @@ val defaultLightPalette = lightColorPalette(null)
 val defaultDarkPalette = darkColorPalette(null, Darkness.Normal)
 
 fun lightColorPalette(accent: Hsl? = null) = if (accent == null) ColorPalette(
-    background0 = Color(0xfffdfdfe),
-    background1 = Color(0xfff8f8fc),
-    background2 = Color(0xffeaeaf5),
+    surface = Color(0xfffdfdfe),
+    surfaceContainer = Color(0xfff8f8fc),
+    primaryContainer = Color(0xffeaeaf5),
     text = Color(0xff212121),
     textSecondary = Color(0xff656566),
     textDisabled = Color(0xff9d9d9d),
@@ -75,17 +75,17 @@ fun lightColorPalette(accent: Hsl? = null) = if (accent == null) ColorPalette(
     val (hue, saturation) = accent
 
     ColorPalette(
-        background0 = Color.hsl(
+        surface = Color.hsl(
             hue = hue,
             saturation = saturation.coerceAtMost(0.1f),
             lightness = 0.925f
         ),
-        background1 = Color.hsl(
+        surfaceContainer = Color.hsl(
             hue = hue,
             saturation = saturation.coerceAtMost(0.3f),
             lightness = 0.90f
         ),
-        background2 = Color.hsl(
+        primaryContainer = Color.hsl(
             hue = hue,
             saturation = saturation.coerceAtMost(0.4f),
             lightness = 0.85f
@@ -120,9 +120,9 @@ fun darkColorPalette(
     accent: Hsl? = null,
     darkness: Darkness
 ) = if (accent == null) ColorPalette(
-    background0 = Color(0xff16171d),
-    background1 = Color(0xff1f2029),
-    background2 = Color(0xff2b2d3b),
+    surface = Color(0xff16171d),
+    surfaceContainer = Color(0xff1f2029),
+    primaryContainer = Color(0xff2b2d3b),
     text = Color(0xffe1e1e2),
     textSecondary = Color(0xffa3a4a6),
     textDisabled = Color(0xff6f6f73),
@@ -134,17 +134,17 @@ fun darkColorPalette(
     val (hue, saturation) = accent
 
     ColorPalette(
-        background0 = if (darkness == Darkness.Normal) Color.hsl(
+        surface = if (darkness == Darkness.Normal) Color.hsl(
             hue = hue,
             saturation = saturation.coerceAtMost(0.1f),
             lightness = 0.10f
         ) else Color.Black,
-        background1 = if (darkness == Darkness.Normal) Color.hsl(
+        surfaceContainer = if (darkness == Darkness.Normal) Color.hsl(
             hue = hue,
             saturation = saturation.coerceAtMost(0.3f),
             lightness = 0.15f
         ) else Color.Black,
-        background2 = if (darkness == Darkness.Normal) Color.hsl(
+        primaryContainer = if (darkness == Darkness.Normal) Color.hsl(
             hue = hue,
             saturation = saturation.coerceAtMost(0.4f),
             lightness = 0.2f
@@ -223,17 +223,17 @@ fun ColorPalette.amoled() = if (isDark) {
     val (hue, saturation) = accent.hsl
 
     copy(
-        background0 = Color.hsl(
+        surface = Color.hsl(
             hue = hue,
             saturation = saturation.coerceAtMost(0.1f),
             lightness = 0.10f
         ),
-        background1 = Color.hsl(
+        surfaceContainer = Color.hsl(
             hue = hue,
             saturation = saturation.coerceAtMost(0.3f),
             lightness = 0.15f
         ),
-        background2 = Color.hsl(
+        primaryContainer = Color.hsl(
             hue = hue,
             saturation = saturation.coerceAtMost(0.4f),
             lightness = 0.2f
@@ -258,12 +258,12 @@ fun colorPaletteOf(
     return if (isDark) darkColorPalette(accentColor, darkness) else lightColorPalette(accentColor)
 }
 
-inline val ColorPalette.isPureBlack get() = background0 == Color.Black
+inline val ColorPalette.isPureBlack get() = surface == Color.Black
 inline val ColorPalette.collapsedPlayerProgressBar
-    get() = if (isPureBlack) defaultDarkPalette.background0 else background2
+    get() = if (isPureBlack) defaultDarkPalette.surface else primaryContainer
 inline val ColorPalette.favoritesIcon get() = if (isDefault) red else accent
 inline val ColorPalette.shimmer get() = if (isDefault) Color(0xff838383) else accent
-inline val ColorPalette.primaryButton get() = if (isPureBlack) Color(0xff272727) else background2
+inline val ColorPalette.primaryButton get() = if (isPureBlack) Color(0xff272727) else primaryContainer
 
 @Suppress("UnusedReceiverParameter")
 inline val ColorPalette.overlay get() = Color.Black.copy(alpha = 0.75f)

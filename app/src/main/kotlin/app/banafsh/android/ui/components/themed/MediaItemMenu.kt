@@ -1,8 +1,6 @@
 package app.banafsh.android.ui.components.themed
 
-import android.content.ContentUris
 import android.content.Intent
-import android.provider.MediaStore
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Left
@@ -69,7 +67,6 @@ import app.banafsh.android.models.Playlist
 import app.banafsh.android.models.Song
 import app.banafsh.android.models.SongPlaylistMap
 import app.banafsh.android.query
-import app.banafsh.android.service.LOCAL_KEY_PREFIX
 import app.banafsh.android.service.PrecacheService
 import app.banafsh.android.service.isLocal
 import app.banafsh.android.transaction
@@ -79,6 +76,7 @@ import app.banafsh.android.ui.screens.artistRoute
 import app.banafsh.android.ui.screens.home.HideSongDialog
 import app.banafsh.android.utils.addNext
 import app.banafsh.android.utils.asMediaItem
+import app.banafsh.android.utils.createShareLocalSongIndent
 import app.banafsh.android.utils.enqueue
 import app.banafsh.android.utils.forcePlay
 import app.banafsh.android.utils.formatAsDuration
@@ -243,18 +241,7 @@ fun BaseMediaItemMenu(
         onGoToArtist = artistRoute::global,
         onShare = {
             val sendIntent = if (isLocal) {
-                Intent().apply {
-                    action = Intent.ACTION_SEND
-                    type = "audio/*"
-                    putExtra(
-                        Intent.EXTRA_STREAM,
-                        ContentUris.withAppendedId(
-                            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                            mediaItem.mediaId.substringAfter(LOCAL_KEY_PREFIX).toLong()
-                        )
-                    )
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                }
+                createShareLocalSongIndent(mediaItem)
             } else {
                 Intent().apply {
                     action = Intent.ACTION_SEND
@@ -603,7 +590,7 @@ fun MediaItemMenu(
                                     .clip(CircleShape)
                                     .clickable(enabled = amount > 1) { amount-- }
                                     .size(48.dp)
-                                    .background(colorPalette.background0)
+                                    .background(colorPalette.surface)
                             ) {
                                 BasicText(
                                     text = "-",
@@ -635,7 +622,7 @@ fun MediaItemMenu(
                                     .clip(CircleShape)
                                     .clickable(enabled = amount < 60) { amount++ }
                                     .size(48.dp)
-                                    .background(colorPalette.background0)
+                                    .background(colorPalette.surface)
                             ) {
                                 BasicText(
                                     text = "+",
@@ -698,7 +685,7 @@ fun MediaItemMenu(
                                 style = typography.xxs.medium,
                                 modifier = Modifier
                                     .background(
-                                        color = colorPalette.background0,
+                                        color = colorPalette.surface,
                                         shape = 16.dp.roundedShape
                                     )
                                     .padding(horizontal = 16.dp, vertical = 8.dp)

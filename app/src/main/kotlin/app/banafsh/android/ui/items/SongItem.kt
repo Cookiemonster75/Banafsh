@@ -123,7 +123,7 @@ fun SongItem(
             Box(
                 modifier = Modifier
                     .clip(thumbnailShape)
-                    .background(colorPalette.background1)
+                    .background(colorPalette.surfaceContainer)
                     .fillMaxSize()
             ) {
                 AsyncImage(

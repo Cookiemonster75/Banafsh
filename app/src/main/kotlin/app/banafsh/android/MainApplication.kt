@@ -178,7 +178,7 @@ class MainActivity : ComponentActivity(), MonetColorsChangedListener {
         BoxWithConstraints(
             modifier = modifier
                 .fillMaxSize()
-                .background(appearance.colorPalette.background0)
+                .background(appearance.colorPalette.surface)
         ) {
             CompositionLocalProvider(LocalAppearance provides appearance) {
                 content()

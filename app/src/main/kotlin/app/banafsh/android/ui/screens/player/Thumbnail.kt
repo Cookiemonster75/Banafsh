@@ -139,7 +139,7 @@ fun Thumbnail(
                         )
                     }
                     .fillMaxSize()
-                    .background(colorPalette.background0)
+                    .background(colorPalette.surface)
                     .let {
                         if (blurRadius == 0.dp) it else it.blur(radius = blurRadius)
                     }

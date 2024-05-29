@@ -37,12 +37,12 @@ fun LinearProgressIndicator(
     if (progress == null) androidx.compose.material3.LinearProgressIndicator(
         modifier = modifier,
         color = colorPalette.accent,
-        trackColor = colorPalette.background1,
+        trackColor = colorPalette.surfaceContainer,
         strokeCap = strokeCap
     ) else androidx.compose.material3.LinearProgressIndicator(
         modifier = modifier,
         color = colorPalette.accent,
-        trackColor = colorPalette.background1,
+        trackColor = colorPalette.surfaceContainer,
         strokeCap = strokeCap,
         progress = { progress }
     )

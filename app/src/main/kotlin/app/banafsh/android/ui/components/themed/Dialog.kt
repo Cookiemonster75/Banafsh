@@ -207,7 +207,7 @@ fun DefaultDialog(
         modifier = modifier
             .padding(all = 48.dp)
             .background(
-                color = LocalAppearance.current.colorPalette.background1,
+                color = LocalAppearance.current.colorPalette.surfaceContainer,
                 shape = 8.dp.roundedShape
             )
             .padding(
@@ -237,7 +237,7 @@ fun <T> ValueSelectorDialog(
         modifier = modifier
             .padding(all = 48.dp)
             .background(
-                color = LocalAppearance.current.colorPalette.background1,
+                color = LocalAppearance.current.colorPalette.surfaceContainer,
                 shape = 8.dp.roundedShape
             )
             .padding(vertical = 16.dp),
@@ -379,7 +379,7 @@ fun SliderDialog(
     Column(
         modifier = modifier
             .padding(all = 48.dp)
-            .background(color = colorPalette.background1, shape = 8.dp.roundedShape)
+            .background(color = colorPalette.surfaceContainer, shape = 8.dp.roundedShape)
             .padding(vertical = 16.dp)
     ) {
         BasicText(
