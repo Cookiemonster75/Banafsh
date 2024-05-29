@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Right
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -14,12 +15,13 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -27,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -117,8 +120,7 @@ fun Thumbnail(
 
         Box(
             modifier = Modifier
-                .aspectRatio(1f)
-                .size(thumbnailSize)
+                .fillMaxWidth()
                 .shadow(
                     elevation = shadowElevation,
                     shape = thumbnailShape,
@@ -126,11 +128,13 @@ fun Thumbnail(
                 )
                 .clip(thumbnailShape)
         ) {
-            if (currentWindow.mediaItem.mediaMetadata.artworkUri != null) AsyncImage(
+            var height by remember { mutableIntStateOf(0) }
+
+            AsyncImage(
                 model = currentWindow.mediaItem.mediaMetadata.artworkUri.thumbnail((thumbnailSize - 64.dp).px),
                 error = painterResource(id = R.drawable.ic_launcher_foreground),
                 contentDescription = null,
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .pointerInput(Unit) {
                         detectTapGestures(
@@ -138,31 +142,28 @@ fun Thumbnail(
                             onLongPress = { onShowStatsForNerds(true) }
                         )
                     }
-                    .fillMaxSize()
+                    .fillMaxWidth()
+                    .animateContentSize()
                     .background(colorPalette.surface)
                     .let {
                         if (blurRadius == 0.dp) it else it.blur(radius = blurRadius)
                     }
-            ) else Icon(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = null,
-                modifier = Modifier
-                    .pointerInput(Unit) {
-                        detectTapGestures(onLongPress = { onShowStatsForNerds(true) })
+                    .onGloballyPositioned {
+                        height = it.size.height
                     }
-                    .fillMaxSize()
             )
 
-            if (!currentWindow.mediaItem.isLocal) Lyrics(
-                mediaId = currentWindow.mediaItem.mediaId,
-                isDisplayed = isShowingLyrics && error == null,
-                onDismiss = { onShowLyrics(false) },
-                ensureSongInserted = { Database.insert(currentWindow.mediaItem) },
-                height = thumbnailSize,
-                mediaMetadataProvider = currentWindow.mediaItem::mediaMetadata,
-                durationProvider = player::getDuration,
-                onOpenDialog = onOpenDialog
-            )
+            if (!currentWindow.mediaItem.isLocal)
+                Lyrics(
+                    mediaId = currentWindow.mediaItem.mediaId,
+                    isDisplayed = isShowingLyrics && error == null,
+                    onDismiss = { onShowLyrics(false) },
+                    ensureSongInserted = { Database.insert(currentWindow.mediaItem) },
+                    mediaMetadataProvider = currentWindow.mediaItem::mediaMetadata,
+                    durationProvider = player::getDuration,
+                    onOpenDialog = onOpenDialog,
+                    modifier = Modifier.height(height.px.dp)
+                )
 
             StatsForNerds(
                 mediaId = currentWindow.mediaItem.mediaId,

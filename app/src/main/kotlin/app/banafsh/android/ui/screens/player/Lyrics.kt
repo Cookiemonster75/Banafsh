@@ -16,7 +16,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,7 +50,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.C
 import androidx.media3.common.MediaMetadata
@@ -105,7 +104,6 @@ fun Lyrics(
     mediaId: String,
     isDisplayed: Boolean,
     onDismiss: () -> Unit,
-    height: Dp,
     mediaMetadataProvider: () -> MediaMetadata,
     durationProvider: () -> Long,
     ensureSongInserted: () -> Unit,
@@ -335,7 +333,7 @@ fun Lyrics(
         }
     }
 
-    Box(
+    BoxWithConstraints(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .pointerInput(Unit) {
@@ -402,7 +400,7 @@ fun Lyrics(
 
                 LaunchedEffect(synchronizedLyrics, density) {
                     val currentSynchronizedLyrics = synchronizedLyrics ?: return@LaunchedEffect
-                    val centerOffset = with(density) { (-height / 3).roundToPx() }
+                    val centerOffset = with(density) { (-maxHeight / 3).roundToPx() }
 
                     lazyListState.animateScrollToItem(
                         index = currentSynchronizedLyrics.index + 1,
@@ -430,7 +428,7 @@ fun Lyrics(
                         .fillMaxWidth()
                 ) {
                     item(key = "header", contentType = 0) {
-                        Spacer(modifier = Modifier.height(height))
+                        Spacer(modifier = Modifier.height(maxHeight))
                     }
                     itemsIndexed(
                         items = synchronizedLyrics.sentences.values.toImmutableList()
@@ -445,7 +443,7 @@ fun Lyrics(
                         )
                     }
                     item(key = "footer", contentType = 0) {
-                        Spacer(modifier = Modifier.height(height))
+                        Spacer(modifier = Modifier.height(maxHeight))
                     }
                 }
             } else BasicText(
@@ -455,7 +453,7 @@ fun Lyrics(
                     .verticalFadingEdge()
                     .verticalScroll(rememberScrollState())
                     .fillMaxWidth()
-                    .padding(vertical = height / 4, horizontal = 32.dp)
+                    .padding(vertical = maxHeight / 4, horizontal = 32.dp)
             )
         }
 

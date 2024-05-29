@@ -9,6 +9,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -101,10 +102,8 @@ fun LyricsDialog(
                     }
                 )
         ) {
-            val thumbnailHeight = maxHeight
-
             if (currentWindow.mediaItem.mediaMetadata.artworkUri != null) AsyncImage(
-                model = currentWindow.mediaItem.mediaMetadata.artworkUri.thumbnail((thumbnailHeight - 64.dp).px),
+                model = currentWindow.mediaItem.mediaMetadata.artworkUri.thumbnail((maxHeight - 64.dp).px),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -117,11 +116,11 @@ fun LyricsDialog(
                 mediaId = currentWindow.mediaItem.mediaId,
                 isDisplayed = true,
                 onDismiss = { },
-                height = thumbnailHeight,
                 mediaMetadataProvider = currentWindow.mediaItem::mediaMetadata,
                 durationProvider = player::getDuration,
                 ensureSongInserted = { Database.insert(currentWindow.mediaItem) },
-                onMenuLaunch = onDismiss
+                onMenuLaunch = onDismiss,
+                modifier = Modifier.height(maxHeight)
             )
         }
     }
