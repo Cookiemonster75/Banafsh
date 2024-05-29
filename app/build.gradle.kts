@@ -137,6 +137,9 @@ dependencies {
     implementation(libs.workmanager)
     implementation(libs.workmanager.ktx)
 
+    implementation(libs.credentials)
+    implementation(libs.credentials.play)
+
     implementation(libs.core.ktx)
     implementation(libs.kotlin.coroutines)
     implementation(libs.kotlin.immutable)

@@ -19,6 +19,7 @@ ktor = "2.3.11"
 detekt = "1.23.6"
 detektCompose = "0.4.1"
 workmanager = "2.9.0"
+credentials = "1.5.0-alpha01"
 
 kotlinCoroutines = "1.8.1"
 kotlinDatetime = "0.6.0"
@@ -71,6 +72,10 @@ media3_session = { module = "androidx.media3:media3-session", version.ref = "med
 
 workmanager = { module = "androidx.work:work-runtime", version.ref = "workmanager" }
 workmanager_ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workmanager" }
+
+#noinspection CredentialDependency ==> thank you Android Lint, I added the dependency and this still flags!
+credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
+credentials_play = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
 
 ktor_http = { module = "io.ktor:ktor-http", version.ref = "ktor" }
 

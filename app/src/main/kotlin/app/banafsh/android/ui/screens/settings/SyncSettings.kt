@@ -18,12 +18,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.password
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEachIndexed
 import app.banafsh.android.Database
+import app.banafsh.android.Dependencies
 import app.banafsh.android.R
 import app.banafsh.android.lib.compose.persist.persistList
 import app.banafsh.android.lib.core.ui.LocalAppearance
@@ -32,13 +38,16 @@ import app.banafsh.android.lib.providers.piped.models.Instance
 import app.banafsh.android.models.PipedSession
 import app.banafsh.android.transaction
 import app.banafsh.android.ui.components.themed.CircularProgressIndicator
+import app.banafsh.android.ui.components.themed.ConfirmationDialog
 import app.banafsh.android.ui.components.themed.DefaultDialog
 import app.banafsh.android.ui.components.themed.DialogTextButton
 import app.banafsh.android.ui.components.themed.IconButton
 import app.banafsh.android.ui.components.themed.TextField
 import app.banafsh.android.ui.screens.Route
 import app.banafsh.android.utils.center
+import app.banafsh.android.utils.get
 import app.banafsh.android.utils.semiBold
+import app.banafsh.android.utils.upsert
 import io.ktor.http.Url
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
@@ -50,6 +59,7 @@ fun SyncSettings() {
 
     val (colorPalette, typography) = LocalAppearance.current
     val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
 
     val pipedSessions by Database.pipedSessions().collectAsState(initial = listOf())
 
@@ -60,8 +70,15 @@ fun SyncSettings() {
     ) {
         var isLoading by rememberSaveable { mutableStateOf(false) }
         var hasError by rememberSaveable { mutableStateOf(false) }
+        var successful by remember { mutableStateOf(false) }
 
         when {
+            successful -> BasicText(
+                text = stringResource(R.string.piped_session_created_successfully),
+                style = typography.xs.semiBold.center,
+                modifier = Modifier.padding(all = 24.dp)
+            )
+
             hasError -> BasicText(
                 text = stringResource(R.string.error_piped_link),
                 style = typography.xs.semiBold.center,
@@ -87,6 +104,12 @@ fun SyncSettings() {
                         canSelect = true
                     } ?: run { instancesUnavailable = true }
                     loadingInstances = false
+                    runCatching {
+                        Dependencies.credentialManager.get(context)?.let {
+                            username = it.id
+                            password = it.password
+                        }
+                    }.getOrNull()
                 }
 
                 BasicText(
@@ -135,13 +158,23 @@ fun SyncSettings() {
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     modifier = Modifier.fillMaxWidth()
                 )
+
                 Spacer(modifier = Modifier.height(8.dp))
+
                 TextField(
                     value = password,
                     onValueChange = { password = it },
                     hintText = stringResource(R.string.password),
                     visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth()
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrect = false,
+                        keyboardType = KeyboardType.Password
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .semantics {
+                            password()
+                        }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 DialogTextButton(
@@ -164,14 +197,13 @@ fun SyncSettings() {
                                     apiBaseUrl = url,
                                     username = username,
                                     password = password
-                                )?.getOrNull().run {
-                                    isLoading = false
-                                    if (this == null) {
-                                        hasError = true
-                                        return@launch
-                                    }
-                                    this
+                                )?.getOrNull()
+                                isLoading = false
+                                if (session == null) {
+                                    hasError = true
+                                    return@launch
                                 }
+
                                 transaction {
                                     Database.insert(
                                         PipedSession(
@@ -181,6 +213,17 @@ fun SyncSettings() {
                                         )
                                     )
                                 }
+
+                                successful = true
+
+                                runCatching {
+                                    Dependencies.credentialManager.upsert(
+                                        context = context,
+                                        username = username,
+                                        password = password
+                                    )
+                                }
+
                                 linkingPiped = false
                             }
                         }
@@ -190,6 +233,19 @@ fun SyncSettings() {
             }
         }
     }
+
+    var deletingPipedSession: Int? by rememberSaveable { mutableStateOf(null) }
+    if (deletingPipedSession != null) ConfirmationDialog(
+        text = stringResource(R.string.confirm_delete_piped_session),
+        onDismiss = {
+            deletingPipedSession = null
+        },
+        onConfirm = {
+            deletingPipedSession?.let {
+                transaction { Database.delete(pipedSessions[it]) }
+            }
+        }
+    )
 
     SettingsCategoryScreen(title = stringResource(R.string.sync)) {
         SettingsDescription(text = stringResource(R.string.sync_description))
@@ -207,14 +263,14 @@ fun SyncSettings() {
             )
         }
         SettingsGroup(title = stringResource(R.string.piped_sessions)) {
-            pipedSessions.forEach {
+            pipedSessions.fastForEachIndexed { i, session ->
                 SettingsEntry(
-                    title = it.username,
-                    text = it.apiBaseUrl.toString(),
+                    title = session.username,
+                    text = session.apiBaseUrl.toString(),
                     onClick = { },
                     trailingContent = {
                         IconButton(
-                            onClick = { transaction { Database.delete(it) } },
+                            onClick = { deletingPipedSession = i },
                             icon = R.drawable.delete,
                             color = colorPalette.text
                         )

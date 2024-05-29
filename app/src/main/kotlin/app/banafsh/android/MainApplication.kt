@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.core.view.WindowCompat
+import androidx.credentials.CredentialManager
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -422,6 +423,8 @@ class MainApplication : Application(), ImageLoaderFactory, Configuration.Provide
 object Dependencies {
     lateinit var application: MainApplication
         private set
+
+    val credentialManager by lazy { CredentialManager.create(application) }
 
     internal fun init(application: MainApplication) {
         this.application = application
