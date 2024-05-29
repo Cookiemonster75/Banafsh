@@ -46,7 +46,7 @@ import kotlin.time.Duration
 
 @Stable
 @JvmInline
-value class SwipeState internal constructor(
+value class SwipeState @PublishedApi internal constructor(
     private val offsetLazy: Lazy<Animatable<Float, AnimationVector1D>> = lazy { acquire() }
 ) {
     internal val offset get() = offsetLazy.value
@@ -68,11 +68,13 @@ value class SwipeState internal constructor(
     fun calculateOffset(bounds: ClosedRange<Dp>? = null) =
         offset.value.px.dp.let { if (bounds == null) it else it.coerceIn(bounds) }
 
+    @PublishedApi
     internal fun recycle() = recycle(offset)
 }
 
+@Suppress("NOTHING_TO_INLINE")
 @Composable
-fun rememberSwipeState(key: Any?): SwipeState {
+inline fun rememberSwipeState(key: Any?): SwipeState {
     val state = remember(key) { SwipeState() }
 
     DisposableEffect(key) {

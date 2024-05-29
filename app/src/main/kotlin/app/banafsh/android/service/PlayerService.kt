@@ -26,6 +26,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.format.DateUtils
 import androidx.annotation.OptIn
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -191,7 +192,7 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
     private var preferenceUpdaterJob: Job? = null
     private var volumeNormalizationJob: Job? = null
 
-    override var isInvincibilityEnabled = false
+    override var isInvincibilityEnabled by mutableStateOf(false)
 
     private var audioManager: AudioManager? = null
     private var audioDeviceCallback: AudioDeviceCallback? = null
@@ -988,6 +989,7 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
         }
     }
 
+    @Stable
     inner class Binder : AndroidBinder() {
         val player: ExoPlayer
             get() = this@PlayerService.player

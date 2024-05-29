@@ -100,6 +100,17 @@ ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
 }
 
+composeCompiler {
+    enableStrongSkippingMode = true
+    enableNonSkippingGroupOptimization = true
+
+    if (project.findProperty("enableComposeCompilerReports") == "true") {
+        val dest = layout.buildDirectory.dir("compose_metrics")
+        metricsDestination = dest
+        reportsDestination = dest
+    }
+}
+
 dependencies {
     coreLibraryDesugaring(libs.desugaring)
 

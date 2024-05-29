@@ -63,13 +63,16 @@ private fun LottieAnimationWithPlaceholder(
     modifier: Modifier = Modifier,
     contentDescription: String? = null
 ) {
+    val colorFilter = remember(tint) {
+        BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+            /* color = */ tint.toArgb(),
+            /* blendModeCompat = */ BlendModeCompat.SRC_ATOP
+        )
+    }
     val dynamicProperties = rememberLottieDynamicProperties(
         rememberLottieDynamicProperty(
             property = LottieProperty.COLOR_FILTER,
-            value = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
-                /* color = */ tint.toArgb(),
-                /* blendModeCompat = */ BlendModeCompat.SRC_ATOP
-            ),
+            value = colorFilter,
             keyPath = arrayOf("**")
         )
     )
