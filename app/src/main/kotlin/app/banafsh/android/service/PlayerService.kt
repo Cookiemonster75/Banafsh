@@ -97,6 +97,7 @@ import app.banafsh.android.transaction
 import app.banafsh.android.utils.ActionReceiver
 import app.banafsh.android.utils.ConditionalCacheDataSourceFactory
 import app.banafsh.android.utils.InvincibleService
+import app.banafsh.android.utils.SongBundleAccessor
 import app.banafsh.android.utils.TimerJob
 import app.banafsh.android.utils.YouTubeRadio
 import app.banafsh.android.utils.activityPendingIntent
@@ -603,7 +604,11 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
                                 .setCustomCacheKey(item.mediaItem.mediaId)
                                 .build()
                                 .apply {
-                                    mediaMetadata.extras?.putBoolean("isFromPersistentQueue", true)
+                                    mediaMetadata.extras
+                                        ?.let { SongBundleAccessor(it) }
+                                        ?.apply {
+                                            isFromPersistentQueue = true
+                                        }
                                 }
                         },
                         /* startIndex = */ index,
@@ -1242,17 +1247,17 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
                         val url = when (val status = body.playabilityStatus?.status) {
                             "OK" -> format?.let { _ ->
                                 val mediaItem = runCatching { findMediaItem(videoId) }.getOrNull()
+                                val extras = mediaItem?.mediaMetadata?.extras
+                                    ?.let { SongBundleAccessor(it) }
 
-                                if (mediaItem?.mediaMetadata?.extras?.getString("durationText") == null)
-                                    format.approxDurationMs?.div(1000)
-                                        ?.let(DateUtils::formatElapsedTime)?.removePrefix("0")
-                                        ?.let { durationText ->
-                                            mediaItem?.mediaMetadata?.extras?.putString(
-                                                "durationText",
-                                                durationText
-                                            )
-                                            Database.updateDurationText(videoId, durationText)
-                                        }
+                                if (extras?.durationText == null) format.approxDurationMs
+                                    ?.div(1000)
+                                    ?.let(DateUtils::formatElapsedTime)
+                                    ?.removePrefix("0")
+                                    ?.let { durationText ->
+                                        extras?.durationText = durationText
+                                        Database.updateDurationText(videoId, durationText)
+                                    }
 
                                 transaction {
                                     runCatching {

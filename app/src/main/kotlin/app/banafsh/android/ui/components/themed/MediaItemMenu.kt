@@ -74,6 +74,7 @@ import app.banafsh.android.ui.items.SongItem
 import app.banafsh.android.ui.screens.albumRoute
 import app.banafsh.android.ui.screens.artistRoute
 import app.banafsh.android.ui.screens.home.HideSongDialog
+import app.banafsh.android.utils.SongBundleAccessor
 import app.banafsh.android.utils.addNext
 import app.banafsh.android.utils.asMediaItem
 import app.banafsh.android.utils.createShareLocalSongIndent
@@ -297,18 +298,22 @@ fun MediaItemMenu(
     var likedAt by remember { mutableStateOf<Long?>(null) }
     var isBlacklisted by remember { mutableStateOf(false) }
 
+    val extras = remember(mediaItem) {
+        mediaItem.mediaMetadata.extras?.let { SongBundleAccessor(it) }
+    }
+
     var albumInfo by remember {
         mutableStateOf(
-            mediaItem.mediaMetadata.extras
-                ?.getString("albumId")
-                ?.let { Info(it, null) }
+            extras?.albumId?.let {
+                Info(id = it, name = null)
+            }
         )
     }
 
     var artistsInfo by remember {
         mutableStateOf(
-            mediaItem.mediaMetadata.extras?.getStringArrayList("artistNames")?.let { names ->
-                mediaItem.mediaMetadata.extras?.getStringArrayList("artistIds")?.let { ids ->
+            extras?.artistNames?.let { names ->
+                extras.artistIds?.let { ids ->
                     names.zip(ids) { name, id -> Info(id, name) }
                 }
             }

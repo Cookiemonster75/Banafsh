@@ -35,14 +35,14 @@ val Innertube.SongItem.asMediaItem: MediaItem
                 .setAlbumTitle(album?.name)
                 .setArtworkUri(thumbnail?.url?.toUri())
                 .setExtras(
-                    bundleOf(
-                        "albumId" to album?.endpoint?.browseId,
-                        "durationText" to durationText,
-                        "artistNames" to authors?.filter { it.endpoint != null }
-                            ?.mapNotNull { it.name },
-                        "artistIds" to authors?.mapNotNull { it.endpoint?.browseId },
-                        "explicit" to explicit
-                    )
+                    SongBundleAccessor.bundle {
+                        albumId = album?.endpoint?.browseId
+                        durationText = this@asMediaItem.durationText
+                        artistNames = authors
+                            ?.filter { it.endpoint != null }
+                            ?.mapNotNull { it.name }
+                        explicit = this@asMediaItem.explicit
+                    }
                 )
                 .build()
         )

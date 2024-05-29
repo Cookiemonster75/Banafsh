@@ -87,6 +87,7 @@ import app.banafsh.android.ui.screens.player.Player
 import app.banafsh.android.ui.screens.playlistRoute
 import app.banafsh.android.utils.DisposableListener
 import app.banafsh.android.utils.LocalMonetCompat
+import app.banafsh.android.utils.SongBundleAccessor
 import app.banafsh.android.utils.asMediaItem
 import app.banafsh.android.utils.collectProvidedBitmapAsState
 import app.banafsh.android.utils.forcePlay
@@ -301,8 +302,10 @@ class MainActivity : ComponentActivity(), MonetColorsChangedListener {
                             reason: Int
                         ) = when {
                             reason != Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED || mediaItem == null -> Unit
-                            mediaItem.mediaMetadata.extras?.getBoolean("isFromPersistentQueue") == true ->
-                                playerBottomSheetState.collapseSoft()
+
+                            mediaItem.mediaMetadata.extras
+                                ?.let { SongBundleAccessor(it) }
+                                ?.isFromPersistentQueue == true -> playerBottomSheetState.collapseSoft()
 
                             else -> playerBottomSheetState.expandSoft()
                         }
