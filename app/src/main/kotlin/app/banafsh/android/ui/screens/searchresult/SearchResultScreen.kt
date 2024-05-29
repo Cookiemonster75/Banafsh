@@ -76,7 +76,7 @@ fun SearchResultScreen(query: String, onSearchAgain: () -> Unit) {
                 topIconButtonId = R.drawable.chevron_back,
                 onTopIconButtonClick = pop,
                 tabIndex = UIStatePreferences.searchResultScreenTabIndex,
-                onTabChanged = { UIStatePreferences.searchResultScreenTabIndex = it },
+                onTabChange = { UIStatePreferences.searchResultScreenTabIndex = it },
                 tabColumnContent = { item ->
                     item(0, stringResource(R.string.songs), R.drawable.musical_notes)
                     item(1, stringResource(R.string.albums), R.drawable.disc)

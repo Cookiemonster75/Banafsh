@@ -69,7 +69,7 @@ fun SettingsScreen() {
                 topIconButtonId = R.drawable.chevron_back,
                 onTopIconButtonClick = pop,
                 tabIndex = tabIndex,
-                onTabChanged = onTabChanged,
+                onTabChange = onTabChanged,
                 tabColumnContent = { item ->
                     item(0, stringResource(R.string.appearance), R.drawable.color_palette)
                     item(1, stringResource(R.string.player), R.drawable.play)
@@ -100,7 +100,7 @@ fun SettingsScreen() {
 inline fun <reified T : Enum<T>> EnumValueSelectorSettingsEntry(
     title: String,
     selectedValue: T,
-    noinline onValueSelected: (T) -> Unit,
+    noinline onValueSelect: (T) -> Unit,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
     noinline valueText: @Composable (T) -> String = { it.name },
@@ -109,7 +109,7 @@ inline fun <reified T : Enum<T>> EnumValueSelectorSettingsEntry(
     title = title,
     selectedValue = selectedValue,
     values = enumValues<T>().toList().toImmutableList(),
-    onValueSelected = onValueSelected,
+    onValueSelect = onValueSelect,
     modifier = modifier,
     isEnabled = isEnabled,
     valueText = valueText,
@@ -121,7 +121,7 @@ fun <T> ValueSelectorSettingsEntry(
     title: String,
     selectedValue: T,
     values: ImmutableList<T>,
-    onValueSelected: (T) -> Unit,
+    onValueSelect: (T) -> Unit,
     modifier: Modifier = Modifier,
     text: String? = null,
     isEnabled: Boolean = true,
@@ -136,7 +136,7 @@ fun <T> ValueSelectorSettingsEntry(
         title = title,
         selectedValue = selectedValue,
         values = values,
-        onValueSelected = onValueSelected,
+        onValueSelect = onValueSelect,
         valueText = valueText
     )
 
@@ -179,7 +179,7 @@ fun SliderSettingsEntry(
     range: ClosedFloatingPointRange<Float>,
     modifier: Modifier = Modifier,
     onSlide: (Float) -> Unit = { },
-    onSlideCompleted: () -> Unit = { },
+    onSlideComplete: () -> Unit = { },
     toDisplay: @Composable (Float) -> String = { it.toString() },
     steps: Int = 0,
     isEnabled: Boolean = true,
@@ -196,7 +196,7 @@ fun SliderSettingsEntry(
     Slider(
         state = state,
         setState = onSlide,
-        onSlideCompleted = onSlideCompleted,
+        onSlideComplete = onSlideComplete,
         range = range,
         steps = steps,
         modifier = Modifier
@@ -224,7 +224,7 @@ inline fun IntSettingsEntry(
 
     if (isShowingDialog) NumberFieldDialog(
         onDismiss = { isShowingDialog = false },
-        onDone = {
+        onAccept = {
             setValue(it)
             isShowingDialog = false
         },

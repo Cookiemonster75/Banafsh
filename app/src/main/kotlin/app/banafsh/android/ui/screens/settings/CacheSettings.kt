@@ -63,7 +63,7 @@ fun CacheSettings() = with(DataPreferences) {
                 EnumValueSelectorSettingsEntry(
                     title = stringResource(R.string.max_size),
                     selectedValue = coilDiskCacheMaxSize,
-                    onValueSelected = { coilDiskCacheMaxSize = it }
+                    onValueSelect = { coilDiskCacheMaxSize = it }
                 )
             }
         }
@@ -101,7 +101,7 @@ fun CacheSettings() = with(DataPreferences) {
                 EnumValueSelectorSettingsEntry(
                     title = stringResource(R.string.max_size),
                     selectedValue = exoPlayerDiskCacheMaxSize,
-                    onValueSelected = { exoPlayerDiskCacheMaxSize = it }
+                    onValueSelect = { exoPlayerDiskCacheMaxSize = it }
                 )
             }
         }

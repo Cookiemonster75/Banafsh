@@ -39,7 +39,7 @@ fun RouteHandler(
 
     RouteHandler(
         route = route,
-        onRouteChanged = { route = it },
+        onRouteChange = { route = it },
         listenToGlobalEmitter = listenToGlobalEmitter,
         handleBackPress = handleBackPress,
         transitionSpec = transitionSpec,
@@ -51,7 +51,7 @@ fun RouteHandler(
 @Composable
 fun RouteHandler(
     route: Route?,
-    onRouteChanged: (Route?) -> Unit,
+    onRouteChange: (Route?) -> Unit,
     modifier: Modifier = Modifier,
     listenToGlobalEmitter: Boolean = false,
     handleBackPress: Boolean = true,
@@ -65,18 +65,18 @@ fun RouteHandler(
         RouteHandlerScope(
             route = route,
             parameters = parameters,
-            push = onRouteChanged,
-            pop = { if (handleBackPress) backDispatcher?.onBackPressed() else onRouteChanged(null) }
+            push = onRouteChange,
+            pop = { if (handleBackPress) backDispatcher?.onBackPressed() else onRouteChange(null) }
         )
     }
 
     if (listenToGlobalEmitter && route == null) OnGlobalRoute { request ->
         request.args.forEachIndexed(parameters::set)
-        onRouteChanged(request.route)
+        onRouteChange(request.route)
     }
 
     BackHandler(enabled = handleBackPress && route != null) {
-        onRouteChanged(null)
+        onRouteChange(null)
     }
 
     updateTransition(targetState = scope, label = null).AnimatedContent(

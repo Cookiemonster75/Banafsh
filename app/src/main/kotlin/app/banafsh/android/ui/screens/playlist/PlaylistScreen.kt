@@ -15,8 +15,8 @@ import app.banafsh.android.ui.screens.Route
 fun PlaylistScreen(
     browseId: String,
     params: String?,
-    maxDepth: Int? = null,
-    shouldDedup: Boolean
+    shouldDedup: Boolean,
+    maxDepth: Int? = null
 ) {
     val saveableStateHolder = rememberSaveableStateHolder()
     PersistMapCleanup(prefix = "playlist/$browseId")
@@ -29,7 +29,7 @@ fun PlaylistScreen(
                 topIconButtonId = R.drawable.chevron_back,
                 onTopIconButtonClick = pop,
                 tabIndex = 0,
-                onTabChanged = { },
+                onTabChange = { },
                 tabColumnContent = { item ->
                     item(0, stringResource(R.string.songs), R.drawable.musical_notes)
                 }

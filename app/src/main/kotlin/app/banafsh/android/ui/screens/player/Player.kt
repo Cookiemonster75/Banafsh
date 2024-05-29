@@ -399,7 +399,7 @@ fun Player(
         ) {
             SliderDialogBody(
                 provideState = { remember(speed) { mutableFloatStateOf(speed) } },
-                onSlideCompleted = { speed = it },
+                onSlideComplete = { speed = it },
                 min = 0f,
                 max = 2f,
                 toDisplay = {
@@ -410,7 +410,7 @@ fun Player(
             )
             SliderDialogBody(
                 provideState = { remember(pitch) { mutableFloatStateOf(pitch) } },
-                onSlideCompleted = { pitch = it },
+                onSlideComplete = { pitch = it },
                 min = 0f,
                 max = 2f,
                 toDisplay = {
@@ -460,7 +460,7 @@ fun Player(
 
                         state
                     },
-                    onSlideCompleted = { submit(it) },
+                    onSlideComplete = { submit(it) },
                     min = -20f,
                     max = 20f,
                     toDisplay = { stringResource(R.string.format_db, "%.2f".format(it)) }

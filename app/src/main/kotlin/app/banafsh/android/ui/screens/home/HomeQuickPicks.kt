@@ -102,7 +102,10 @@ fun QuickPicks(
     LaunchedEffect(DataPreferences.quickPicksSource) {
         if (
             DataPreferences.shouldCacheQuickPicks && !DataPreferences.cachedQuickPicks.let {
-                it.albums.isNullOrEmpty() && it.artists.isNullOrEmpty() && it.playlists.isNullOrEmpty() && it.songs.isNullOrEmpty()
+                it.albums.isNullOrEmpty() &&
+                        it.artists.isNullOrEmpty() &&
+                        it.playlists.isNullOrEmpty() &&
+                        it.songs.isNullOrEmpty()
             }
         ) relatedPageResult = Result.success(DataPreferences.cachedQuickPicks)
 

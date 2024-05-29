@@ -39,7 +39,7 @@ fun BuiltInPlaylistScreen(builtInPlaylist: BuiltInPlaylist) {
                 topIconButtonId = R.drawable.chevron_back,
                 onTopIconButtonClick = pop,
                 tabIndex = tabIndex,
-                onTabChanged = onTabIndexChanged,
+                onTabChange = onTabIndexChanged,
                 tabColumnContent = { item ->
                     item(0, stringResource(R.string.favorites), R.drawable.heart)
                     item(1, stringResource(R.string.offline), R.drawable.airplane)

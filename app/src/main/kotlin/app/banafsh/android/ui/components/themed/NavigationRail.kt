@@ -45,9 +45,9 @@ inline fun NavigationRail(
     topIconButtonId: Int,
     noinline onTopIconButtonClick: () -> Unit,
     tabIndex: Int,
-    crossinline onTabIndexChanged: (Int) -> Unit,
-    content: @Composable ColumnScope.(@Composable (Int, String, Int) -> Unit) -> Unit,
-    modifier: Modifier = Modifier
+    crossinline onTabIndexChange: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.(@Composable (Int, String, Int) -> Unit) -> Unit
 ) {
     val (colorPalette, typography) = LocalAppearance.current
 
@@ -133,7 +133,7 @@ inline fun NavigationRail(
 
                 val contentModifier = Modifier
                     .clip(24.dp.roundedShape)
-                    .clickable(onClick = { onTabIndexChanged(index) })
+                    .clickable(onClick = { onTabIndexChange(index) })
 
                 if (isLandscape) Column(
                     horizontalAlignment = Alignment.CenterHorizontally,

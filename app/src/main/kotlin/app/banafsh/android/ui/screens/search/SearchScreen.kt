@@ -77,7 +77,7 @@ fun SearchScreen(
                 topIconButtonId = R.drawable.chevron_back,
                 onTopIconButtonClick = pop,
                 tabIndex = tabIndex,
-                onTabChanged = onTabChanged,
+                onTabChange = onTabChanged,
                 tabColumnContent = { item ->
                     item(0, stringResource(R.string.online), R.drawable.globe)
                     item(1, stringResource(R.string.library), R.drawable.library)
@@ -87,7 +87,7 @@ fun SearchScreen(
                     when (currentTabIndex) {
                         0 -> OnlineSearch(
                             textFieldValue = textFieldValue,
-                            onTextFieldValueChanged = onTextFieldValueChanged,
+                            onTextFieldValueChange = onTextFieldValueChanged,
                             onSearch = onSearch,
                             onViewPlaylist = onViewPlaylist,
                             decorationBox = decorationBox
@@ -95,7 +95,7 @@ fun SearchScreen(
 
                         1 -> LocalSongSearch(
                             textFieldValue = textFieldValue,
-                            onTextFieldValueChanged = onTextFieldValueChanged,
+                            onTextFieldValueChange = onTextFieldValueChanged,
                             decorationBox = decorationBox
                         )
                     }

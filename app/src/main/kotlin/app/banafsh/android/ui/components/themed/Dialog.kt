@@ -56,7 +56,7 @@ import kotlinx.coroutines.delay
 fun TextFieldDialog(
     hintText: String,
     onDismiss: () -> Unit,
-    onDone: (String) -> Unit,
+    onAccept: (String) -> Unit,
     modifier: Modifier = Modifier,
     cancelText: String = stringResource(R.string.cancel),
     doneText: String = stringResource(R.string.done),
@@ -87,7 +87,7 @@ fun TextFieldDialog(
                 onDone = {
                     if (isTextInputValid(value)) {
                         onDismiss()
-                        onDone(value)
+                        onAccept(value)
                     }
                 }
             ),
@@ -113,7 +113,7 @@ fun TextFieldDialog(
                 onClick = {
                     if (isTextInputValid(value)) {
                         onDismiss()
-                        onDone(value)
+                        onAccept(value)
                     }
                 }
             )
@@ -129,7 +129,7 @@ fun TextFieldDialog(
 @Composable
 fun <T> NumberFieldDialog(
     onDismiss: () -> Unit,
-    onDone: (T) -> Unit,
+    onAccept: (T) -> Unit,
     initialValue: T,
     defaultValue: T,
     convert: (String) -> T?,
@@ -141,7 +141,7 @@ fun <T> NumberFieldDialog(
 ) where T : Number, T : Comparable<T> = TextFieldDialog(
     hintText = "",
     onDismiss = onDismiss,
-    onDone = { onDone((convert(it) ?: defaultValue).coerceIn(range)) },
+    onAccept = { onAccept((convert(it) ?: defaultValue).coerceIn(range)) },
     modifier = modifier,
     cancelText = cancelText,
     doneText = doneText,
@@ -224,7 +224,7 @@ fun <T> ValueSelectorDialog(
     title: String,
     selectedValue: T,
     values: ImmutableList<T>,
-    onValueSelected: (T) -> Unit,
+    onValueSelect: (T) -> Unit,
     modifier: Modifier = Modifier,
     valueText: @Composable (T) -> String = { it.toString() }
 ) = Dialog(onDismissRequest = onDismiss) {
@@ -233,7 +233,7 @@ fun <T> ValueSelectorDialog(
         title = title,
         selectedValue = selectedValue,
         values = values,
-        onValueSelected = onValueSelected,
+        onValueSelect = onValueSelect,
         modifier = modifier
             .padding(all = 48.dp)
             .background(
@@ -251,7 +251,7 @@ fun <T> ValueSelectorDialogBody(
     title: String,
     selectedValue: T?,
     values: ImmutableList<T>,
-    onValueSelected: (T) -> Unit,
+    onValueSelect: (T) -> Unit,
     modifier: Modifier = Modifier,
     valueText: @Composable (T) -> String = { it.toString() }
 ) = Column(modifier = modifier) {
@@ -272,7 +272,7 @@ fun <T> ValueSelectorDialogBody(
                     .clickable(
                         onClick = {
                             onDismiss()
-                            onValueSelected(value)
+                            onValueSelect(value)
                         }
                     )
                     .padding(vertical = 12.dp, horizontal = 24.dp)
@@ -330,7 +330,7 @@ fun <T> ValueSelectorDialogBody(
 @Composable
 fun ColumnScope.SliderDialogBody(
     provideState: @Composable () -> MutableState<Float>,
-    onSlideCompleted: (newState: Float) -> Unit,
+    onSlideComplete: (newState: Float) -> Unit,
     min: Float,
     max: Float,
     toDisplay: @Composable (Float) -> String = { it.toString() },
@@ -349,7 +349,7 @@ fun ColumnScope.SliderDialogBody(
     Slider(
         state = state,
         setState = { state = it },
-        onSlideCompleted = { onSlideCompleted(state) },
+        onSlideComplete = { onSlideComplete(state) },
         range = min..max,
         steps = steps,
         modifier = Modifier

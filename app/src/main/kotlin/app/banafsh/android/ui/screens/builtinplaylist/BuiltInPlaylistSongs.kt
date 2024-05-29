@@ -93,7 +93,7 @@ fun BuiltInPlaylistSongs(
                     .distinctUntilChanged()
                     .cancellable()
             }
-        }.collect { songs = it }
+        }.collect { songs = it.toImmutableList() }
     }
 
     val lazyListState = rememberLazyListState()
@@ -151,7 +151,7 @@ fun BuiltInPlaylistSongs(
                             ),
                             selectedValue = topListPeriod,
                             values = DataPreferences.TopListPeriod.entries.toImmutableList(),
-                            onValueSelected = { topListPeriod = it },
+                            onValueSelect = { topListPeriod = it },
                             valueText = { it.displayName() }
                         )
                     }

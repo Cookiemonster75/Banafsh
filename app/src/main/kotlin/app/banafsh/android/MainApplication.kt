@@ -312,6 +312,7 @@ class MainActivity : ComponentActivity(), MonetColorsChangedListener {
         }
     }
 
+    @Suppress("CyclomaticComplexMethod")
     private fun handleIntent(intent: Intent) {
         val uri = intent.data ?: intent.getStringExtra(Intent.EXTRA_TEXT)?.toUri() ?: return
         intent.data = null

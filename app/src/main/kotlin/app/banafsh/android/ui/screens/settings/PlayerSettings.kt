@@ -86,7 +86,7 @@ fun PlayerSettings() = with(PlayerPreferences) {
                         text = stringResource(R.string.minimum_silence_length_description),
                         state = newValue,
                         onSlide = { newValue = it },
-                        onSlideCompleted = {
+                        onSlideComplete = {
                             minimumSilence = newValue.toLong() * 1000L
                             changed = true
                         },
@@ -132,7 +132,7 @@ fun PlayerSettings() = with(PlayerPreferences) {
                     text = stringResource(R.string.loudness_base_gain_description),
                     state = newValue,
                     onSlide = { newValue = it },
-                    onSlideCompleted = { volumeNormalizationBaseGain = newValue },
+                    onSlideComplete = { volumeNormalizationBaseGain = newValue },
                     toDisplay = { stringResource(R.string.format_db, "%.2f".format(it)) },
                     range = -20.00f..20.00f
                 )
@@ -153,7 +153,7 @@ fun PlayerSettings() = with(PlayerPreferences) {
                     text = stringResource(R.string.bass_boost_level_description),
                     state = newValue,
                     onSlide = { newValue = it },
-                    onSlideCompleted = { bassBoostLevel = newValue.toInt() },
+                    onSlideComplete = { bassBoostLevel = newValue.toInt() },
                     toDisplay = { (it * 1000f).toInt().toString() },
                     range = 0f..1f
                 )

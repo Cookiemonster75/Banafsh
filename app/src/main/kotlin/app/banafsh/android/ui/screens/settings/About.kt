@@ -257,7 +257,7 @@ fun About() = SettingsCategoryScreen(
         EnumValueSelectorSettingsEntry(
             title = stringResource(R.string.version_check),
             selectedValue = DataPreferences.versionCheckPeriod,
-            onValueSelected = onSelect@{
+            onValueSelect = onSelect@{
                 DataPreferences.versionCheckPeriod = it
                 if (isAtLeastAndroid13 && it.period != null && !hasPermission)
                     launcher.launch(permission)

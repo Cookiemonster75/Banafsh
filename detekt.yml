@@ -53,6 +53,8 @@ Compose:
     active: true
 
 complexity:
+  ComplexCondition:
+    active: false
   CyclomaticComplexMethod:
     ignoreAnnotated:
       - androidx.compose.runtime.Composable

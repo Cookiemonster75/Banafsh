@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
@@ -37,15 +39,15 @@ fun LyricsDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) = Dialog(onDismissRequest = onDismiss) {
-    val appearance = LocalAppearance.current
-    val (colorPalette) = appearance
-    val thumbnailShape = appearance.thumbnailShape
+    val currentOnDismiss by rememberUpdatedState(onDismiss)
+
+    val (colorPalette, _, _, thumbnailShape) = LocalAppearance.current
 
     val player = LocalPlayerServiceBinder.current?.player ?: return@Dialog
     val (window, error) = windowState()
 
     LaunchedEffect(window, error) {
-        if (window == null || window.mediaItem.isLocal || error != null) onDismiss()
+        if (window == null || window.mediaItem.isLocal || error != null) currentOnDismiss()
     }
 
     window ?: return@Dialog
@@ -119,7 +121,7 @@ fun LyricsDialog(
                 mediaMetadataProvider = currentWindow.mediaItem::mediaMetadata,
                 durationProvider = player::getDuration,
                 ensureSongInserted = { Database.insert(currentWindow.mediaItem) },
-                onMenuLaunched = onDismiss
+                onMenuLaunch = onDismiss
             )
         }
     }

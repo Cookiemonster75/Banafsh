@@ -10,7 +10,7 @@ import app.banafsh.android.lib.core.ui.LocalAppearance
 fun Slider(
     state: Float,
     setState: (Float) -> Unit,
-    onSlideCompleted: () -> Unit,
+    onSlideComplete: () -> Unit,
     range: ClosedFloatingPointRange<Float>,
     modifier: Modifier = Modifier,
     @IntRange(from = 0) steps: Int = 0
@@ -20,7 +20,7 @@ fun Slider(
     androidx.compose.material3.Slider(
         value = state,
         onValueChange = setState,
-        onValueChangeFinished = onSlideCompleted,
+        onValueChangeFinished = onSlideComplete,
         valueRange = range,
         modifier = modifier,
         steps = steps,

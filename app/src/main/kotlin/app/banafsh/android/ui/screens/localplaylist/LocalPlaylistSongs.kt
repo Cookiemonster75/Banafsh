@@ -65,6 +65,7 @@ import app.banafsh.android.utils.forcePlayAtIndex
 import app.banafsh.android.utils.forcePlayFromBeginning
 import app.banafsh.android.utils.launchYouTubeMusic
 import app.banafsh.android.utils.toast
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -73,7 +74,7 @@ import kotlinx.coroutines.runBlocking
 @Composable
 fun LocalPlaylistSongs(
     playlist: Playlist,
-    songs: List<Song>,
+    songs: ImmutableList<Song>,
     onDelete: () -> Unit,
     thumbnailContent: @Composable () -> Unit,
     modifier: Modifier = Modifier
@@ -106,7 +107,7 @@ fun LocalPlaylistSongs(
         hintText = stringResource(R.string.enter_playlist_name_prompt),
         initialTextInput = playlist.name,
         onDismiss = { isRenaming = false },
-        onDone = { text ->
+        onAccept = { text ->
             query {
                 Database.update(playlist.copy(name = text))
             }
@@ -156,8 +157,9 @@ fun LocalPlaylistSongs(
 
                             Spacer(modifier = Modifier.weight(1f))
 
-                            PlaylistDownloadIcon(songs = songs.map { it.asMediaItem }
-                                .toImmutableList())
+                            PlaylistDownloadIcon(
+                                songs = songs.map { it.asMediaItem }.toImmutableList()
+                            )
 
                             HeaderIconButton(
                                 icon = R.drawable.ellipsis_horizontal,

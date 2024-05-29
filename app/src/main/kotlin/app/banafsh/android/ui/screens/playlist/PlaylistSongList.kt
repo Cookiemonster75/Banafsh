@@ -100,7 +100,7 @@ fun PlaylistSongList(
         hintText = stringResource(R.string.enter_playlist_name_prompt),
         initialTextInput = playlistPage?.title.orEmpty(),
         onDismiss = { isImportingPlaylist = false },
-        onDone = { text ->
+        onAccept = { text ->
             query {
                 transaction {
                     val playlistId = Database.insert(

@@ -508,7 +508,7 @@ fun Queue(
                                 if (isCreatingNewPlaylist) TextFieldDialog(
                                     hintText = stringResource(R.string.enter_playlist_name_prompt),
                                     onDismiss = { isCreatingNewPlaylist = false },
-                                    onDone = { text ->
+                                    onAccept = { text ->
                                         menuState.hide()
                                         addToPlaylist(Playlist(name = text), 0)
                                     }

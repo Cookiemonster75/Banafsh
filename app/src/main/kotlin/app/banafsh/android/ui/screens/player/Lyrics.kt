@@ -110,7 +110,7 @@ fun Lyrics(
     durationProvider: () -> Long,
     ensureSongInserted: () -> Unit,
     modifier: Modifier = Modifier,
-    onMenuLaunched: () -> Unit = { },
+    onMenuLaunch: () -> Unit = { },
     onOpenDialog: (() -> Unit)? = null,
     shouldShowSynchronizedLyrics: Boolean = PlayerPreferences.isShowingSynchronizedLyrics,
     setShouldShowSynchronizedLyrics: (Boolean) -> Unit = {
@@ -121,6 +121,7 @@ fun Lyrics(
     enter = fadeIn(),
     exit = fadeOut()
 ) {
+    val currentEnsureSongInserted by rememberUpdatedState(ensureSongInserted)
     val currentMediaMetadataProvider by rememberUpdatedState(mediaMetadataProvider)
     val currentDurationProvider by rememberUpdatedState(durationProvider)
 
@@ -208,7 +209,7 @@ fun Lyrics(
                             ).also {
                                 transaction {
                                     runCatching {
-                                        ensureSongInserted()
+                                        currentEnsureSongInserted()
                                         Database.upsert(it)
                                     }
                                 }
@@ -232,10 +233,10 @@ fun Lyrics(
         maxLines = 10,
         isTextInputValid = { true },
         onDismiss = { isEditing = false },
-        onDone = {
+        onAccept = {
             transaction {
                 runCatching {
-                    ensureSongInserted()
+                    currentEnsureSongInserted()
 
                     Database.upsert(
                         if (shouldShowSynchronizedLyrics) Lyrics(
@@ -311,7 +312,7 @@ fun Lyrics(
                 title = stringResource(R.string.choose_lyric_track),
                 selectedValue = null,
                 values = tracks.toImmutableList(),
-                onValueSelected = {
+                onValueSelect = {
                     transaction {
                         Database.upsert(
                             Lyrics(
@@ -498,7 +499,7 @@ fun Lyrics(
                     indication = rememberRipple(bounded = false),
                     interactionSource = remember { MutableInteractionSource() },
                     onClick = {
-                        onMenuLaunched()
+                        onMenuLaunch()
                         menuState.display {
                             Menu {
                                 MenuEntry(
@@ -554,7 +555,7 @@ fun Lyrics(
                                         menuState.hide()
                                         transaction {
                                             runCatching {
-                                                ensureSongInserted()
+                                                currentEnsureSongInserted()
 
                                                 Database.upsert(
                                                     if (shouldShowSynchronizedLyrics) Lyrics(

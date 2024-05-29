@@ -62,13 +62,14 @@ import app.banafsh.android.utils.center
 import app.banafsh.android.utils.disabled
 import app.banafsh.android.utils.medium
 import app.banafsh.android.utils.secondary
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
 fun OnlineSearch(
     textFieldValue: TextFieldValue,
-    onTextFieldValueChanged: (TextFieldValue) -> Unit,
+    onTextFieldValueChange: (TextFieldValue) -> Unit,
     onSearch: (String) -> Unit,
     onViewPlaylist: (String) -> Unit,
     decorationBox: @Composable (@Composable () -> Unit) -> Unit,
@@ -81,7 +82,7 @@ fun OnlineSearch(
     LaunchedEffect(textFieldValue.text) {
         if (!DataPreferences.pauseSearchHistory) Database.queries("%${textFieldValue.text}%")
             .distinctUntilChanged { old, new -> old.size == new.size }
-            .collect { history = it }
+            .collect { history = it.toImmutableList() }
     }
 
     var suggestionsResult by persist<Result<List<String>?>?>("search/online/suggestionsResult")
@@ -129,7 +130,7 @@ fun OnlineSearch(
                     titleContent = {
                         BasicTextField(
                             value = textFieldValue,
-                            onValueChange = onTextFieldValueChanged,
+                            onValueChange = onTextFieldValueChange,
                             textStyle = typography.xxl.medium.align(TextAlign.End),
                             singleLine = true,
                             maxLines = 1,
@@ -160,7 +161,7 @@ fun OnlineSearch(
 
                         if (textFieldValue.text.isNotEmpty()) SecondaryTextButton(
                             text = stringResource(R.string.clear),
-                            onClick = { onTextFieldValueChanged(TextFieldValue()) }
+                            onClick = { onTextFieldValueChange(TextFieldValue()) }
                         )
                     }
                 )
@@ -222,7 +223,7 @@ fun OnlineSearch(
                                 indication = rippleIndication,
                                 interactionSource = remember { MutableInteractionSource() },
                                 onClick = {
-                                    onTextFieldValueChanged(
+                                    onTextFieldValueChange(
                                         TextFieldValue(
                                             text = searchQuery.query,
                                             selection = TextRange(searchQuery.query.length)
@@ -269,7 +270,7 @@ fun OnlineSearch(
                                     indication = rippleIndication,
                                     interactionSource = remember { MutableInteractionSource() },
                                     onClick = {
-                                        onTextFieldValueChanged(
+                                        onTextFieldValueChange(
                                             TextFieldValue(
                                                 text = suggestion,
                                                 selection = TextRange(suggestion.length)

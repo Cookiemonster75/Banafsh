@@ -43,6 +43,7 @@ import app.banafsh.android.ui.components.themed.Header
 import app.banafsh.android.ui.components.themed.HeaderIconButton
 import app.banafsh.android.ui.items.ArtistItem
 import app.banafsh.android.ui.screens.Route
+import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalFoundationApi::class)
 @Route
@@ -58,7 +59,7 @@ fun HomeArtistList(
     LaunchedEffect(artistSortBy, artistSortOrder) {
         Database
             .artists(artistSortBy, artistSortOrder)
-            .collect { items = it }
+            .collect { items = it.toImmutableList() }
     }
 
     val sortOrderIconRotation by animateFloatAsState(

@@ -88,7 +88,7 @@ fun SyncSettings() {
             isLoading -> CircularProgressIndicator(modifier = Modifier.padding(all = 8.dp))
 
             else -> Column(modifier = Modifier.fillMaxWidth()) {
-                var instances: List<Instance> by persistList(tag = "settings/sync/piped/instances")
+                var instances by persistList<Instance>(tag = "settings/sync/piped/instances")
                 var loadingInstances by rememberSaveable { mutableStateOf(true) }
                 var selectedInstance: Int? by rememberSaveable { mutableStateOf(null) }
                 var username by rememberSaveable { mutableStateOf("") }
@@ -100,7 +100,7 @@ fun SyncSettings() {
                 LaunchedEffect(Unit) {
                     Piped.getInstances()?.getOrNull()?.let {
                         selectedInstance = null
-                        instances = it
+                        instances = it.toImmutableList()
                         canSelect = true
                     } ?: run { instancesUnavailable = true }
                     loadingInstances = false
@@ -121,7 +121,7 @@ fun SyncSettings() {
                     title = stringResource(R.string.instance),
                     selectedValue = selectedInstance,
                     values = instances.indices.toImmutableList(),
-                    onValueSelected = { selectedInstance = it },
+                    onValueSelect = { selectedInstance = it },
                     valueText = { idx ->
                         idx?.let { instances.getOrNull(it)?.name }
                             ?: if (instancesUnavailable) stringResource(R.string.error_piped_instances_unavailable)

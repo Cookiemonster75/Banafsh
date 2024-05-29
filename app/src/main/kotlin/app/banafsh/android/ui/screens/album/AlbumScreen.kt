@@ -43,6 +43,7 @@ import app.banafsh.android.ui.screens.albumRoute
 import app.banafsh.android.ui.screens.searchresult.ItemsPage
 import app.banafsh.android.utils.asMediaItem
 import com.valentinilk.shimmer.shimmer
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.cancellable
@@ -77,7 +78,7 @@ fun AlbumScreen(browseId: String) {
                     .cancellable()
             ) { currentAlbum, currentSongs ->
                 album = currentAlbum
-                songs = currentSongs
+                songs = currentSongs.toImmutableList()
 
                 if (currentAlbum?.timestamp != null && currentSongs.isNotEmpty()) return@combine
 
@@ -186,7 +187,7 @@ fun AlbumScreen(browseId: String) {
                 topIconButtonId = R.drawable.chevron_back,
                 onTopIconButtonClick = pop,
                 tabIndex = tabIndex,
-                onTabChanged = { newTab -> tabIndexState.update { newTab } },
+                onTabChange = { newTab -> tabIndexState.update { newTab } },
                 tabColumnContent = { item ->
                     item(0, stringResource(R.string.songs), R.drawable.musical_notes)
                     item(1, stringResource(R.string.other_versions), R.drawable.disc)

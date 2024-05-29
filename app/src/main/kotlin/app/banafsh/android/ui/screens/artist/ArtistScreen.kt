@@ -163,7 +163,7 @@ fun ArtistScreen(browseId: String) {
                 topIconButtonId = R.drawable.chevron_back,
                 onTopIconButtonClick = pop,
                 tabIndex = UIStatePreferences.artistScreenTabIndex,
-                onTabChanged = { UIStatePreferences.artistScreenTabIndex = it },
+                onTabChange = { UIStatePreferences.artistScreenTabIndex = it },
                 tabColumnContent = { item ->
                     item(0, stringResource(R.string.overview), R.drawable.sparkles)
                     item(1, stringResource(R.string.songs), R.drawable.musical_notes)

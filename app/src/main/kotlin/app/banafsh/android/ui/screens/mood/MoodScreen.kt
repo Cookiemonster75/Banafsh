@@ -26,7 +26,7 @@ fun MoodScreen(mood: Mood) {
                 topIconButtonId = R.drawable.chevron_back,
                 onTopIconButtonClick = pop,
                 tabIndex = 0,
-                onTabChanged = { },
+                onTabChange = { },
                 tabColumnContent = { item ->
                     item(0, stringResource(R.string.mood), R.drawable.disc)
                 }

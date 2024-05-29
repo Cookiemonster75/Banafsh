@@ -101,7 +101,7 @@ fun HomeScreen(onPlaylistUrl: (String) -> Unit) {
                 topIconButtonId = R.drawable.settings,
                 onTopIconButtonClick = { settingsRoute() },
                 tabIndex = UIStatePreferences.homeScreenTabIndex,
-                onTabChanged = { UIStatePreferences.homeScreenTabIndex = it },
+                onTabChange = { UIStatePreferences.homeScreenTabIndex = it },
                 tabColumnContent = { item ->
                     item(0, stringResource(R.string.quick_picks), R.drawable.sparkles)
                     item(1, stringResource(R.string.discover), R.drawable.globe)

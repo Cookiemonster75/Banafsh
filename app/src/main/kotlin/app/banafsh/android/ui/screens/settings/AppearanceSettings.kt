@@ -39,20 +39,20 @@ fun AppearanceSettings() = with(AppearancePreferences) {
             EnumValueSelectorSettingsEntry(
                 title = stringResource(R.string.color_source),
                 selectedValue = colorSource,
-                onValueSelected = { colorSource = it },
+                onValueSelect = { colorSource = it },
                 valueText = { it.nameLocalized }
             )
             EnumValueSelectorSettingsEntry(
                 title = stringResource(R.string.color_mode),
                 selectedValue = colorMode,
-                onValueSelected = { colorMode = it },
+                onValueSelect = { colorMode = it },
                 valueText = { it.nameLocalized }
             )
             AnimatedVisibility(visible = colorMode == ColorMode.Dark || (colorMode == ColorMode.System && isDark)) {
                 EnumValueSelectorSettingsEntry(
                     title = stringResource(R.string.darkness),
                     selectedValue = darkness,
-                    onValueSelected = { darkness = it },
+                    onValueSelect = { darkness = it },
                     valueText = { it.nameLocalized }
                 )
             }
@@ -61,7 +61,7 @@ fun AppearanceSettings() = with(AppearancePreferences) {
             EnumValueSelectorSettingsEntry(
                 title = stringResource(R.string.thumbnail_roundness),
                 selectedValue = thumbnailRoundness,
-                onValueSelected = { thumbnailRoundness = it },
+                onValueSelect = { thumbnailRoundness = it },
                 trailingContent = {
                     Spacer(
                         modifier = Modifier
@@ -93,7 +93,7 @@ fun AppearanceSettings() = with(AppearancePreferences) {
             if (googleFontsAvailable()) EnumValueSelectorSettingsEntry(
                 title = stringResource(R.string.font),
                 selectedValue = fontFamily,
-                onValueSelected = { fontFamily = it },
+                onValueSelect = { fontFamily = it },
                 valueText = {
                     if (it == BuiltInFontFamily.System) stringResource(R.string.use_system_font) else it.name
                 }
@@ -139,7 +139,7 @@ fun AppearanceSettings() = with(AppearancePreferences) {
             EnumValueSelectorSettingsEntry(
                 title = stringResource(R.string.seek_bar_style),
                 selectedValue = PlayerPreferences.seekBarStyle,
-                onValueSelected = { PlayerPreferences.seekBarStyle = it },
+                onValueSelect = { PlayerPreferences.seekBarStyle = it },
                 valueText = { it.displayName() }
             )
 
@@ -150,7 +150,7 @@ fun AppearanceSettings() = with(AppearancePreferences) {
                 EnumValueSelectorSettingsEntry(
                     title = stringResource(R.string.seek_bar_quality),
                     selectedValue = PlayerPreferences.wavySeekBarQuality,
-                    onValueSelected = { PlayerPreferences.wavySeekBarQuality = it },
+                    onValueSelect = { PlayerPreferences.wavySeekBarQuality = it },
                     valueText = { it.displayName() }
                 )
             }

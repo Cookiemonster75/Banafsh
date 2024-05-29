@@ -42,12 +42,13 @@ import app.banafsh.android.utils.asMediaItem
 import app.banafsh.android.utils.forcePlay
 import app.banafsh.android.utils.medium
 import app.banafsh.android.utils.toSong
+import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LocalSongSearch(
     textFieldValue: TextFieldValue,
-    onTextFieldValueChanged: (TextFieldValue) -> Unit,
+    onTextFieldValueChange: (TextFieldValue) -> Unit,
     decorationBox: @Composable (@Composable () -> Unit) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -63,7 +64,7 @@ fun LocalSongSearch(
             LocalDB
                 .search("%${textFieldValue.text}%")
                 .collect {
-                    items = it.map { localSong -> localSong.toSong() }
+                    items = it.map { localSong -> localSong.toSong() }.toImmutableList()
                 }
         }
     }
@@ -85,7 +86,7 @@ fun LocalSongSearch(
                     titleContent = {
                         BasicTextField(
                             value = textFieldValue,
-                            onValueChange = onTextFieldValueChanged,
+                            onValueChange = onTextFieldValueChange,
                             textStyle = typography.xxl.medium.align(TextAlign.End),
                             singleLine = true,
                             maxLines = 1,
@@ -97,7 +98,7 @@ fun LocalSongSearch(
                     actionsContent = {
                         if (textFieldValue.text.isNotEmpty()) SecondaryTextButton(
                             text = stringResource(R.string.clear),
-                            onClick = { onTextFieldValueChanged(TextFieldValue()) }
+                            onClick = { onTextFieldValueChange(TextFieldValue()) }
                         )
                     }
                 )

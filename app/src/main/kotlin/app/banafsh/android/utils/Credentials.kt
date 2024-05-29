@@ -43,7 +43,11 @@ private suspend inline fun <T> wrapper(
     }
 }
 
-private inline fun <reified Response : Any, reified Exception : Throwable, reified CancellationException : Exception> callback(
+private inline fun <
+        reified Response : Any,
+        reified Exception : Throwable,
+        reified CancellationException : Exception
+        > callback(
     cont: CancellableContinuation<Response>
 ) = object : CredentialManagerCallback<Response, Exception> {
     override fun onError(e: Exception) {

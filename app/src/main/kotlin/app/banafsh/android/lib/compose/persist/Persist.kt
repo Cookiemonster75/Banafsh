@@ -6,6 +6,8 @@ import androidx.compose.runtime.SnapshotMutationPolicy
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.structuralEqualityPolicy
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Suppress("UNCHECKED_CAST")
 @Composable
@@ -23,8 +25,8 @@ fun <T> persist(
 }
 
 @Composable
-fun <T> persistList(tag: String): MutableState<List<T>> =
-    persist(tag = tag, initialValue = emptyList())
+fun <T> persistList(tag: String): MutableState<ImmutableList<T>> =
+    persist(tag = tag, initialValue = persistentListOf())
 
 @Composable
 fun <T : Any?> persist(tag: String): MutableState<T?> =

@@ -36,13 +36,14 @@ import app.banafsh.android.utils.asMediaItem
 import app.banafsh.android.utils.enqueue
 import app.banafsh.android.utils.forcePlayAtIndex
 import app.banafsh.android.utils.forcePlayFromBeginning
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 // TODO: migrate to single impl for all 'song lists'
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AlbumSongs(
-    songs: List<Song>,
+    songs: ImmutableList<Song>,
     headerContent: @Composable (
         beforeContent: (@Composable () -> Unit)?,
         afterContent: (@Composable () -> Unit)?
