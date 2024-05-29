@@ -20,7 +20,9 @@ object UrlSerializer : KSerializer<Url> {
     override fun serialize(encoder: Encoder, value: Url) = encoder.encodeString(value.toString())
 }
 
-typealias UrlString = @Serializable(with = UrlSerializer::class) Url
+typealias UrlString =
+@Serializable(with = UrlSerializer::class)
+Url
 
 object SecondLocalDateTimeSerializer : KSerializer<LocalDateTime> {
     override val descriptor = PrimitiveSerialDescriptor("DateTimeSeconds", PrimitiveKind.LONG)
@@ -32,7 +34,9 @@ object SecondLocalDateTimeSerializer : KSerializer<LocalDateTime> {
         encoder.encodeLong(value.toInstant(TimeZone.UTC).epochSeconds)
 }
 
-typealias DateTimeSeconds = @Serializable(with = SecondLocalDateTimeSerializer::class) LocalDateTime
+typealias DateTimeSeconds =
+@Serializable(with = SecondLocalDateTimeSerializer::class)
+LocalDateTime
 
 object UUIDSerializer : KSerializer<UUID> {
     override val descriptor = PrimitiveSerialDescriptor("UUID", PrimitiveKind.STRING)
@@ -40,4 +44,6 @@ object UUIDSerializer : KSerializer<UUID> {
     override fun serialize(encoder: Encoder, value: UUID) = encoder.encodeString(value.toString())
 }
 
-typealias UUIDString = @Serializable(with = UUIDSerializer::class) UUID
+typealias UUIDString =
+@Serializable(with = UUIDSerializer::class)
+UUID

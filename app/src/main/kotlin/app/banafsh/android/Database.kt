@@ -609,7 +609,7 @@ interface Database {
     ],
     views = [SortedSongPlaylistMap::class],
     version = 1,
-    exportSchema = true,
+    exportSchema = true
 )
 @TypeConverters(Converters::class)
 abstract class DatabaseInitializer protected constructor() : RoomDatabase() {

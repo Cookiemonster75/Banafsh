@@ -184,13 +184,15 @@ fun SyncSettings() {
                             username.isNotBlank() && password.isNotBlank(),
                     onClick = {
                         @Suppress("Wrapping") // thank you ktlint
-                        (customInstance?.let {
+                        (
+                            customInstance?.let {
                             runCatching {
                                 Url(it)
                             }.getOrNull() ?: runCatching {
                                 Url("https://$it")
                             }.getOrNull()
-                        } ?: selectedInstance?.let { instances[it].apiBaseUrl })?.let { url ->
+                        } ?: selectedInstance?.let { instances[it].apiBaseUrl }
+                        )?.let { url ->
                             coroutineScope.launch {
                                 isLoading = true
                                 val session = Piped.login(

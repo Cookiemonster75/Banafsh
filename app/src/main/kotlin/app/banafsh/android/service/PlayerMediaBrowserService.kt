@@ -317,7 +317,7 @@ class PlayerMediaBrowserService : MediaBrowserService(), ServiceConnection {
                         LocalDB
                             .localSongs(
                                 sortBy = OrderPreferences.localSongSortBy,
-                                sortOrder = OrderPreferences.localSongSortOrder,
+                                sortOrder = OrderPreferences.localSongSortOrder
                             )
                             .map { songs ->
                                 songs

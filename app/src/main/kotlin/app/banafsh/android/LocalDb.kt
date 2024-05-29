@@ -73,7 +73,6 @@ interface LocalDB {
 
     @Delete
     fun delete(song: LocalSong)
-
 }
 
 @androidx.room.Database(
@@ -91,7 +90,7 @@ abstract class LocalDBInitializer protected constructor() : RoomDatabase() {
         private fun buildDatabase() = Room
             .inMemoryDatabaseBuilder(
                 context = Dependencies.application.applicationContext,
-                klass = LocalDBInitializer::class.java,
+                klass = LocalDBInitializer::class.java
             ).build()
 
         operator fun invoke() {

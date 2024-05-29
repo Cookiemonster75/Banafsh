@@ -15,7 +15,9 @@ object UrlSerializer : KSerializer<Url> {
     override fun serialize(encoder: Encoder, value: Url) = encoder.encodeString(value.toString())
 }
 
-typealias SerializableUrl = @Serializable(with = UrlSerializer::class) Url
+typealias SerializableUrl =
+@Serializable(with = UrlSerializer::class)
+Url
 
 object Iso8601DateSerializer : KSerializer<LocalDateTime> {
     override val descriptor =
@@ -28,4 +30,6 @@ object Iso8601DateSerializer : KSerializer<LocalDateTime> {
         encoder.encodeString(value.toString())
 }
 
-typealias SerializableIso8601Date = @Serializable(with = Iso8601DateSerializer::class) LocalDateTime
+typealias SerializableIso8601Date =
+@Serializable(with = Iso8601DateSerializer::class)
+LocalDateTime

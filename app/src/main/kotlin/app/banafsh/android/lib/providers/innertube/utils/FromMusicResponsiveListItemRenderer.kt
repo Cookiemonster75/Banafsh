@@ -5,7 +5,6 @@ import app.banafsh.android.lib.providers.innertube.models.MusicResponsiveListIte
 import app.banafsh.android.lib.providers.innertube.models.NavigationEndpoint
 import app.banafsh.android.lib.providers.innertube.models.isExplicit
 
-
 fun Innertube.SongItem.Companion.from(renderer: MusicResponsiveListItemRenderer) =
     Innertube.SongItem(
         info = renderer

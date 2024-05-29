@@ -61,7 +61,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.withContext
 
-
 @Composable
 fun Controls(
     media: UiMedia,
