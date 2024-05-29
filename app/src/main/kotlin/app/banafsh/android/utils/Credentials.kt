@@ -1,19 +1,14 @@
 package app.banafsh.android.utils
 
 import android.content.Context
-import android.os.CancellationSignal
-import androidx.credentials.CreateCredentialResponse
 import androidx.credentials.CreatePasswordRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.CredentialManagerCallback
 import androidx.credentials.GetCredentialRequest
-import androidx.credentials.GetCredentialResponse
 import androidx.credentials.GetPasswordOption
 import androidx.credentials.PasswordCredential
 import androidx.credentials.exceptions.CreateCredentialCancellationException
-import androidx.credentials.exceptions.CreateCredentialException
 import androidx.credentials.exceptions.GetCredentialCancellationException
-import androidx.credentials.exceptions.GetCredentialException
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -48,6 +43,16 @@ private suspend inline fun <T> wrapper(
     }
 }
 
+private inline fun <reified Response : Any, reified Exception : Throwable, reified CancellationException : Exception> callback(
+    cont: CancellableContinuation<Response>
+) = object : CredentialManagerCallback<Response, Exception> {
+    override fun onError(e: Exception) {
+        if (e is CancellationException) cont.cancel(e) else cont.resumeWithException(e)
+    }
+
+    override fun onResult(result: Response) = cont.resume(result)
+}
+
 suspend fun CredentialManager.upsert(
     context: Context,
     username: String,
@@ -59,21 +64,9 @@ suspend fun CredentialManager.upsert(
             id = username,
             password = password
         ),
-        cancellationSignal = CancellationSignal().apply {
-            setOnCancelListener { cont.cancel() }
-        },
+        cancellationSignal = cont.asCancellationSignal,
         executor = executor,
-        callback = object :
-            CredentialManagerCallback<CreateCredentialResponse, CreateCredentialException> {
-            override fun onError(e: CreateCredentialException) {
-                when (e) {
-                    is CreateCredentialCancellationException -> cont.cancel(e)
-                    else -> cont.resumeWithException(e)
-                }
-            }
-
-            override fun onResult(result: CreateCredentialResponse) = cont.resume(Unit)
-        }
+        callback = callback<_, _, CreateCredentialCancellationException>(cont)
     )
 }
 
@@ -81,22 +74,8 @@ suspend fun CredentialManager.get(context: Context) = wrapper { cont ->
     getCredentialAsync(
         context = context,
         request = GetCredentialRequest(listOf(GetPasswordOption())),
-        cancellationSignal = CancellationSignal().apply {
-            setOnCancelListener { cont.cancel() }
-        },
+        cancellationSignal = cont.asCancellationSignal,
         executor = executor,
-        callback = object : CredentialManagerCallback<GetCredentialResponse, GetCredentialException> {
-            override fun onError(e: GetCredentialException) {
-                when (e) {
-                    is GetCredentialCancellationException -> cont.cancel(e)
-                    else -> cont.resumeWithException(e)
-                }
-            }
-
-            override fun onResult(result: GetCredentialResponse) {
-                val credential = runCatching { result.credential as? PasswordCredential }.getOrNull()
-                cont.resume(credential)
-            }
-        }
+        callback = callback<_, _, GetCredentialCancellationException>(cont)
     )
-}
+}.let { runCatching { it.credential as? PasswordCredential }.getOrNull() }
