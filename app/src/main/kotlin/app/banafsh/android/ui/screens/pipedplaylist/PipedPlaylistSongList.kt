@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +16,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,11 +42,13 @@ import app.banafsh.android.ui.components.themed.SecondaryTextButton
 import app.banafsh.android.ui.components.themed.adaptiveThumbnailContent
 import app.banafsh.android.ui.items.SongItem
 import app.banafsh.android.ui.items.SongItemPlaceholder
+import app.banafsh.android.utils.PlaylistDownloadIcon
 import app.banafsh.android.utils.asMediaItem
 import app.banafsh.android.utils.enqueue
 import app.banafsh.android.utils.forcePlayAtIndex
 import app.banafsh.android.utils.forcePlayFromBeginning
 import com.valentinilk.shimmer.shimmer
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.UUID
@@ -61,6 +65,9 @@ fun PipedPlaylistSongList(
     val menuState = LocalMenuState.current
 
     var playlist by persist<Playlist>(tag = "pipedplaylist/$playlistId/playlistPage")
+    val mediaItems = remember(playlist) {
+        playlist?.videos?.mapNotNull { it.asMediaItem }?.toImmutableList()
+    }
 
     LaunchedEffect(Unit) {
         playlist = withContext(Dispatchers.IO) {
@@ -102,10 +109,13 @@ fun PipedPlaylistSongList(
                                 text = stringResource(R.string.enqueue),
                                 enabled = playlist?.videos?.isNotEmpty() == true,
                                 onClick = {
-                                    playlist?.videos?.mapNotNull(Playlist.Video::asMediaItem)
-                                        ?.let { mediaItems -> binder?.player?.enqueue(mediaItems) }
+                                    mediaItems?.let { binder?.player?.enqueue(it) }
                                 }
                             )
+
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            mediaItems?.let { PlaylistDownloadIcon(it) }
                         }
 
                         if (!isLandscape) thumbnailContent()
