@@ -13,6 +13,7 @@ data class Song(
     val artistsText: String? = null,
     val durationText: String?,
     val thumbnailUrl: String?,
+    val dateModified: Long? = null,
     val likedAt: Long? = null,
     val totalPlayTimeMs: Long = 0,
     val loudnessBoost: Float? = null,

@@ -16,7 +16,6 @@ import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.media3.common.util.UnstableApi
 import app.banafsh.android.Database
-import app.banafsh.android.LocalDB
 import app.banafsh.android.R
 import app.banafsh.android.models.Album
 import app.banafsh.android.models.PlaylistPreview
@@ -29,7 +28,6 @@ import app.banafsh.android.utils.forcePlayAtIndex
 import app.banafsh.android.utils.forceSeekToNext
 import app.banafsh.android.utils.forceSeekToPrevious
 import app.banafsh.android.utils.intent
-import app.banafsh.android.utils.toSong
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.cancellable
@@ -314,15 +312,14 @@ class PlayerMediaBrowserService : MediaBrowserService(), ServiceConnection {
                     }
 
                     MediaId.LOCAL ->
-                        LocalDB
-                            .localSongs(
+                        Database
+                            .songs(
                                 sortBy = OrderPreferences.localSongSortBy,
-                                sortOrder = OrderPreferences.localSongSortOrder
+                                sortOrder = OrderPreferences.localSongSortOrder,
+                                isLocal = true
                             )
                             .map { songs ->
-                                songs
-                                    .filter { it.durationText != "0:00" }
-                                    .map { song -> song.toSong() }
+                                songs.filter { it.durationText != "0:00" }
                             }
                             .first()
 

@@ -6,18 +6,8 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
-import app.banafsh.android.models.LocalSong
-import app.banafsh.android.models.Song
 import app.banafsh.android.service.LOCAL_KEY_PREFIX
 import app.banafsh.android.service.isLocal
-
-fun LocalSong.toSong() = Song(
-    id = id,
-    title = title,
-    artistsText = artistsText,
-    durationText = durationText,
-    thumbnailUrl = thumbnailUrl
-)
 
 fun MediaItem.getUri(): Uri {
     return if (isLocal) ContentUris.withAppendedId(

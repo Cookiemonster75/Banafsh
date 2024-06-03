@@ -132,6 +132,9 @@ class MainActivity : ComponentActivity(), MonetColorsChangedListener {
 
     override fun onStart() {
         super.onStart()
+        query {
+            Database.clearLocalSongs()
+        }
         bindService(intent<PlayerService>(), serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
@@ -415,7 +418,6 @@ object Dependencies {
 
     internal fun init(application: MainApplication) {
         this.application = application
-        LocalDBInitializer()
         DatabaseInitializer()
     }
 }

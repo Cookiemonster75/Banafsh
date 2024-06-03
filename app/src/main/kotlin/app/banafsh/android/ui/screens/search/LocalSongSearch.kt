@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import app.banafsh.android.LocalDB
+import app.banafsh.android.Database
 import app.banafsh.android.LocalPlayerAwareWindowInsets
 import app.banafsh.android.LocalPlayerServiceBinder
 import app.banafsh.android.R
@@ -41,7 +41,6 @@ import app.banafsh.android.utils.align
 import app.banafsh.android.utils.asMediaItem
 import app.banafsh.android.utils.forcePlay
 import app.banafsh.android.utils.medium
-import app.banafsh.android.utils.toSong
 import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -60,12 +59,9 @@ fun LocalSongSearch(
 
     LaunchedEffect(textFieldValue.text) {
         if (textFieldValue.text.length > 1) {
-            // Database.search("%${textFieldValue.text}%").collect { items = it }
-            LocalDB
-                .search("%${textFieldValue.text}%")
-                .collect {
-                    items = it.map { localSong -> localSong.toSong() }.toImmutableList()
-                }
+             Database
+                 .search("%${textFieldValue.text}%")
+                 .collect { items = it.toImmutableList() }
         }
     }
 

@@ -26,12 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import app.banafsh.android.LocalDB
+import app.banafsh.android.Database
 import app.banafsh.android.R
 import app.banafsh.android.lib.core.ui.LocalAppearance
 import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid13
 import app.banafsh.android.lib.core.ui.utils.isCompositionLaunched
-import app.banafsh.android.models.LocalSong
+import app.banafsh.android.models.Song
 import app.banafsh.android.preferences.OrderPreferences
 import app.banafsh.android.service.LOCAL_KEY_PREFIX
 import app.banafsh.android.transaction
@@ -40,7 +40,6 @@ import app.banafsh.android.ui.screens.Route
 import app.banafsh.android.utils.AudioMediaCursor
 import app.banafsh.android.utils.hasPermission
 import app.banafsh.android.utils.medium
-import app.banafsh.android.utils.toSong
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -83,13 +82,12 @@ fun HomeLocalSongs(onSearchClick: () -> Unit) = with(OrderPreferences) {
     if (hasPermission) HomeSongs(
         onSearchClick = onSearchClick,
         songProvider = {
-            LocalDB.localSongs(
+            Database.songs(
                 sortBy = localSongSortBy,
-                sortOrder = localSongSortOrder
+                sortOrder = localSongSortOrder,
+                isLocal = true
             ).map { songs ->
-                songs
-                    .filter { it.durationText != "0:00" }
-                    .map { song -> song.toSong() }
+                songs.filter { it.durationText != "0:00" }
             }
         },
         sortBy = localSongSortBy,
@@ -126,7 +124,7 @@ fun HomeLocalSongs(onSearchClick: () -> Unit) = with(OrderPreferences) {
 }
 
 private val mediaScope = CoroutineScope(Dispatchers.IO + CoroutineName("MediaStore worker"))
-fun Context.musicFilesAsFlow(): StateFlow<List<LocalSong>> = flow {
+fun Context.musicFilesAsFlow(): StateFlow<List<Song>> = flow {
     var version: String? = null
 
     while (currentCoroutineContext().isActive) {
@@ -140,7 +138,7 @@ fun Context.musicFilesAsFlow(): StateFlow<List<LocalSong>> = flow {
                     while (next()) {
                         if (!isMusic || duration == 0) continue
                         add(
-                            LocalSong(
+                            Song(
                                 id = "$LOCAL_KEY_PREFIX$id",
                                 title = title,
                                 artistsText = artist,
@@ -158,5 +156,5 @@ fun Context.musicFilesAsFlow(): StateFlow<List<LocalSong>> = flow {
         delay(5.seconds)
     }
 }.distinctUntilChanged()
-    .onEach { songs -> transaction { songs.forEach(LocalDB::insert) } }
+    .onEach { songs -> transaction { songs.forEach(Database::insert) } }
     .stateIn(mediaScope, SharingStarted.Eagerly, listOf())
