@@ -250,7 +250,7 @@ inline val ColorPalette.onOverlayShimmer get() = defaultDarkPalette.shimmer
 
 fun SchemeTonalSpot.toColorPalette(isDark: Boolean) = ColorPalette(
     surface = Color(surface),
-    surfaceContainer = Color(surfaceContainerHighest),
+    surfaceContainer = Color(surfaceContainerHigh),
     primaryContainer = Color(primaryContainer),
     accent = Color(primary),
     onAccent = Color(onPrimary),

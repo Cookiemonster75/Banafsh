@@ -10,10 +10,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.lib.core.ui.primaryButton
 import app.banafsh.android.lib.core.ui.utils.roundedShape
 import app.banafsh.android.utils.disabled
 import app.banafsh.android.utils.medium
-import app.banafsh.android.utils.primary
 
 @Composable
 fun DialogTextButton(
@@ -28,16 +28,14 @@ fun DialogTextButton(
     BasicText(
         text = text,
         style = typography.xs.medium.let {
-            when {
-                !enabled -> it.disabled
-                primary -> it.primary
-                else -> it
-            }
+            if (!enabled) it.disabled
+            else it
         },
         modifier = modifier
-            .clip(36.dp.roundedShape)
-            .background(if (primary) colorPalette.accent else Color.Transparent)
+            .clip(16.dp.roundedShape)
+            .background(if (primary) colorPalette.primaryButton else Color.Transparent)
             .clickable(enabled = enabled, onClick = onClick)
-            .padding(horizontal = 20.dp, vertical = 16.dp)
+            .padding(all = 8.dp)
+            .padding(horizontal = 8.dp)
     )
 }

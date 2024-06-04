@@ -115,7 +115,8 @@ fun TextFieldDialog(
                         onDismiss()
                         onAccept(value)
                     }
-                }
+                },
+                enabled = value.isNotEmpty()
             )
         }
     }
