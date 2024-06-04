@@ -22,8 +22,3 @@
     #noinspection ShrinkerUnresolvedReference
     kotlinx.serialization.KSerializer serializer(...);
 }
-
--keepattributes RuntimeVisibleAnnotations,AnnotationDefault
-
--dontwarn com.google.android.material.color.DynamicColors
--dontwarn org.slf4j.impl.StaticLoggerBinder

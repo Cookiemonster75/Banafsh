@@ -6,6 +6,8 @@ import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.palette.graphics.Palette
+import com.google.material_color_utilities.hct.Hct
+import com.google.material_color_utilities.scheme.SchemeTonalSpot
 
 @Immutable
 data class ColorPalette(
@@ -55,26 +57,15 @@ data class ColorPalette(
     }
 }
 
-private val defaultAccentColor = Color(0xff3e44ce).hsl
+private val defaultAccentColor = Color(0xff3e44ce)
 
-val defaultLightPalette = lightColorPalette(null)
-val defaultDarkPalette = darkColorPalette(null, Darkness.Normal)
+val defaultLightPalette = lightColorPalette(defaultAccentColor)
+val defaultDarkPalette = darkColorPalette(defaultAccentColor, Darkness.Normal)
 
-fun lightColorPalette(accent: Hsl? = null) = if (accent == null) ColorPalette(
-    surface = Color(0xfffdfdfe),
-    surfaceContainer = Color(0xfff8f8fc),
-    primaryContainer = Color(0xffeaeaf5),
-    text = Color(0xff212121),
-    textSecondary = Color(0xff656566),
-    textDisabled = Color(0xff9d9d9d),
-    accent = defaultAccentColor.color,
-    onAccent = Color.White,
-    isDefault = true,
-    isDark = false
-) else {
-    val (hue, saturation) = accent
+fun lightColorPalette(accent: Color): ColorPalette {
+    val (hue, saturation) = accent.hsl
 
-    ColorPalette(
+    return ColorPalette(
         surface = Color.hsl(
             hue = hue,
             saturation = saturation.coerceAtMost(0.1f),
@@ -117,23 +108,12 @@ fun lightColorPalette(accent: Hsl? = null) = if (accent == null) ColorPalette(
 }
 
 fun darkColorPalette(
-    accent: Hsl? = null,
+    accent: Color,
     darkness: Darkness
-) = if (accent == null) ColorPalette(
-    surface = Color(0xff16171d),
-    surfaceContainer = Color(0xff1f2029),
-    primaryContainer = Color(0xff2b2d3b),
-    text = Color(0xffe1e1e2),
-    textSecondary = Color(0xffa3a4a6),
-    textDisabled = Color(0xff6f6f73),
-    accent = defaultAccentColor.color,
-    onAccent = Color.White,
-    isDefault = true,
-    isDark = true
-) else {
-    val (hue, saturation) = accent
+): ColorPalette {
+    val (hue, saturation) = accent.hsl
 
-    ColorPalette(
+    return ColorPalette(
         surface = if (darkness == Darkness.Normal) Color.hsl(
             hue = hue,
             saturation = saturation.coerceAtMost(0.1f),
@@ -175,23 +155,10 @@ fun darkColorPalette(
     )
 }
 
-fun accentColorOf(
-    source: ColorSource,
-    isDark: Boolean,
-    materialAccentColor: Color?,
-    sampleBitmap: Bitmap?
-) = when (source) {
-    ColorSource.Default -> null
-    ColorSource.Dynamic -> sampleBitmap?.let { dynamicAccentColorOf(it, isDark) }
-        ?: defaultAccentColor
-
-    ColorSource.MaterialYou -> materialAccentColor?.hsl ?: defaultAccentColor
-}
-
 fun dynamicAccentColorOf(
     bitmap: Bitmap,
     isDark: Boolean
-): Hsl? {
+): Color? {
     val palette = Palette
         .from(bitmap)
         .maximumColorCount(8)
@@ -216,7 +183,7 @@ fun dynamicAccentColorOf(
             ?: hsl
     else hsl
 
-    return arr.hsl
+    return arr.hsl.color
 }
 
 fun ColorPalette.amoled() = if (isDark) {
@@ -248,14 +215,21 @@ fun colorPaletteOf(
     materialAccentColor: Color?,
     sampleBitmap: Bitmap?
 ): ColorPalette {
-    val accentColor = accentColorOf(
-        source = source,
-        isDark = isDark,
-        materialAccentColor = materialAccentColor,
-        sampleBitmap = sampleBitmap
-    )
+    val accentColor = when (source) {
+        ColorSource.Default -> defaultAccentColor
+        else -> (sampleBitmap?.let { dynamicAccentColorOf(it, isDark) }
+            ?: materialAccentColor) ?: defaultAccentColor
+    }
 
-    return if (isDark) darkColorPalette(accentColor, darkness) else lightColorPalette(accentColor)
+    return if (source == ColorSource.MaterialYou) {
+        SchemeTonalSpot(
+            /* sourceColorHct = */ Hct.fromInt(accentColor.toArgb()),
+            /* isDark = */ isDark,
+            /* contrastLevel = */ 0.0
+        ).toColorPalette(isDark)
+    } else {
+        if (isDark) darkColorPalette(accentColor, darkness) else lightColorPalette(accentColor)
+    }
 }
 
 inline val ColorPalette.isPureBlack get() = surface == Color.Black
@@ -273,3 +247,17 @@ inline val ColorPalette.onOverlay get() = defaultDarkPalette.text
 
 @Suppress("UnusedReceiverParameter")
 inline val ColorPalette.onOverlayShimmer get() = defaultDarkPalette.shimmer
+
+fun SchemeTonalSpot.toColorPalette(isDark: Boolean) = ColorPalette(
+    surface = Color(surface),
+    surfaceContainer = Color(surfaceContainerHighest),
+    primaryContainer = Color(primaryContainer),
+    accent = Color(primary),
+    onAccent = Color(onPrimary),
+    red = Color(error),
+    text = Color(onSurface),
+    textSecondary = Color(onSecondaryContainer),
+    textDisabled = Color(onSurface).copy(alpha = 0.38f),
+    isDefault = false,
+    isDark = isDark
+)

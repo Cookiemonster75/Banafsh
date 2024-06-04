@@ -164,6 +164,8 @@ dependencies {
     implementation(libs.ktor.client.okhttp)
     api(libs.ktor.http)
 
+    implementation(projects.materialColorUtilities)
+
     detektPlugins(libs.detekt.compose)
     detektPlugins(libs.detekt.formatting)
 }

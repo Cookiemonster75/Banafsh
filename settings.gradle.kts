@@ -24,3 +24,4 @@ pluginManagement {
 
 rootProject.name = "banafsh"
 include(":app")
+include(":material-color-utilities")
