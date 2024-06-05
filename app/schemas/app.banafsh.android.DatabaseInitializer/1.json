@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "75450afa8fc10cb5e5c4c4745c83a7cb",
+    "identityHash": "bf42eb131d1a128773d749b9e5028201",
     "entities": [
       {
         "tableName": "Song",
@@ -498,19 +498,13 @@
         "foreignKeys": []
       },
       {
-        "tableName": "QueuedMediaItem",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mediaItem` BLOB NOT NULL, `position` INTEGER)",
+        "tableName": "QueuedSong",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`itemId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `position` INTEGER, `id` TEXT NOT NULL, `title` TEXT NOT NULL, `artistsText` TEXT, `durationText` TEXT, `thumbnailUrl` TEXT, `dateModified` INTEGER, `likedAt` INTEGER, `totalPlayTimeMs` INTEGER NOT NULL, `loudnessBoost` REAL, `blacklisted` INTEGER NOT NULL DEFAULT false, `explicit` INTEGER NOT NULL DEFAULT false)",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "itemId",
+            "columnName": "itemId",
             "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "mediaItem",
-            "columnName": "mediaItem",
-            "affinity": "BLOB",
             "notNull": true
           },
           {
@@ -518,12 +512,80 @@
             "columnName": "position",
             "affinity": "INTEGER",
             "notNull": false
+          },
+          {
+            "fieldPath": "song.id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "song.title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "song.artistsText",
+            "columnName": "artistsText",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "song.durationText",
+            "columnName": "durationText",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "song.thumbnailUrl",
+            "columnName": "thumbnailUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "song.dateModified",
+            "columnName": "dateModified",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "song.likedAt",
+            "columnName": "likedAt",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "song.totalPlayTimeMs",
+            "columnName": "totalPlayTimeMs",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "song.loudnessBoost",
+            "columnName": "loudnessBoost",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "song.blacklisted",
+            "columnName": "blacklisted",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "false"
+          },
+          {
+            "fieldPath": "song.explicit",
+            "columnName": "explicit",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "false"
           }
         ],
         "primaryKey": {
           "autoGenerate": true,
           "columnNames": [
-            "id"
+            "itemId"
           ]
         },
         "indices": [],
@@ -765,7 +827,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '75450afa8fc10cb5e5c4c4745c83a7cb')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bf42eb131d1a128773d749b9e5028201')"
     ]
   }
 }

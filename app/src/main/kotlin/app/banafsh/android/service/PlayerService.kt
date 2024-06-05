@@ -87,7 +87,7 @@ import app.banafsh.android.lib.providers.innertube.requests.searchPage
 import app.banafsh.android.lib.providers.innertube.utils.from
 import app.banafsh.android.models.Event
 import app.banafsh.android.models.Format
-import app.banafsh.android.models.QueuedMediaItem
+import app.banafsh.android.models.QueuedSong
 import app.banafsh.android.models.Song
 import app.banafsh.android.models.SongWithContentLength
 import app.banafsh.android.preferences.AppearancePreferences
@@ -101,6 +101,7 @@ import app.banafsh.android.utils.InvincibleService
 import app.banafsh.android.utils.TimerJob
 import app.banafsh.android.utils.YouTubeRadio
 import app.banafsh.android.utils.activityPendingIntent
+import app.banafsh.android.utils.asMediaItem
 import app.banafsh.android.utils.broadcastPendingIntent
 import app.banafsh.android.utils.findNextMediaItemById
 import app.banafsh.android.utils.forcePlayFromBeginning
@@ -113,6 +114,7 @@ import app.banafsh.android.utils.shouldBePlaying
 import app.banafsh.android.utils.songBundle
 import app.banafsh.android.utils.thumbnail
 import app.banafsh.android.utils.timer
+import app.banafsh.android.utils.toSong
 import app.banafsh.android.utils.toast
 import kotlin.math.roundToInt
 import kotlin.system.exitProcess
@@ -566,16 +568,16 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
     private fun maybeSavePlayerQueue() {
         if (!PlayerPreferences.persistentQueue) return
 
-        val mediaItems = player.currentTimeline.mediaItems
+        val songs = player.currentTimeline.mediaItems.map { it.toSong() }
         val mediaItemIndex = player.currentMediaItemIndex
         val mediaItemPosition = player.currentPosition
 
         query {
             Database.clearQueue()
             Database.insert(
-                mediaItems.mapIndexed { index, mediaItem ->
-                    QueuedMediaItem(
-                        mediaItem = mediaItem,
+                songs.mapIndexed { index, song ->
+                    QueuedSong(
+                        song = song,
                         position = if (index == mediaItemIndex) mediaItemPosition else null
                     )
                 }
@@ -599,10 +601,7 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
                 runCatching {
                     player.setMediaItems(
                         /* mediaItems = */ queue.map { item ->
-                            item.mediaItem.buildUpon()
-                                .setUri(item.mediaItem.mediaId)
-                                .setCustomCacheKey(item.mediaItem.mediaId)
-                                .build()
+                            item.song.asMediaItem
                                 .apply {
                                     mediaMetadata.extras?.songBundle?.apply {
                                         isFromPersistentQueue = true

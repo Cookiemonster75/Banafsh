@@ -1,10 +1,7 @@
 package app.banafsh.android
 
 import android.database.SQLException
-import android.os.Parcel
-import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
-import androidx.media3.common.util.UnstableApi
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -37,7 +34,7 @@ import app.banafsh.android.models.PipedSession
 import app.banafsh.android.models.Playlist
 import app.banafsh.android.models.PlaylistPreview
 import app.banafsh.android.models.PlaylistWithSongs
-import app.banafsh.android.models.QueuedMediaItem
+import app.banafsh.android.models.QueuedSong
 import app.banafsh.android.models.SearchQuery
 import app.banafsh.android.models.Song
 import app.banafsh.android.models.SongAlbumMap
@@ -47,6 +44,7 @@ import app.banafsh.android.models.SongWithContentLength
 import app.banafsh.android.models.SortedSongPlaylistMap
 import app.banafsh.android.service.LOCAL_KEY_PREFIX
 import app.banafsh.android.utils.songBundle
+import app.banafsh.android.utils.toSong
 import io.ktor.http.Url
 import kotlinx.coroutines.flow.Flow
 
@@ -151,10 +149,10 @@ interface Database {
     @RewriteQueriesToDropUnusedColumns
     fun favorites(): Flow<List<Song>>
 
-    @Query("SELECT * FROM QueuedMediaItem")
-    fun queue(): List<QueuedMediaItem>
+    @Query("SELECT * FROM QueuedSong")
+    fun queue(): List<QueuedSong>
 
-    @Query("DELETE FROM QueuedMediaItem")
+    @Query("DELETE FROM QueuedSong")
     fun clearQueue()
 
     @Query("SELECT * FROM SearchQuery WHERE `query` LIKE :query ORDER BY id DESC")
@@ -526,7 +524,7 @@ interface Database {
     fun insert(song: Song): Long
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insert(queuedMediaItems: List<QueuedMediaItem>)
+    fun insert(queuedSongs: List<QueuedSong>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertSongPlaylistMaps(songPlaylistMaps: List<SongPlaylistMap>)
@@ -543,14 +541,7 @@ interface Database {
     @Transaction
     fun insert(mediaItem: MediaItem, block: (Song) -> Song = { it }) {
         val extras = mediaItem.mediaMetadata.extras?.songBundle
-        val song = Song(
-            id = mediaItem.mediaId,
-            title = mediaItem.mediaMetadata.title?.toString().orEmpty(),
-            artistsText = mediaItem.mediaMetadata.artist?.toString(),
-            durationText = extras?.durationText,
-            thumbnailUrl = mediaItem.mediaMetadata.artworkUri?.toString(),
-            explicit = extras?.explicit == true
-        ).let(block).also { song ->
+        val song = mediaItem.toSong().let(block).also { song ->
             if (insert(song) == -1L) return
         }
 
@@ -632,7 +623,7 @@ interface Database {
         Album::class,
         SongAlbumMap::class,
         SearchQuery::class,
-        QueuedMediaItem::class,
+        QueuedSong::class,
         Format::class,
         Event::class,
         Lyrics::class,
@@ -671,30 +662,6 @@ abstract class DatabaseInitializer protected constructor() : RoomDatabase() {
 @Suppress("unused")
 @TypeConverters
 object Converters {
-    @TypeConverter
-    @OptIn(UnstableApi::class)
-    fun mediaItemFromByteArray(value: ByteArray?): MediaItem? = value?.let { byteArray ->
-        runCatching {
-            val parcel = Parcel.obtain()
-            parcel.unmarshall(byteArray, 0, byteArray.size)
-            parcel.setDataPosition(0)
-            val bundle = parcel.readBundle(MediaItem::class.java.classLoader)
-            parcel.recycle()
-
-            bundle?.let(MediaItem::fromBundle)
-        }.getOrNull()
-    }
-
-    @TypeConverter
-    @OptIn(UnstableApi::class)
-    fun mediaItemToByteArray(mediaItem: MediaItem?): ByteArray? = mediaItem?.toBundle()?.let {
-        val parcel = Parcel.obtain()
-        parcel.writeBundle(it)
-        val bytes = parcel.marshall()
-        parcel.recycle()
-
-        bytes
-    }
 
     @TypeConverter
     fun urlToString(url: Url) = url.toString()
