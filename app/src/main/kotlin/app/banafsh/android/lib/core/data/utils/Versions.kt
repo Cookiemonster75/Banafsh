@@ -15,8 +15,8 @@ value class Version(private val parts: List<Int>) {
 
     companion object {
         private val comparator = compareBy<Version> { it.major } then
-                compareBy { it.minor } then
-                compareBy { it.patch }
+            compareBy { it.minor } then
+            compareBy { it.patch }
     }
 
     operator fun compareTo(other: Version) = comparator.compare(this, other)

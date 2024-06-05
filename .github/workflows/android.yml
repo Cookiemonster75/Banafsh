@@ -22,6 +22,12 @@ jobs:
     - name: Run android lint
       run: ./gradlew lint
 
+    - name: Run ktlint
+      run: ./gradlew ktlintCheck
+
+    - name: Run detekt
+      run: ./gradlew detekt
+
     - name: Run tests
       run: ./gradlew test
     

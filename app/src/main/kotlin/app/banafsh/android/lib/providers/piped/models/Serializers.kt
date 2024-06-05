@@ -1,6 +1,7 @@
 package app.banafsh.android.lib.providers.piped.models
 
 import io.ktor.http.Url
+import java.util.UUID
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -12,7 +13,6 @@ import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import java.util.UUID
 
 object UrlSerializer : KSerializer<Url> {
     override val descriptor = PrimitiveSerialDescriptor("Url", PrimitiveKind.STRING)
@@ -21,8 +21,8 @@ object UrlSerializer : KSerializer<Url> {
 }
 
 typealias UrlString =
-@Serializable(with = UrlSerializer::class)
-Url
+    @Serializable(with = UrlSerializer::class)
+    Url
 
 object SecondLocalDateTimeSerializer : KSerializer<LocalDateTime> {
     override val descriptor = PrimitiveSerialDescriptor("DateTimeSeconds", PrimitiveKind.LONG)
@@ -35,8 +35,8 @@ object SecondLocalDateTimeSerializer : KSerializer<LocalDateTime> {
 }
 
 typealias DateTimeSeconds =
-@Serializable(with = SecondLocalDateTimeSerializer::class)
-LocalDateTime
+    @Serializable(with = SecondLocalDateTimeSerializer::class)
+    LocalDateTime
 
 object UUIDSerializer : KSerializer<UUID> {
     override val descriptor = PrimitiveSerialDescriptor("UUID", PrimitiveKind.STRING)
@@ -45,5 +45,5 @@ object UUIDSerializer : KSerializer<UUID> {
 }
 
 typealias UUIDString =
-@Serializable(with = UUIDSerializer::class)
-UUID
+    @Serializable(with = UUIDSerializer::class)
+    UUID

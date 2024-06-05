@@ -17,11 +17,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerInputChange
+import kotlin.math.roundToInt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.math.roundToInt
 
 @Stable
 class ReorderingState(
@@ -71,7 +71,7 @@ class ReorderingState(
 
         animatablesPool = AnimatablesPool(
             size = (lazyListState.layoutInfo.viewportEndOffset - lazyListState.layoutInfo.viewportStartOffset) /
-                    (draggingItemSize + 2),
+                (draggingItemSize + 2),
             initialValue = 0,
             typeConverter = Int.VectorConverter
         )
@@ -150,9 +150,9 @@ class ReorderingState(
                 val offsetInViewPort = targetOffset + itemInfo.offset - overscrolled
 
                 val topOverscroll = lazyListState.layoutInfo.viewportStartOffset +
-                        lazyListState.layoutInfo.beforeContentPadding - offsetInViewPort
+                    lazyListState.layoutInfo.beforeContentPadding - offsetInViewPort
                 val bottomOverscroll = lazyListState.layoutInfo.viewportEndOffset -
-                        lazyListState.layoutInfo.afterContentPadding - offsetInViewPort - itemInfo.size
+                    lazyListState.layoutInfo.afterContentPadding - offsetInViewPort - itemInfo.size
 
                 if (topOverscroll > 0) overscroll(topOverscroll) else if (bottomOverscroll < 0)
                     overscroll(bottomOverscroll)

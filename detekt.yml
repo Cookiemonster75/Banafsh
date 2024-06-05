@@ -75,27 +75,6 @@ exceptions:
     ignoredExceptionTypes:
       - ActivityNotFoundException
 
-formatting:
-  AnnotationOnSeparateLine:
-    active: true
-    ignoreAnnotated:
-      - kotlinx.serialization.Serializable
-  CommentWrapping:
-    # Because argument names in comment are a thing: Java API's do not support named arguments
-    active: false
-  EnumEntryNameCase:
-    active: false # Handled by Android Lint
-  Indentation:
-    active: false # Idea/Android Studio handles indentation differently
-  MultiLineIfElse:
-    active: false
-  TrailingCommaOnCallSite:
-    active: true
-    useTrailingCommaOnCallSite: false
-  TrailingCommaOnDeclarationSite:
-    active: true
-    useTrailingCommaOnDeclarationSite: false
-
 naming:
   EnumNaming:
     active: false # Handled by Android Lint

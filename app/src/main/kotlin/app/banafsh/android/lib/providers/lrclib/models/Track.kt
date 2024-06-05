@@ -1,8 +1,8 @@
 package app.banafsh.android.lib.providers.lrclib.models
 
-import kotlinx.serialization.Serializable
 import kotlin.math.abs
 import kotlin.time.Duration
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class Track(

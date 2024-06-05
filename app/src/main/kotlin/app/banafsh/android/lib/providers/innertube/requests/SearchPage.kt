@@ -17,7 +17,7 @@ suspend fun <T : Innertube.Item> Innertube.searchPage(
 ) = runCatchingCancellable {
     val response = client.post(SEARCH) {
         setBody(body)
-        @Suppress("all")
+        @Suppress("ktlint:standard:max-line-length")
         mask(
             "contents.tabbedSearchResultsRenderer.tabs.tabRenderer.content.sectionListRenderer.contents.musicShelfRenderer(continuations,contents.$MUSIC_RESPONSIVE_LIST_ITEM_RENDERER_MASK)"
         )
@@ -43,7 +43,7 @@ suspend fun <T : Innertube.Item> Innertube.searchPage(
 ) = runCatchingCancellable {
     val response = client.post(SEARCH) {
         setBody(body)
-        @Suppress("all")
+        @Suppress("ktlint:standard:max-line-length")
         mask(
             "continuationContents.musicShelfContinuation(continuations,contents.$MUSIC_RESPONSIVE_LIST_ITEM_RENDERER_MASK)"
         )

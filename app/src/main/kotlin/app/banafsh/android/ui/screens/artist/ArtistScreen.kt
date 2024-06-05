@@ -188,7 +188,7 @@ fun ArtistScreen(browseId: String) {
                             tag = "artist/$browseId/songs",
                             header = headerContent,
                             provider = artistPage?.let {
-                                @Suppress("SpacingAroundCurly")
+                                @Suppress("ktlint:standard:curly-spacing")
                                 { continuation ->
                                     continuation?.let {
                                         Innertube.itemsPage(
@@ -207,12 +207,12 @@ fun ArtistScreen(browseId: String) {
                                                 fromMusicResponsiveListItemRenderer = Innertube.SongItem::from
                                             )
                                         }
-                                    ?: Result.success(
-                                        Innertube.ItemsPage(
-                                            items = artistPage?.songs,
-                                            continuation = null
+                                        ?: Result.success(
+                                            Innertube.ItemsPage(
+                                                items = artistPage?.songs,
+                                                continuation = null
+                                            )
                                         )
-                                    )
                                 }
                             },
                             itemContent = { song ->
@@ -246,7 +246,7 @@ fun ArtistScreen(browseId: String) {
                             header = headerContent,
                             emptyItemsText = stringResource(R.string.artist_has_no_albums),
                             provider = artistPage?.let {
-                                @Suppress("SpacingAroundCurly")
+                                @Suppress("ktlint:standard:curly-spacing")
                                 { continuation ->
                                     continuation?.let {
                                         Innertube.itemsPage(
@@ -265,12 +265,12 @@ fun ArtistScreen(browseId: String) {
                                                 fromMusicTwoRowItemRenderer = Innertube.AlbumItem::from
                                             )
                                         }
-                                    ?: Result.success(
-                                        Innertube.ItemsPage(
-                                            items = artistPage?.albums,
-                                            continuation = null
+                                        ?: Result.success(
+                                            Innertube.ItemsPage(
+                                                items = artistPage?.albums,
+                                                continuation = null
+                                            )
                                         )
-                                    )
                                 }
                             },
                             itemContent = { album ->
@@ -290,7 +290,7 @@ fun ArtistScreen(browseId: String) {
                             header = headerContent,
                             emptyItemsText = stringResource(R.string.artist_has_no_singles),
                             provider = artistPage?.let {
-                                @Suppress("SpacingAroundCurly")
+                                @Suppress("ktlint:standard:curly-spacing")
                                 { continuation ->
                                     continuation?.let {
                                         Innertube.itemsPage(
@@ -309,12 +309,12 @@ fun ArtistScreen(browseId: String) {
                                                 fromMusicTwoRowItemRenderer = Innertube.AlbumItem::from
                                             )
                                         }
-                                    ?: Result.success(
-                                        Innertube.ItemsPage(
-                                            items = artistPage?.singles,
-                                            continuation = null
+                                        ?: Result.success(
+                                            Innertube.ItemsPage(
+                                                items = artistPage?.singles,
+                                                continuation = null
+                                            )
                                         )
-                                    )
                                 }
                             },
                             itemContent = { album ->

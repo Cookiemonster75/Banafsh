@@ -1,9 +1,9 @@
 package app.banafsh.android.lib.providers.piped.models
 
 import io.ktor.http.Url
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlin.time.Duration.Companion.seconds
 
 @Serializable
 data class CreatedPlaylist(

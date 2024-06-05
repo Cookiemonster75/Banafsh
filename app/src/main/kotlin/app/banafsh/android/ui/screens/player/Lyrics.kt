@@ -89,6 +89,8 @@ import app.banafsh.android.utils.medium
 import app.banafsh.android.utils.semiBold
 import app.banafsh.android.utils.toast
 import com.valentinilk.shimmer.shimmer
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.CancellationException
@@ -97,8 +99,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.withContext
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun Lyrics(
@@ -172,39 +172,39 @@ fun Lyrics(
                             Lyrics(
                                 songId = mediaId,
                                 fixed = (
-                                        if (currentLyrics?.fixed == null)
-                                            Innertube.lyrics(NextBody(videoId = mediaId))
-                                                ?.getOrNull()
-                                                ?: LrcLib.bestLyrics(
-                                                    artist = artist,
-                                                    title = title,
-                                                    duration = duration.milliseconds,
-                                                    album = album,
-                                                    synced = false
-                                                )?.map { it?.text }?.getOrNull()
-                                        else currentLyrics.fixed
-                                        ).orEmpty(),
-                                synced = (
-                                        if (currentLyrics?.synced == null)
-                                            LrcLib.bestLyrics(
+                                    if (currentLyrics?.fixed == null)
+                                        Innertube.lyrics(NextBody(videoId = mediaId))
+                                            ?.getOrNull()
+                                            ?: LrcLib.bestLyrics(
                                                 artist = artist,
                                                 title = title,
                                                 duration = duration.milliseconds,
+                                                album = album,
+                                                synced = false
+                                            )?.map { it?.text }?.getOrNull()
+                                    else currentLyrics.fixed
+                                    ).orEmpty(),
+                                synced = (
+                                    if (currentLyrics?.synced == null)
+                                        LrcLib.bestLyrics(
+                                            artist = artist,
+                                            title = title,
+                                            duration = duration.milliseconds,
+                                            album = album
+                                        )?.map { it?.text }?.getOrNull()
+                                            ?: KuGou.lyrics(
+                                                artist = artist,
+                                                title = title,
+                                                duration = duration / 1000
+                                            )?.map { it?.value }?.getOrNull()
+                                            ?: LrcLib.bestLyrics(
+                                                artist = artist,
+                                                title = title.split("(")[0].trim(),
+                                                duration = duration.milliseconds,
                                                 album = album
                                             )?.map { it?.text }?.getOrNull()
-                                                ?: KuGou.lyrics(
-                                                    artist = artist,
-                                                    title = title,
-                                                    duration = duration / 1000
-                                                )?.map { it?.value }?.getOrNull()
-                                                ?: LrcLib.bestLyrics(
-                                                    artist = artist,
-                                                    title = title.split("(")[0].trim(),
-                                                    duration = duration.milliseconds,
-                                                    album = album
-                                                )?.map { it?.text }?.getOrNull()
-                                        else currentLyrics.synced
-                                        ).orEmpty()
+                                    else currentLyrics.synced
+                                    ).orEmpty()
                             ).also {
                                 transaction {
                                     runCatching {

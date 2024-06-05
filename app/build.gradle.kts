@@ -167,5 +167,4 @@ dependencies {
     implementation(projects.materialColorUtilities)
 
     detektPlugins(libs.detekt.compose)
-    detektPlugins(libs.detekt.formatting)
 }

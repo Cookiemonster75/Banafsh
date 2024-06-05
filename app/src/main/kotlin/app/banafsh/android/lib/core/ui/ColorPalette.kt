@@ -217,8 +217,10 @@ fun colorPaletteOf(
 ): ColorPalette {
     val accentColor = when (source) {
         ColorSource.Default -> defaultAccentColor
-        else -> (sampleBitmap?.let { dynamicAccentColorOf(it, isDark) }
-            ?: materialAccentColor) ?: defaultAccentColor
+        else -> (
+            sampleBitmap?.let { dynamicAccentColorOf(it, isDark) }
+                ?: materialAccentColor
+            ) ?: defaultAccentColor
     }
 
     return if (source == ColorSource.MaterialYou) {

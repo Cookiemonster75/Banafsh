@@ -289,7 +289,7 @@ class MainActivity : ComponentActivity(), MonetColorsChangedListener {
                         mediaItem == null -> playerBottomSheetState.dismissSoft()
 
                         reason == Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED &&
-                                mediaItem.mediaMetadata.extras?.songBundle?.isFromPersistentQueue != true
+                            mediaItem.mediaMetadata.extras?.songBundle?.isFromPersistentQueue != true
                         -> playerBottomSheetState.expandSoft()
 
                         playerBottomSheetState.dismissed -> playerBottomSheetState.collapseSoft()

@@ -15,7 +15,7 @@ suspend fun Innertube.nextPage(body: NextBody): Result<Innertube.NextPage>? =
     runCatchingCancellable {
         val response = client.post(NEXT) {
             setBody(body)
-            @Suppress("all")
+            @Suppress("ktlint:standard:max-line-length")
             mask(
                 "contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs.tabRenderer.content.musicQueueRenderer.content.playlistPanelRenderer(continuations,contents(automixPreviewVideoRenderer,$PLAYLIST_PANEL_VIDEO_RENDERER_MASK))"
             )

@@ -112,10 +112,10 @@ import app.banafsh.android.utils.shuffleQueue
 import app.banafsh.android.utils.smoothScrollToTop
 import app.banafsh.android.utils.windows
 import com.valentinilk.shimmer.shimmer
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)
 @Composable

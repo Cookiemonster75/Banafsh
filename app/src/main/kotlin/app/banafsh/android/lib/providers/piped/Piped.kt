@@ -29,13 +29,13 @@ import io.ktor.http.Url
 import io.ktor.http.contentType
 import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
+import java.util.UUID
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import java.util.UUID
 
 operator fun Url.div(path: String) = URLBuilder(this).apply { path(path) }.build()
 operator fun JsonElement.div(key: String) = jsonObject[key]!!
@@ -94,15 +94,15 @@ object Piped {
     suspend fun login(apiBaseUrl: Url, username: String, password: String) =
         runCatchingCancellable {
             apiBaseUrl authenticatedWith (
-                    client.post(apiBaseUrl / "login") {
-                        setBody(
-                            mapOf(
-                                "username" to username,
-                                "password" to password
-                            )
+                client.post(apiBaseUrl / "login") {
+                    setBody(
+                        mapOf(
+                            "username" to username,
+                            "password" to password
                         )
-                    }.body<JsonElement>() / "token"
-                    ).jsonPrimitive.content
+                    )
+                }.body<JsonElement>() / "token"
+                ).jsonPrimitive.content
         }
 
     val playlist = Playlists()

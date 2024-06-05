@@ -9,6 +9,10 @@ import androidx.credentials.GetPasswordOption
 import androidx.credentials.PasswordCredential
 import androidx.credentials.exceptions.CreateCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialCancellationException
+import java.util.concurrent.CancellationException
+import java.util.concurrent.Executors
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -16,10 +20,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import java.util.concurrent.CancellationException
-import java.util.concurrent.Executors
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 private val executor = Executors.newCachedThreadPool()
 private val coroutineScope = CoroutineScope(
@@ -44,10 +44,10 @@ private suspend inline fun <T> wrapper(
 }
 
 private inline fun <
-        reified Response : Any,
-        reified Exception : Throwable,
-        reified CancellationException : Exception
-        > callback(
+    reified Response : Any,
+    reified Exception : Throwable,
+    reified CancellationException : Exception
+    > callback(
     cont: CancellableContinuation<Response>
 ) = object : CredentialManagerCallback<Response, Exception> {
     override fun onError(e: Exception) {

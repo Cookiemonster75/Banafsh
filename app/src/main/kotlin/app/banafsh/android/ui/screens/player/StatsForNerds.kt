@@ -43,12 +43,12 @@ import app.banafsh.android.lib.providers.innertube.requests.player
 import app.banafsh.android.models.Format
 import app.banafsh.android.utils.color
 import app.banafsh.android.utils.medium
+import kotlin.math.roundToInt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.withContext
-import kotlin.math.roundToInt
 
 @OptIn(UnstableApi::class)
 @Composable

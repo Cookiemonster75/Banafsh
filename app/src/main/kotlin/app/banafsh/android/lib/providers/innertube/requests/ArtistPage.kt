@@ -67,15 +67,15 @@ suspend fun Innertube.artistPage(body: BrowseBody) = runCatchingCancellable {
             ?.description
             ?.text,
         thumbnail = (
-                response
+            response
+                .header
+                ?.musicImmersiveHeaderRenderer
+                ?.foregroundThumbnail
+                ?: response
                     .header
                     ?.musicImmersiveHeaderRenderer
-                    ?.foregroundThumbnail
-                    ?: response
-                        .header
-                        ?.musicImmersiveHeaderRenderer
-                        ?.thumbnail
-                )
+                    ?.thumbnail
+            )
             ?.musicThumbnailRenderer
             ?.thumbnail
             ?.thumbnails

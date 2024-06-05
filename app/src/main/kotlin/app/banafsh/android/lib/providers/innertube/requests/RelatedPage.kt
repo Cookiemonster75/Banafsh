@@ -18,7 +18,7 @@ import io.ktor.client.request.setBody
 suspend fun Innertube.relatedPage(body: NextBody) = runCatchingCancellable {
     val nextResponse = client.post(NEXT) {
         setBody(body.copy(context = Context.DefaultWebNoLang))
-        @Suppress("all")
+        @Suppress("ktlint:standard:max-line-length")
         mask(
             "contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs.tabRenderer(endpoint,title)"
         )
@@ -44,7 +44,7 @@ suspend fun Innertube.relatedPage(body: NextBody) = runCatchingCancellable {
                 context = Context.DefaultWebNoLang
             )
         )
-        @Suppress("all")
+        @Suppress("ktlint:standard:max-line-length")
         mask(
             "contents.sectionListRenderer.contents.musicCarouselShelfRenderer(header.musicCarouselShelfBasicHeaderRenderer(title,strapline),contents($MUSIC_RESPONSIVE_LIST_ITEM_RENDERER_MASK,$MUSIC_TWO_ROW_ITEM_RENDERER_MASK))"
         )

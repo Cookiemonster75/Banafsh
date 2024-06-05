@@ -12,8 +12,8 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
 import kotlin.time.Duration
+import kotlinx.serialization.json.Json
 
 object LrcLib {
     private val client by lazy {
@@ -105,11 +105,11 @@ object LrcLib {
                     text.trim().lines().filter { it.length >= 10 }.forEach {
                         put(
                             it[8].digitToInt() * 10L +
-                                    it[7].digitToInt() * 100 +
-                                    it[5].digitToInt() * 1000 +
-                                    it[4].digitToInt() * 10000 +
-                                    it[2].digitToInt() * 60 * 1000 +
-                                    it[1].digitToInt() * 600 * 1000,
+                                it[7].digitToInt() * 100 +
+                                it[5].digitToInt() * 1000 +
+                                it[4].digitToInt() * 10000 +
+                                it[2].digitToInt() * 60 * 1000 +
+                                it[1].digitToInt() * 600 * 1000,
                             it.substring(10)
                         )
                     }

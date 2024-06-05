@@ -156,21 +156,21 @@ fun PlaylistSongList(
                 color = colorPalette.text,
                 onClick = {
                     (
-                            playlistPage?.url
-                                ?: "https://music.youtube.com/playlist?list=${
-                                    browseId.removePrefix(
-                                        "VL"
-                                    )
-                                }"
-                            ).let { url ->
-                            val sendIntent = Intent().apply {
-                                action = Intent.ACTION_SEND
-                                type = "text/plain"
-                                putExtra(Intent.EXTRA_TEXT, url)
-                            }
-
-                            context.startActivity(Intent.createChooser(sendIntent, null))
+                        playlistPage?.url
+                            ?: "https://music.youtube.com/playlist?list=${
+                                browseId.removePrefix(
+                                    "VL"
+                                )
+                            }"
+                        ).let { url ->
+                        val sendIntent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_TEXT, url)
                         }
+
+                        context.startActivity(Intent.createChooser(sendIntent, null))
+                    }
                 }
             )
         }

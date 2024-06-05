@@ -13,7 +13,7 @@ import io.ktor.client.request.setBody
 suspend fun Innertube.lyrics(body: NextBody) = runCatchingCancellable {
     val nextResponse = client.post(NEXT) {
         setBody(body)
-        @Suppress("all")
+        @Suppress("ktlint:standard:max-line-length")
         mask(
             "contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs.tabRenderer(endpoint,title)"
         )

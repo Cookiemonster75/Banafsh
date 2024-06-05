@@ -53,7 +53,7 @@ fun Context.pendingIntent(
 
 val Context.isIgnoringBatteryOptimizations
     get() = !isAtLeastAndroid6 ||
-            getSystemService<PowerManager>()?.isIgnoringBatteryOptimizations(packageName) ?: true
+        getSystemService<PowerManager>()?.isIgnoringBatteryOptimizations(packageName) ?: true
 
 fun Context.toast(
     message: String,
@@ -86,7 +86,7 @@ fun launchYouTubeMusic(
             context.applicationContext.packageManager.queryIntentActivities(intent, 0)
                 .firstOrNull {
                     it?.activityInfo?.packageName != null &&
-                            BuildConfig.APPLICATION_ID !in it.activityInfo.packageName
+                        BuildConfig.APPLICATION_ID !in it.activityInfo.packageName
                 }?.activityInfo?.packageName
                 ?: return false
         context.startActivity(intent)

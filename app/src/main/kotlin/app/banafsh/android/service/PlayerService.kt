@@ -22,6 +22,7 @@ import android.media.audiofx.LoudnessEnhancer
 import android.media.session.MediaSession
 import android.media.session.PlaybackState
 import android.net.Uri
+import android.os.Binder as AndroidBinder
 import android.os.Build
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -113,6 +114,8 @@ import app.banafsh.android.utils.songBundle
 import app.banafsh.android.utils.thumbnail
 import app.banafsh.android.utils.timer
 import app.banafsh.android.utils.toast
+import kotlin.math.roundToInt
+import kotlin.system.exitProcess
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -136,9 +139,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import kotlin.math.roundToInt
-import kotlin.system.exitProcess
-import android.os.Binder as AndroidBinder
 
 const val LOCAL_KEY_PREFIX = "local:"
 private const val TAG = "PlayerService"
@@ -159,15 +159,15 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
 
     private val defaultActions =
         PlaybackState.ACTION_PLAY or
-                PlaybackState.ACTION_PAUSE or
-                PlaybackState.ACTION_PLAY_PAUSE or
-                PlaybackState.ACTION_STOP or
-                PlaybackState.ACTION_SKIP_TO_PREVIOUS or
-                PlaybackState.ACTION_SKIP_TO_NEXT or
-                PlaybackState.ACTION_SKIP_TO_QUEUE_ITEM or
-                PlaybackState.ACTION_SEEK_TO or
-                PlaybackState.ACTION_REWIND or
-                PlaybackState.ACTION_PLAY_FROM_SEARCH
+            PlaybackState.ACTION_PAUSE or
+            PlaybackState.ACTION_PLAY_PAUSE or
+            PlaybackState.ACTION_STOP or
+            PlaybackState.ACTION_SKIP_TO_PREVIOUS or
+            PlaybackState.ACTION_SKIP_TO_NEXT or
+            PlaybackState.ACTION_SKIP_TO_QUEUE_ITEM or
+            PlaybackState.ACTION_SEEK_TO or
+            PlaybackState.ACTION_REWIND or
+            PlaybackState.ACTION_PLAY_FROM_SEARCH
 
     private val stateBuilder
         get() = PlaybackState.Builder().setActions(
@@ -726,10 +726,10 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
             object : AudioDeviceCallback() {
                 private fun canPlayMusic(audioDeviceInfo: AudioDeviceInfo) =
                     audioDeviceInfo.isSink && (
-                            audioDeviceInfo.type == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP ||
-                                    audioDeviceInfo.type == AudioDeviceInfo.TYPE_WIRED_HEADSET ||
-                                    audioDeviceInfo.type == AudioDeviceInfo.TYPE_WIRED_HEADPHONES
-                            )
+                        audioDeviceInfo.type == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP ||
+                            audioDeviceInfo.type == AudioDeviceInfo.TYPE_WIRED_HEADSET ||
+                            audioDeviceInfo.type == AudioDeviceInfo.TYPE_WIRED_HEADPHONES
+                        )
                         .let {
                             if (!isAtLeastAndroid8) it else
                                 it || audioDeviceInfo.type == AudioDeviceInfo.TYPE_USB_HEADSET

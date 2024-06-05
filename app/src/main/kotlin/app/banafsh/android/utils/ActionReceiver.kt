@@ -23,7 +23,7 @@ abstract class ActionReceiver(private val base: String) : BroadcastReceiver() {
                 /* requestCode = */ 100,
                 /* intent = */ Intent(value).setPackage(packageName),
                 /* flags = */ PendingIntent.FLAG_UPDATE_CURRENT or
-                        (if (isAtLeastAndroid6) PendingIntent.FLAG_IMMUTABLE else 0)
+                    (if (isAtLeastAndroid6) PendingIntent.FLAG_IMMUTABLE else 0)
             )
     }
 

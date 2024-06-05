@@ -52,11 +52,11 @@ import app.banafsh.android.utils.findActivity
 import app.banafsh.android.utils.isIgnoringBatteryOptimizations
 import app.banafsh.android.utils.smoothScrollToBottom
 import app.banafsh.android.utils.toast
+import kotlin.math.roundToInt
+import kotlin.system.exitProcess
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
-import kotlin.system.exitProcess
 
 @SuppressLint("BatteryLife")
 @Route

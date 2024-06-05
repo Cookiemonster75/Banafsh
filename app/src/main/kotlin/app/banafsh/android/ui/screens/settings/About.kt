@@ -59,10 +59,10 @@ import app.banafsh.android.utils.center
 import app.banafsh.android.utils.hasPermission
 import app.banafsh.android.utils.pendingIntent
 import app.banafsh.android.utils.semiBold
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlin.time.Duration
 import kotlin.time.toJavaDuration
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 private val VERSION_NAME = BuildConfig.VERSION_NAME.substringBeforeLast("-")
 private const val REPO_OWNER = "IamRezaMousavi"
@@ -178,11 +178,11 @@ private suspend fun Version.getNewerVersion(
         .sortedByDescending { it.publishedAt }
         .firstOrNull { release ->
             !release.draft &&
-                    !release.preRelease &&
-                    release.tag.version > this &&
-                    release.assets.any {
-                        it.contentType == contentType && it.state == Release.Asset.State.Uploaded
-                    }
+                !release.preRelease &&
+                release.tag.version > this &&
+                release.assets.any {
+                    it.contentType == contentType && it.state == Release.Asset.State.Uploaded
+                }
         }
 }
 
@@ -227,7 +227,7 @@ fun About() = SettingsCategoryScreen(
             text = stringResource(R.string.report_bug_description),
             onClick = {
                 uriHandler.openUri(
-                    @Suppress("MaximumLineLength")
+                    @Suppress("ktlint:standard:max-line-length")
                     "https://github.com/$REPO_OWNER/$REPO_NAME/issues/new?assignees=&labels=bug&template=bug_report.yaml"
                 )
             }
@@ -238,7 +238,7 @@ fun About() = SettingsCategoryScreen(
             text = stringResource(R.string.redirect_github),
             onClick = {
                 uriHandler.openUri(
-                    @Suppress("MaximumLineLength")
+                    @Suppress("ktlint:standard:max-line-length")
                     "https://github.com/$REPO_OWNER/$REPO_NAME/issues/new?assignees=&labels=enhancement&template=feature_request.md"
                 )
             }

@@ -26,6 +26,11 @@ import app.banafsh.android.utils.ActionReceiver
 import app.banafsh.android.utils.download
 import app.banafsh.android.utils.intent
 import app.banafsh.android.utils.toast
+import java.io.File
+import java.util.concurrent.Executors
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -44,17 +49,12 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.io.File
-import java.util.concurrent.Executors
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
-import kotlin.time.Duration.Companion.milliseconds
 
 private val executor = Executors.newCachedThreadPool()
 private val coroutineScope = CoroutineScope(
     executor.asCoroutineDispatcher() +
-            SupervisorJob() +
-            CoroutineName("PrecacheService-Worker-Scope")
+        SupervisorJob() +
+        CoroutineName("PrecacheService-Worker-Scope")
 )
 
 // While the class is not a singleton (lifecycle), there should only be one download state at a time

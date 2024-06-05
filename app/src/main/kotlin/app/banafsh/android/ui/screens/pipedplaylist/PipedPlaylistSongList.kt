@@ -48,10 +48,10 @@ import app.banafsh.android.utils.enqueue
 import app.banafsh.android.utils.forcePlayAtIndex
 import app.banafsh.android.utils.forcePlayFromBeginning
 import com.valentinilk.shimmer.shimmer
+import java.util.UUID
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.UUID
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

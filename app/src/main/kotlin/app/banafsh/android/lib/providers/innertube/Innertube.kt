@@ -71,7 +71,7 @@ object Innertube {
     internal const val MUSIC_TWO_ROW_ITEM_RENDERER_MASK =
         "musicTwoRowItemRenderer(thumbnailRenderer,title,subtitle,navigationEndpoint)"
 
-    @Suppress("MaximumLineLength")
+    @Suppress("ktlint:standard:max-line-length")
     internal const val PLAYLIST_PANEL_VIDEO_RENDERER_MASK =
         "playlistPanelVideoRenderer(title,navigationEndpoint,longBylineText,shortBylineText,thumbnail,lengthText,badges)"
 

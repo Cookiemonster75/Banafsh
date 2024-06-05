@@ -95,8 +95,8 @@ import app.banafsh.android.utils.semiBold
 import app.banafsh.android.utils.shouldBePlaying
 import app.banafsh.android.utils.thumbnail
 import coil.compose.AsyncImage
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlin.math.absoluteValue
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
 fun Player(
@@ -182,7 +182,7 @@ fun Player(
                             topLeft = Offset.Zero,
                             size = Size(
                                 width = positionAndDuration.first.toFloat() /
-                                        positionAndDuration.second.absoluteValue * size.width,
+                                    positionAndDuration.second.absoluteValue * size.width,
                                 height = size.height
                             )
                         )
