@@ -14,12 +14,20 @@ fun MediaItem.getUri(): Uri = if (isLocal) ContentUris.withAppendedId(
     mediaId.substringAfter(LOCAL_KEY_PREFIX).toLong()
 ) else mediaId.toUri()
 
-fun createShareLocalSongIndent(mediaItem: MediaItem): Intent = Intent().apply {
+fun createShareSongIndent(mediaItem: MediaItem): Intent = Intent().apply {
     action = Intent.ACTION_SEND
-    type = "audio/*"
-    putExtra(
-        Intent.EXTRA_STREAM,
-        mediaItem.getUri()
-    )
-    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    if (mediaItem.isLocal) {
+        type = "audio/*"
+        putExtra(
+            Intent.EXTRA_STREAM,
+            mediaItem.getUri()
+        )
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    } else {
+        type = "text/plain"
+        putExtra(
+            Intent.EXTRA_TEXT,
+            "https://music.youtube.com/watch?v=${mediaItem.mediaId}"
+        )
+    }
 }

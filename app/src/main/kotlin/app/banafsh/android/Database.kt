@@ -151,9 +151,6 @@ interface Database {
     @RewriteQueriesToDropUnusedColumns
     fun favorites(): Flow<List<Song>>
 
-    @Query("DELETE FROM Song WHERE id LIKE '$LOCAL_KEY_PREFIX%'")
-    fun clearLocalSongs()
-
     @Query("SELECT * FROM QueuedMediaItem")
     fun queue(): List<QueuedMediaItem>
 

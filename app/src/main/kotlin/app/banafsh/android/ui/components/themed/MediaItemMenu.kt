@@ -76,7 +76,7 @@ import app.banafsh.android.ui.screens.artistRoute
 import app.banafsh.android.ui.screens.home.HideSongDialog
 import app.banafsh.android.utils.addNext
 import app.banafsh.android.utils.asMediaItem
-import app.banafsh.android.utils.createShareLocalSongIndent
+import app.banafsh.android.utils.createShareSongIndent
 import app.banafsh.android.utils.enqueue
 import app.banafsh.android.utils.forcePlay
 import app.banafsh.android.utils.formatAsDuration
@@ -213,7 +213,6 @@ fun BaseMediaItemMenu(
     onShowNormalizationDialog: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
-    val isLocal by remember { derivedStateOf { mediaItem.isLocal } }
 
     MediaItemMenu(
         mediaItem = mediaItem,
@@ -241,19 +240,7 @@ fun BaseMediaItemMenu(
         onGoToAlbum = albumRoute::global,
         onGoToArtist = artistRoute::global,
         onShare = {
-            val sendIntent = if (isLocal) {
-                createShareLocalSongIndent(mediaItem)
-            } else {
-                Intent().apply {
-                    action = Intent.ACTION_SEND
-                    type = "text/plain"
-                    putExtra(
-                        Intent.EXTRA_TEXT,
-                        "https://music.youtube.com/watch?v=${mediaItem.mediaId}"
-                    )
-                }
-            }
-
+            val sendIntent = createShareSongIndent(mediaItem)
             context.startActivity(Intent.createChooser(sendIntent, null))
         },
         onRemoveFromQuickPicks = onRemoveFromQuickPicks,
