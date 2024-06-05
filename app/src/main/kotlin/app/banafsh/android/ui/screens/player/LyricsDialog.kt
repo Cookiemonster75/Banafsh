@@ -29,6 +29,7 @@ import app.banafsh.android.service.isLocal
 import app.banafsh.android.ui.modifiers.PinchDirection
 import app.banafsh.android.ui.modifiers.onSwipe
 import app.banafsh.android.ui.modifiers.pinchToToggle
+import app.banafsh.android.utils.FullScreenState
 import app.banafsh.android.utils.forceSeekToNext
 import app.banafsh.android.utils.forceSeekToPrevious
 import app.banafsh.android.utils.thumbnail
@@ -41,6 +42,8 @@ fun LyricsDialog(
     modifier: Modifier = Modifier
 ) = Dialog(onDismissRequest = onDismiss) {
     val currentOnDismiss by rememberUpdatedState(onDismiss)
+
+    FullScreenState(shown = false)
 
     val (colorPalette, _, _, thumbnailShape) = LocalAppearance.current
 
