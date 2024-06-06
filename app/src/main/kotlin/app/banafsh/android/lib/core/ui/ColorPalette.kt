@@ -60,7 +60,7 @@ data class ColorPalette(
 private val defaultAccentColor = Color(0xff3e44ce)
 
 val defaultLightPalette = lightColorPalette(defaultAccentColor)
-val defaultDarkPalette = darkColorPalette(defaultAccentColor, Darkness.Normal)
+val defaultDarkPalette = darkColorPalette(defaultAccentColor)
 
 fun lightColorPalette(accent: Color): ColorPalette {
     val (hue, saturation) = accent.hsl
@@ -107,28 +107,25 @@ fun lightColorPalette(accent: Color): ColorPalette {
     )
 }
 
-fun darkColorPalette(
-    accent: Color,
-    darkness: Darkness
-): ColorPalette {
+fun darkColorPalette(accent: Color): ColorPalette {
     val (hue, saturation) = accent.hsl
 
     return ColorPalette(
-        surface = if (darkness == Darkness.Normal) Color.hsl(
+        surface = Color.hsl(
             hue = hue,
             saturation = saturation.coerceAtMost(0.1f),
             lightness = 0.10f
-        ) else Color.Black,
-        surfaceContainer = if (darkness == Darkness.Normal) Color.hsl(
+        ),
+        surfaceContainer = Color.hsl(
             hue = hue,
             saturation = saturation.coerceAtMost(0.3f),
             lightness = 0.15f
-        ) else Color.Black,
-        primaryContainer = if (darkness == Darkness.Normal) Color.hsl(
+        ),
+        primaryContainer = Color.hsl(
             hue = hue,
             saturation = saturation.coerceAtMost(0.4f),
             lightness = 0.2f
-        ) else Color.Black,
+        ),
         text = Color.hsl(
             hue = hue,
             saturation = saturation.coerceAtMost(0.02f),
@@ -146,7 +143,7 @@ fun darkColorPalette(
         ),
         accent = Color.hsl(
             hue = hue,
-            saturation = saturation.coerceAtMost(if (darkness == Darkness.AMOLED) 0.4f else 0.5f),
+            saturation = saturation.coerceAtMost(0.5f),
             lightness = 0.5f
         ),
         onAccent = Color.White,
@@ -186,6 +183,14 @@ fun dynamicAccentColorOf(
     return arr.hsl.color
 }
 
+fun ColorPalette.pureBlack() = if (isDark) {
+    copy(
+        surface = Color.Black,
+        surfaceContainer = Color.Black,
+        primaryContainer = Color.Black
+    )
+} else this
+
 fun ColorPalette.amoled() = if (isDark) {
     val (hue, saturation) = accent.hsl
 
@@ -204,6 +209,11 @@ fun ColorPalette.amoled() = if (isDark) {
             hue = hue,
             saturation = saturation.coerceAtMost(0.4f),
             lightness = 0.2f
+        ),
+        accent = Color.hsl(
+            hue = hue,
+            saturation = saturation.coerceAtMost(0.4f),
+            lightness = 0.5f
         )
     )
 } else this
@@ -223,20 +233,26 @@ fun colorPaletteOf(
             ) ?: defaultAccentColor
     }
 
-    return if (source == ColorSource.MaterialYou) {
+    val colorPalette = if (source == ColorSource.MaterialYou) {
         SchemeTonalSpot(
             /* sourceColorHct = */ Hct.fromInt(accentColor.toArgb()),
             /* isDark = */ isDark,
             /* contrastLevel = */ 0.0
         ).toColorPalette(isDark)
     } else {
-        if (isDark) darkColorPalette(accentColor, darkness) else lightColorPalette(accentColor)
+        if (isDark) darkColorPalette(accentColor) else lightColorPalette(accentColor)
+    }
+
+    return when (darkness) {
+        Darkness.Normal -> colorPalette
+        Darkness.AMOLED -> colorPalette.amoled()
+        Darkness.PureBlack -> colorPalette.pureBlack()
     }
 }
 
 inline val ColorPalette.isPureBlack get() = surface == Color.Black
 inline val ColorPalette.collapsedPlayerProgressBar
-    get() = if (isPureBlack) defaultDarkPalette.surface else primaryContainer
+    get() = if (isPureBlack) surface else primaryContainer
 inline val ColorPalette.favoritesIcon get() = if (isDefault) red else accent
 inline val ColorPalette.shimmer get() = if (isDefault) Color(0xff838383) else accent
 inline val ColorPalette.primaryButton get() = if (isPureBlack) Color(0xff272727) else primaryContainer
@@ -244,22 +260,20 @@ inline val ColorPalette.primaryButton get() = if (isPureBlack) Color(0xff272727)
 @Suppress("UnusedReceiverParameter")
 inline val ColorPalette.overlay get() = Color.Black.copy(alpha = 0.75f)
 
-@Suppress("UnusedReceiverParameter")
-inline val ColorPalette.onOverlay get() = defaultDarkPalette.text
+inline val ColorPalette.onOverlay get() = text
 
-@Suppress("UnusedReceiverParameter")
-inline val ColorPalette.onOverlayShimmer get() = defaultDarkPalette.shimmer
+inline val ColorPalette.onOverlayShimmer get() = shimmer
 
 fun SchemeTonalSpot.toColorPalette(isDark: Boolean) = ColorPalette(
     surface = Color(surface),
-    surfaceContainer = Color(surfaceContainerHigh),
+    surfaceContainer = Color(surfaceContainerHighest),
     primaryContainer = Color(primaryContainer),
     accent = Color(primary),
     onAccent = Color(onPrimary),
     red = Color(error),
-    text = Color(onSurface),
-    textSecondary = Color(onSecondaryContainer),
-    textDisabled = Color(onSurface).copy(alpha = 0.38f),
+    text = Color(primary),
+    textSecondary = Color(secondary),
+    textDisabled = Color(outline).copy(alpha = 0.38f),
     isDefault = false,
     isDark = isDark
 )
