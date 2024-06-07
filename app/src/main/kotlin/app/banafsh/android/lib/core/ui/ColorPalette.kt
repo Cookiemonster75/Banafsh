@@ -159,7 +159,7 @@ fun dynamicAccentColorOf(
     val palette = Palette
         .from(bitmap)
         .maximumColorCount(8)
-        .addFilter(if (isDark) ({ _, hsl -> hsl[0] !in 36f..100f }) else null)
+        .addFilter(if (isDark) ({ _, hsl -> hsl[0] !in 50f..100f }) else null)
         .generate()
 
     val hsl = if (isDark) {
@@ -227,10 +227,8 @@ fun colorPaletteOf(
 ): ColorPalette {
     val accentColor = when (source) {
         ColorSource.Default -> defaultAccentColor
-        else -> (
-            sampleBitmap?.let { dynamicAccentColorOf(it, isDark) }
-                ?: materialAccentColor
-            ) ?: defaultAccentColor
+        else -> sampleBitmap?.let { dynamicAccentColorOf(it, isDark) }
+            ?: materialAccentColor ?: defaultAccentColor
     }
 
     val colorPalette = if (source == ColorSource.MaterialYou) {
@@ -266,13 +264,13 @@ inline val ColorPalette.onOverlayShimmer get() = shimmer
 
 fun SchemeTonalSpot.toColorPalette(isDark: Boolean) = ColorPalette(
     surface = Color(surface),
-    surfaceContainer = Color(surfaceContainerHighest),
+    surfaceContainer = Color(surfaceContainerLow),
     primaryContainer = Color(primaryContainer),
     accent = Color(primary),
     onAccent = Color(onPrimary),
     red = Color(error),
-    text = Color(primary),
-    textSecondary = Color(secondary),
+    text = Color(onPrimaryContainer),
+    textSecondary = Color(onSecondaryContainer),
     textDisabled = Color(outline).copy(alpha = 0.38f),
     isDefault = false,
     isDark = isDark
