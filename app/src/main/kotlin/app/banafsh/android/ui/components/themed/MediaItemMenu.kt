@@ -99,11 +99,12 @@ fun InHistoryMediaItemMenu(
 ) {
     var isHiding by rememberSaveable { mutableStateOf(false) }
 
-    if (isHiding) HideSongDialog(
-        song = song,
-        onDismiss = { isHiding = false },
-        onConfirm = onDismiss
-    )
+    if (isHiding)
+        HideSongDialog(
+            song = song,
+            onDismiss = { isHiding = false },
+            onConfirm = onDismiss
+        )
 
     InHistoryMediaItemMenu(
         onDismiss = onDismiss,

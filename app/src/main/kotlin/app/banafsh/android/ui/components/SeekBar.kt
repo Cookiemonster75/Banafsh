@@ -187,16 +187,17 @@ private fun ClassicSeekBarBody(
                     center = center.copy(x = scrubberPosition)
                 )
 
-                if (drawSteps) for (i in position + 1..range.endInclusive) {
-                    val stepPosition =
-                        (i.toFloat() - range.start) / (range.endInclusive - range.start) * size.width
+                if (drawSteps)
+                    for (i in position + 1..range.endInclusive) {
+                        val stepPosition =
+                            (i.toFloat() - range.start) / (range.endInclusive - range.start) * size.width
 
-                    drawCircle(
-                        color = scrubberColor,
-                        radius = scrubberRadius.toPx() / 2,
-                        center = center.copy(x = stepPosition)
-                    )
-                }
+                        drawCircle(
+                            color = scrubberColor,
+                            radius = scrubberRadius.toPx() / 2,
+                            center = center.copy(x = stepPosition)
+                        )
+                    }
             }
             .height(scrubberRadius)
     ) {

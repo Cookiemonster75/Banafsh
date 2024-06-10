@@ -54,9 +54,8 @@ fun Attribution(
             modifier = modifier
                 .padding(endPaddingValues)
                 .let {
-                    if (overflow) it.clickable {
-                        expanded = !expanded
-                    } else it
+                    if (overflow) it.clickable { expanded = !expanded }
+                    else it
                 }
         ) {
             BasicText(

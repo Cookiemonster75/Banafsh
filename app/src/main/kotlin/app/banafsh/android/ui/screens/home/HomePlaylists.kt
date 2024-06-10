@@ -74,15 +74,16 @@ fun HomePlaylists(
 
     var isCreatingANewPlaylist by rememberSaveable { mutableStateOf(false) }
 
-    if (isCreatingANewPlaylist) TextFieldDialog(
-        hintText = stringResource(R.string.enter_playlist_name_prompt),
-        onDismiss = { isCreatingANewPlaylist = false },
-        onAccept = { text ->
-            query {
-                Database.insert(Playlist(name = text))
+    if (isCreatingANewPlaylist)
+        TextFieldDialog(
+            hintText = stringResource(R.string.enter_playlist_name_prompt),
+            onDismiss = { isCreatingANewPlaylist = false },
+            onAccept = { text ->
+                query {
+                    Database.insert(Playlist(name = text))
+                }
             }
-        }
-    )
+        )
     var items by persistList<PlaylistPreview>("home/playlists")
     var pipedSessions by persist<Map<PipedSession, List<PipedPlaylistPreview>?>>("home/piped")
 

@@ -230,6 +230,8 @@
     <string name="show_like_button_description">Show the like button directly in the player</string>
     <string name="swipe_to_remove_item">Swipe to remove item</string>
     <string name="swipe_to_remove_item_description">Swipe left to remove an item from the queue</string>
+    <string name="lyrics_keep_screen_awake">Keep screen awake (lyrics)</string>
+    <string name="lyrics_keep_screen_awake_description">Keeps the screen awake while the lyrics are showing</string>
 
     <string name="cache">Cache</string>
     <string name="cache_description">When the cache runs out of space, the resources that haven\'t been accessed for the longest time are cleared</string>

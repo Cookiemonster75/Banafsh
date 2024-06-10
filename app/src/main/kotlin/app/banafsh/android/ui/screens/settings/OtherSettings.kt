@@ -173,23 +173,24 @@ fun OtherSettings() {
                     selectingThumbnailSize = true
                 }
             )
-            if (selectingThumbnailSize) SliderDialog(
-                onDismiss = { selectingThumbnailSize = false },
-                title = stringResource(R.string.max_dynamic_thumbnail_size)
-            ) {
-                SliderDialogBody(
-                    provideState = {
-                        remember(AppearancePreferences.maxThumbnailSize) {
-                            mutableFloatStateOf(AppearancePreferences.maxThumbnailSize.toFloat())
-                        }
-                    },
-                    onSlideComplete = { AppearancePreferences.maxThumbnailSize = it.roundToInt() },
-                    min = 32f,
-                    max = 1920f,
-                    toDisplay = { stringResource(R.string.format_px, it.roundToInt()) },
-                    steps = 58
-                )
-            }
+            if (selectingThumbnailSize)
+                SliderDialog(
+                    onDismiss = { selectingThumbnailSize = false },
+                    title = stringResource(R.string.max_dynamic_thumbnail_size)
+                ) {
+                    SliderDialogBody(
+                        provideState = {
+                            remember(AppearancePreferences.maxThumbnailSize) {
+                                mutableFloatStateOf(AppearancePreferences.maxThumbnailSize.toFloat())
+                            }
+                        },
+                        onSlideComplete = { AppearancePreferences.maxThumbnailSize = it.roundToInt() },
+                        min = 32f,
+                        max = 1920f,
+                        toDisplay = { stringResource(R.string.format_px, it.roundToInt()) },
+                        steps = 58
+                    )
+                }
         }
         SettingsGroup(title = stringResource(R.string.service_lifetime)) {
             AnimatedVisibility(visible = !isIgnoringBatteryOptimizations) {
@@ -199,9 +200,10 @@ fun OtherSettings() {
                 )
             }
 
-            if (isAtLeastAndroid12) SettingsDescription(
-                text = stringResource(R.string.service_lifetime_warning_android_12)
-            )
+            if (isAtLeastAndroid12)
+                SettingsDescription(
+                    text = stringResource(R.string.service_lifetime_warning_android_12)
+                )
 
             SettingsEntry(
                 title = stringResource(R.string.ignore_battery_optimizations),
@@ -250,65 +252,68 @@ fun OtherSettings() {
         var showTroubleshoot by rememberSaveable { mutableStateOf(false) }
 
         AnimatedContent(showTroubleshoot, label = "") { show ->
-            if (show) SettingsGroup(
-                title = stringResource(R.string.troubleshooting),
-                description = stringResource(R.string.troubleshooting_warning),
-                important = true
-            ) {
-                val troubleshootScope = rememberCoroutineScope()
-                var reloading by rememberSaveable { mutableStateOf(false) }
+            if (show)
+                SettingsGroup(
+                    title = stringResource(R.string.troubleshooting),
+                    description = stringResource(R.string.troubleshooting_warning),
+                    important = true
+                ) {
+                    val troubleshootScope = rememberCoroutineScope()
+                    var reloading by rememberSaveable { mutableStateOf(false) }
 
-                SecondaryTextButton(
-                    text = stringResource(R.string.reload_app_internals),
-                    onClick = {
-                        if (!reloading) troubleshootScope.launch {
-                            reloading = true
+                    SecondaryTextButton(
+                        text = stringResource(R.string.reload_app_internals),
+                        onClick = {
+                            if (!reloading) troubleshootScope.launch {
+                                reloading = true
+                                binder?.restartForegroundOrStop()
+                                DatabaseInitializer.reload()
+                                reloading = false
+                            }
+                        },
+                        enabled = !reloading,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp)
+                            .padding(horizontal = 16.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    SecondaryTextButton(
+                        text = stringResource(R.string.kill_app),
+                        onClick = {
+                            binder?.stopRadio()
+                            binder?.invincible = false
+                            context.findActivity().finishAndRemoveTask()
                             binder?.restartForegroundOrStop()
-                            DatabaseInitializer.reload()
-                            reloading = false
-                        }
-                    },
-                    enabled = !reloading,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp)
-                        .padding(horizontal = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
+                            troubleshootScope.launch {
+                                delay(500L)
+                                Handler(Looper.getMainLooper()).postAtFrontOfQueue { exitProcess(0) }
+                            }
+                        },
+                        enabled = !reloading,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp)
+                            .padding(horizontal = 16.dp)
+                    )
+                }
+            else
                 SecondaryTextButton(
-                    text = stringResource(R.string.kill_app),
+                    text = stringResource(R.string.show_troubleshoot_section),
                     onClick = {
-                        binder?.stopRadio()
-                        binder?.invincible = false
-                        context.findActivity().finishAndRemoveTask()
-                        binder?.restartForegroundOrStop()
-                        troubleshootScope.launch {
-                            delay(500L)
-                            Handler(Looper.getMainLooper()).postAtFrontOfQueue { exitProcess(0) }
+                        coroutineScope.launch {
+                            delay(500)
+                            scrollState.smoothScrollToBottom()
                         }
+                        showTroubleshoot = true
                     },
-                    enabled = !reloading,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp)
+                        .padding(start = 16.dp, bottom = 16.dp)
                         .padding(horizontal = 16.dp)
                 )
-            } else SecondaryTextButton(
-                text = stringResource(R.string.show_troubleshoot_section),
-                onClick = {
-                    coroutineScope.launch {
-                        delay(500)
-                        scrollState.smoothScrollToBottom()
-                    }
-                    showTroubleshoot = true
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, bottom = 16.dp)
-                    .padding(horizontal = 16.dp)
-            )
         }
     }
 }

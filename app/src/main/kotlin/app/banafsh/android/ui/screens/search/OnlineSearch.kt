@@ -104,7 +104,8 @@ fun OnlineSearch(
             "https://m.youtube.com/playlist?"
         ).any(textFieldValue.text::startsWith)
 
-        if (isPlaylistUrl) textFieldValue.text.toUri().getQueryParameter("list") else null
+        if (isPlaylistUrl) textFieldValue.text.toUri().getQueryParameter("list")
+        else null
     }
 
     val rippleIndication = rememberRipple(bounded = false)

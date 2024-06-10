@@ -103,29 +103,31 @@ fun LocalPlaylistSongs(
 
     var isRenaming by rememberSaveable { mutableStateOf(false) }
 
-    if (isRenaming) TextFieldDialog(
-        hintText = stringResource(R.string.enter_playlist_name_prompt),
-        initialTextInput = playlist.name,
-        onDismiss = { isRenaming = false },
-        onAccept = { text ->
-            query {
-                Database.update(playlist.copy(name = text))
+    if (isRenaming)
+        TextFieldDialog(
+            hintText = stringResource(R.string.enter_playlist_name_prompt),
+            initialTextInput = playlist.name,
+            onDismiss = { isRenaming = false },
+            onAccept = { text ->
+                query {
+                    Database.update(playlist.copy(name = text))
+                }
             }
-        }
-    )
+        )
 
     var isDeleting by rememberSaveable { mutableStateOf(false) }
 
-    if (isDeleting) ConfirmationDialog(
-        text = stringResource(R.string.confirm_delete_playlist),
-        onDismiss = { isDeleting = false },
-        onConfirm = {
-            query {
-                Database.delete(playlist)
+    if (isDeleting)
+        ConfirmationDialog(
+            text = stringResource(R.string.confirm_delete_playlist),
+            onDismiss = { isDeleting = false },
+            onConfirm = {
+                query {
+                    Database.delete(playlist)
+                }
+                onDelete()
             }
-            onDelete()
-        }
-    )
+        )
 
     Box {
         LookaheadScope {

@@ -56,7 +56,8 @@ fun Modifier.pinchToToggle(
                     if (abs(1 - scale) * centroidSize > touchSlop) touchSlopReached = true
                 }
 
-                if (touchSlopReached) event.changes.fastForEach { if (it.positionChanged()) it.consume() }
+                if (touchSlopReached)
+                    event.changes.fastForEach { if (it.positionChanged()) it.consume() }
 
                 if (
                     direction.reachedThreshold(

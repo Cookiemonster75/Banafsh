@@ -81,14 +81,15 @@ fun AppearanceSettings() = with(AppearancePreferences) {
             )
         }
         SettingsGroup(title = stringResource(R.string.text)) {
-            if (isAtLeastAndroid13) SettingsEntry(
-                title = stringResource(R.string.language),
-                text = currentLocale()?.displayLanguage
-                    ?: stringResource(R.string.color_source_default),
-                onClick = {
-                    context.findActivity().startLanguagePicker()
-                }
-            )
+            if (isAtLeastAndroid13)
+                SettingsEntry(
+                    title = stringResource(R.string.language),
+                    text = currentLocale()?.displayLanguage
+                        ?: stringResource(R.string.color_source_default),
+                    onClick = {
+                        context.findActivity().startLanguagePicker()
+                    }
+                )
 
             if (googleFontsAvailable()) EnumValueSelectorSettingsEntry(
                 title = stringResource(R.string.font),
@@ -160,6 +161,13 @@ fun AppearanceSettings() = with(AppearancePreferences) {
                 text = stringResource(R.string.swipe_to_remove_item_description),
                 isChecked = PlayerPreferences.horizontalSwipeToRemoveItem,
                 onCheckedChange = { PlayerPreferences.horizontalSwipeToRemoveItem = it }
+            )
+
+            SwitchSettingsEntry(
+                title = stringResource(R.string.lyrics_keep_screen_awake),
+                text = stringResource(R.string.lyrics_keep_screen_awake_description),
+                isChecked = lyricsKeepScreenAwake,
+                onCheckedChange = { lyricsKeepScreenAwake = it }
             )
         }
         SettingsGroup(title = stringResource(R.string.songs)) {

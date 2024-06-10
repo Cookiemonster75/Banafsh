@@ -175,15 +175,16 @@ fun Queue(
     }
 
     LaunchedEffect(mediaItemIndex, shouldLoadSuggestions) {
-        if (shouldLoadSuggestions) withContext(Dispatchers.IO) {
-            suggestions = runCatching {
-                Innertube.nextPage(
-                    NextBody(videoId = windows[mediaItemIndex].mediaItem.mediaId)
-                )?.mapCatching { page ->
-                    page.itemsPage?.items?.map { it.asMediaItem }
-                }
-            }.also { it.exceptionOrNull()?.printStackTrace() }.getOrNull()
-        }
+        if (shouldLoadSuggestions)
+            withContext(Dispatchers.IO) {
+                suggestions = runCatching {
+                    Innertube.nextPage(
+                        NextBody(videoId = windows[mediaItemIndex].mediaItem.mediaId)
+                    )?.mapCatching { page ->
+                        page.itemsPage?.items?.map { it.asMediaItem }
+                    }
+                }.also { it.exceptionOrNull()?.printStackTrace() }.getOrNull()
+            }
     }
 
     LaunchedEffect(mediaItemIndex) {
@@ -290,15 +291,18 @@ fun Queue(
                                                 )
                                                 .size(Dimensions.thumbnails.song)
                                         ) {
-                                            if (shouldBePlaying) MusicBars(
-                                                color = colorPalette.onOverlay,
-                                                modifier = Modifier.height(24.dp)
-                                            ) else Image(
-                                                painter = painterResource(R.drawable.play),
-                                                contentDescription = null,
-                                                colorFilter = ColorFilter.tint(colorPalette.onOverlay),
-                                                modifier = Modifier.size(24.dp)
-                                            )
+                                            if (shouldBePlaying)
+                                                MusicBars(
+                                                    color = colorPalette.onOverlay,
+                                                    modifier = Modifier.height(24.dp)
+                                                )
+                                            else
+                                                Image(
+                                                    painter = painterResource(R.drawable.play),
+                                                    contentDescription = null,
+                                                    colorFilter = ColorFilter.tint(colorPalette.onOverlay),
+                                                    modifier = Modifier.size(24.dp)
+                                                )
                                         }
                                     }
                                 },
@@ -322,7 +326,8 @@ fun Queue(
                                         },
                                         onClick = {
                                             if (isPlayingThisMediaItem) {
-                                                if (shouldBePlaying) binder.player.pause() else binder.player.play()
+                                                if (shouldBePlaying) binder.player.pause()
+                                                else binder.player.play()
                                             } else {
                                                 binder.player.seekToDefaultPosition(window.firstPeriodIndex)
                                                 binder.player.playWhenReady = true
@@ -505,14 +510,15 @@ fun Queue(
                                         .onFirst { isCreatingNewPlaylist = it.isEmpty() }
                                 }.collectAsState(initial = null, context = Dispatchers.IO)
 
-                                if (isCreatingNewPlaylist) TextFieldDialog(
-                                    hintText = stringResource(R.string.enter_playlist_name_prompt),
-                                    onDismiss = { isCreatingNewPlaylist = false },
-                                    onAccept = { text ->
-                                        menuState.hide()
-                                        addToPlaylist(Playlist(name = text), 0)
-                                    }
-                                )
+                                if (isCreatingNewPlaylist)
+                                    TextFieldDialog(
+                                        hintText = stringResource(R.string.enter_playlist_name_prompt),
+                                        onDismiss = { isCreatingNewPlaylist = false },
+                                        onAccept = { text ->
+                                            menuState.hide()
+                                            addToPlaylist(Playlist(name = text), 0)
+                                        }
+                                    )
 
                                 BackHandler { menuState.hide() }
 

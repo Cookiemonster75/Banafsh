@@ -48,14 +48,17 @@ fun adaptiveThumbnailContent(
             .clip(shape ?: thumbnailShape)
             .size(thumbnailSize)
 
-        if (isLoading) Spacer(
-            modifier = modifier
-                .shimmer()
-                .background(colorPalette.shimmer)
-        ) else AsyncImage(
-            model = url?.thumbnail(thumbnailSize.px),
-            contentDescription = null,
-            modifier = modifier.background(colorPalette.surfaceContainer)
-        )
+        if (isLoading)
+            Spacer(
+                modifier = modifier
+                    .shimmer()
+                    .background(colorPalette.shimmer)
+            )
+        else
+            AsyncImage(
+                model = url?.thumbnail(thumbnailSize.px),
+                contentDescription = null,
+                modifier = modifier.background(colorPalette.surfaceContainer)
+            )
     }
 }

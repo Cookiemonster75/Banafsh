@@ -268,47 +268,48 @@ fun About() = SettingsCategoryScreen(
         )
     }
 
-    if (newVersionDialogOpened) DefaultDialog(
-        onDismiss = { newVersionDialogOpened = false }
-    ) {
-        var newerVersion: Result<Release?>? by remember { mutableStateOf(null) }
+    if (newVersionDialogOpened)
+        DefaultDialog(
+            onDismiss = { newVersionDialogOpened = false }
+        ) {
+            var newerVersion: Result<Release?>? by remember { mutableStateOf(null) }
 
-        LaunchedEffect(Unit) {
-            withContext(Dispatchers.IO) {
-                newerVersion = VERSION_NAME.version
-                    .getNewerVersion()
-                    ?.onFailure(Throwable::printStackTrace)
+            LaunchedEffect(Unit) {
+                withContext(Dispatchers.IO) {
+                    newerVersion = VERSION_NAME.version
+                        .getNewerVersion()
+                        ?.onFailure(Throwable::printStackTrace)
+                }
             }
-        }
 
-        newerVersion?.getOrNull()?.let {
-            BasicText(
-                text = stringResource(R.string.new_version_available),
+            newerVersion?.getOrNull()?.let {
+                BasicText(
+                    text = stringResource(R.string.new_version_available),
+                    style = typography.xs.semiBold.center
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                BasicText(
+                    text = it.name ?: it.tag,
+                    style = typography.m.bold.center
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                SecondaryTextButton(
+                    text = stringResource(R.string.more_information),
+                    onClick = { uriHandler.openUri(it.frontendUrl.toString()) }
+                )
+            } ?: newerVersion?.exceptionOrNull()?.let {
+                BasicText(
+                    text = stringResource(R.string.error_github),
+                    style = typography.xs.semiBold.center,
+                    modifier = Modifier.padding(all = 24.dp)
+                )
+            } ?: if (newerVersion?.isSuccess == true) BasicText(
+                text = stringResource(R.string.up_to_date),
                 style = typography.xs.semiBold.center
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            BasicText(
-                text = it.name ?: it.tag,
-                style = typography.m.bold.center
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            SecondaryTextButton(
-                text = stringResource(R.string.more_information),
-                onClick = { uriHandler.openUri(it.frontendUrl.toString()) }
-            )
-        } ?: newerVersion?.exceptionOrNull()?.let {
-            BasicText(
-                text = stringResource(R.string.error_github),
-                style = typography.xs.semiBold.center,
-                modifier = Modifier.padding(all = 24.dp)
-            )
-        } ?: if (newerVersion?.isSuccess == true) BasicText(
-            text = stringResource(R.string.up_to_date),
-            style = typography.xs.semiBold.center
-        ) else CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-    }
+            ) else CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+        }
 }

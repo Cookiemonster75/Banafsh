@@ -204,8 +204,8 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
     private var bassBoost: BassBoost? = null
 
     private val binder = Binder()
-    private var isNotificationStarted = false
 
+    private var isNotificationStarted = false
     override val notificationId get() = NOTIFICATION_ID
     private val notificationActionReceiver = NotificationActionReceiver()
 
@@ -273,7 +273,6 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
             }
 
         updateRepeatMode()
-
         maybeRestorePlayerQueue()
 
         mediaSession = MediaSession(baseContext, TAG).apply {
@@ -306,7 +305,6 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
         }
 
         notificationActionReceiver.register(this)
-
         maybeResumePlaybackWhenDeviceConnected()
 
         fun <T> CoroutineScope.subscribe(
@@ -493,16 +491,17 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
         val prev = player.currentMediaItem ?: return
         player.seekToNextMediaItem()
 
-        if (isAtLeastAndroid8) notificationManager?.createNotificationChannel(
-            NotificationChannel(
-                /* id = */ AUTOSKIP_NOTIFICATION_CHANNEL_ID,
-                /* name = */ getString(R.string.skip_on_error),
-                /* importance = */ NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                enableVibration(true)
-                enableLights(true)
-            }
-        )
+        if (isAtLeastAndroid8)
+            notificationManager?.createNotificationChannel(
+                NotificationChannel(
+                    /* id = */ AUTOSKIP_NOTIFICATION_CHANNEL_ID,
+                    /* name = */ getString(R.string.skip_on_error),
+                    /* importance = */ NotificationManager.IMPORTANCE_HIGH
+                ).apply {
+                    enableVibration(true)
+                    enableLights(true)
+                }
+            )
 
         val notification = NotificationCompat.Builder(this, AUTOSKIP_NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.app_icon)
@@ -568,16 +567,16 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
     private fun maybeSavePlayerQueue() {
         if (!PlayerPreferences.persistentQueue) return
 
-        val songs = player.currentTimeline.mediaItems.map { it.toSong() }
+        val mediaItems = player.currentTimeline.mediaItems
         val mediaItemIndex = player.currentMediaItemIndex
         val mediaItemPosition = player.currentPosition
 
         query {
             Database.clearQueue()
             Database.insert(
-                songs.mapIndexed { index, song ->
+                mediaItems.mapIndexed { index, mediaItem ->
                     QueuedSong(
-                        song = song,
+                        song = mediaItem.toSong(),
                         position = if (index == mediaItemIndex) mediaItemPosition else null
                     )
                 }
@@ -1143,7 +1142,7 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
     }
 
     inner class NotificationActionReceiver internal constructor() :
-        ActionReceiver("app.vitune.android") {
+        ActionReceiver("app.banafsh.android") {
         val pause by action { _, _ ->
             player.pause()
         }

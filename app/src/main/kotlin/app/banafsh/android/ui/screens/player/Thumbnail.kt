@@ -153,17 +153,16 @@ fun Thumbnail(
                     }
             )
 
-            if (!currentWindow.mediaItem.isLocal)
-                Lyrics(
-                    mediaId = currentWindow.mediaItem.mediaId,
-                    isDisplayed = isShowingLyrics && error == null,
-                    onDismiss = { onShowLyrics(false) },
-                    ensureSongInserted = { Database.insert(currentWindow.mediaItem) },
-                    mediaMetadataProvider = currentWindow.mediaItem::mediaMetadata,
-                    durationProvider = player::getDuration,
-                    onOpenDialog = onOpenDialog,
-                    modifier = Modifier.height(height.px.dp)
-                )
+            if (!currentWindow.mediaItem.isLocal) Lyrics(
+                mediaId = currentWindow.mediaItem.mediaId,
+                isDisplayed = isShowingLyrics && error == null,
+                onDismiss = { onShowLyrics(false) },
+                ensureSongInserted = { Database.insert(currentWindow.mediaItem) },
+                mediaMetadataProvider = currentWindow.mediaItem::mediaMetadata,
+                durationProvider = player::getDuration,
+                onOpenDialog = onOpenDialog,
+                modifier = Modifier.height(height.px.dp)
+            )
 
             StatsForNerds(
                 mediaId = currentWindow.mediaItem.mediaId,

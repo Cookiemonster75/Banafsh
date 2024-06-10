@@ -33,6 +33,7 @@ import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -49,6 +50,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -68,6 +70,7 @@ import app.banafsh.android.lib.providers.kugou.KuGou
 import app.banafsh.android.lib.providers.lrclib.LrcLib
 import app.banafsh.android.lib.providers.lrclib.models.Track
 import app.banafsh.android.models.Lyrics
+import app.banafsh.android.preferences.AppearancePreferences
 import app.banafsh.android.preferences.PlayerPreferences
 import app.banafsh.android.query
 import app.banafsh.android.transaction
@@ -114,7 +117,8 @@ fun Lyrics(
     shouldShowSynchronizedLyrics: Boolean = PlayerPreferences.isShowingSynchronizedLyrics,
     setShouldShowSynchronizedLyrics: (Boolean) -> Unit = {
         PlayerPreferences.isShowingSynchronizedLyrics = it
-    }
+    },
+    shouldKeepScreenAwake: Boolean = AppearancePreferences.lyricsKeepScreenAwake
 ) = AnimatedVisibility(
     visible = isDisplayed,
     enter = fadeIn(),
@@ -129,6 +133,7 @@ fun Lyrics(
     val menuState = LocalMenuState.current
     val binder = LocalPlayerServiceBinder.current
     val density = LocalDensity.current
+    val view = LocalView.current
 
     var lyrics by remember { mutableStateOf<Lyrics?>(null) }
 
@@ -144,6 +149,14 @@ fun Lyrics(
     val text = remember(lyrics, showSynchronizedLyrics) {
         if (showSynchronizedLyrics) lyrics?.synced else lyrics?.fixed
     }
+
+    if (shouldKeepScreenAwake)
+        DisposableEffect(Unit) {
+            view.keepScreenOn = true
+            onDispose {
+                view.keepScreenOn = false
+            }
+        }
 
     LaunchedEffect(mediaId, shouldShowSynchronizedLyrics) {
         runCatching {
@@ -215,43 +228,49 @@ fun Lyrics(
                             }
                         } else lyrics = currentLyrics
 
-                        if (
+                        isError =
                             (shouldShowSynchronizedLyrics && lyrics?.synced?.isBlank() == true) ||
                             (!shouldShowSynchronizedLyrics && lyrics?.fixed?.isBlank() == true)
-                        ) isError = true
                     }
             }
         }.exceptionOrNull()
             ?.let { if (it is CancellationException) throw it else it.printStackTrace() }
     }
 
-    if (isEditing) TextFieldDialog(
-        hintText = stringResource(R.string.enter_lyrics),
-        initialTextInput = text.orEmpty(),
-        singleLine = false,
-        maxLines = 10,
-        isTextInputValid = { true },
-        onDismiss = { isEditing = false },
-        onAccept = {
-            transaction {
-                runCatching {
-                    currentEnsureSongInserted()
+    if (isEditing)
+        TextFieldDialog(
+            hintText = stringResource(R.string.enter_lyrics),
+            initialTextInput = (
+                if (shouldShowSynchronizedLyrics) lyrics?.synced
+                else lyrics?.fixed
+                ).orEmpty(),
+            singleLine = false,
+            maxLines = 10,
+            isTextInputValid = { true },
+            onDismiss = { isEditing = false },
+            onAccept = {
+                transaction {
+                    runCatching {
+                        currentEnsureSongInserted()
 
-                    Database.upsert(
-                        if (shouldShowSynchronizedLyrics) Lyrics(
-                            songId = mediaId,
-                            fixed = lyrics?.fixed,
-                            synced = it
-                        ) else Lyrics(
-                            songId = mediaId,
-                            fixed = it,
-                            synced = lyrics?.synced
+                        Database.upsert(
+                            if (shouldShowSynchronizedLyrics)
+                                Lyrics(
+                                    songId = mediaId,
+                                    fixed = lyrics?.fixed,
+                                    synced = it
+                                )
+                            else
+                                Lyrics(
+                                    songId = mediaId,
+                                    fixed = it,
+                                    synced = lyrics?.synced
+                                )
                         )
-                    )
+                    }
                 }
             }
-        }
-    )
+        )
 
     if (isPicking && shouldShowSynchronizedLyrics) DefaultDialog(
         onDismiss = { isPicking = false },
@@ -557,20 +576,24 @@ fun Lyrics(
                                     enabled = lyrics != null,
                                     onClick = {
                                         menuState.hide()
+
                                         transaction {
                                             runCatching {
                                                 currentEnsureSongInserted()
 
                                                 Database.upsert(
-                                                    if (shouldShowSynchronizedLyrics) Lyrics(
-                                                        songId = mediaId,
-                                                        fixed = lyrics?.fixed,
-                                                        synced = null
-                                                    ) else Lyrics(
-                                                        songId = mediaId,
-                                                        fixed = null,
-                                                        synced = lyrics?.synced
-                                                    )
+                                                    if (shouldShowSynchronizedLyrics)
+                                                        Lyrics(
+                                                            songId = mediaId,
+                                                            fixed = lyrics?.fixed,
+                                                            synced = null
+                                                        )
+                                                    else
+                                                        Lyrics(
+                                                            songId = mediaId,
+                                                            fixed = null,
+                                                            synced = lyrics?.synced
+                                                        )
                                                 )
                                             }
                                         }

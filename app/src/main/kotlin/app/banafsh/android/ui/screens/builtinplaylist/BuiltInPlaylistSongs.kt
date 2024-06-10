@@ -143,17 +143,18 @@ fun BuiltInPlaylistSongs(
                             onClick = { dialogShowing = true }
                         )
 
-                        if (dialogShowing) ValueSelectorDialog(
-                            onDismiss = { dialogShowing = false },
-                            title = stringResource(
-                                R.string.format_view_top_of_header,
-                                topListLength
-                            ),
-                            selectedValue = topListPeriod,
-                            values = DataPreferences.TopListPeriod.entries.toImmutableList(),
-                            onValueSelect = { topListPeriod = it },
-                            valueText = { it.displayName() }
-                        )
+                        if (dialogShowing)
+                            ValueSelectorDialog(
+                                onDismiss = { dialogShowing = false },
+                                title = stringResource(
+                                    R.string.format_view_top_of_header,
+                                    topListLength
+                                ),
+                                selectedValue = topListPeriod,
+                                values = DataPreferences.TopListPeriod.entries.toImmutableList(),
+                                onValueSelect = { topListPeriod = it },
+                                valueText = { it.displayName() }
+                            )
                     }
                 }
             }

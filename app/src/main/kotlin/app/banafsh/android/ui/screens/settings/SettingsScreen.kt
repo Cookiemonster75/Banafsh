@@ -131,14 +131,15 @@ fun <T> ValueSelectorSettingsEntry(
 ) {
     var isShowingDialog by remember { mutableStateOf(false) }
 
-    if (isShowingDialog) ValueSelectorDialog(
-        onDismiss = { isShowingDialog = false },
-        title = title,
-        selectedValue = selectedValue,
-        values = values,
-        onValueSelect = onValueSelect,
-        valueText = valueText
-    )
+    if (isShowingDialog)
+        ValueSelectorDialog(
+            onDismiss = { isShowingDialog = false },
+            title = title,
+            selectedValue = selectedValue,
+            values = values,
+            onValueSelect = onValueSelect,
+            valueText = valueText
+        )
 
     SettingsEntry(
         modifier = modifier,
@@ -222,17 +223,18 @@ inline fun IntSettingsEntry(
 ) {
     var isShowingDialog by remember { mutableStateOf(false) }
 
-    if (isShowingDialog) NumberFieldDialog(
-        onDismiss = { isShowingDialog = false },
-        onAccept = {
-            setValue(it)
-            isShowingDialog = false
-        },
-        initialValue = currentValue,
-        defaultValue = defaultValue,
-        convert = { it.toIntOrNull() },
-        range = range
-    )
+    if (isShowingDialog)
+        NumberFieldDialog(
+            onDismiss = { isShowingDialog = false },
+            onAccept = {
+                setValue(it)
+                isShowingDialog = false
+            },
+            initialValue = currentValue,
+            defaultValue = defaultValue,
+            convert = { it.toIntOrNull() },
+            range = range
+        )
 
     SettingsEntry(
         modifier = modifier,

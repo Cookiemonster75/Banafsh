@@ -96,35 +96,36 @@ fun PlaylistSongList(
 
     var isImportingPlaylist by rememberSaveable { mutableStateOf(false) }
 
-    if (isImportingPlaylist) TextFieldDialog(
-        hintText = stringResource(R.string.enter_playlist_name_prompt),
-        initialTextInput = playlistPage?.title.orEmpty(),
-        onDismiss = { isImportingPlaylist = false },
-        onAccept = { text ->
-            query {
-                transaction {
-                    val playlistId = Database.insert(
-                        Playlist(
-                            name = text,
-                            browseId = browseId,
-                            thumbnail = playlistPage?.thumbnail?.url
-                        )
-                    )
-
-                    playlistPage?.songsPage?.items
-                        ?.map(Innertube.SongItem::asMediaItem)
-                        ?.onEach(Database::insert)
-                        ?.mapIndexed { index, mediaItem ->
-                            SongPlaylistMap(
-                                songId = mediaItem.mediaId,
-                                playlistId = playlistId,
-                                position = index
+    if (isImportingPlaylist)
+        TextFieldDialog(
+            hintText = stringResource(R.string.enter_playlist_name_prompt),
+            initialTextInput = playlistPage?.title.orEmpty(),
+            onDismiss = { isImportingPlaylist = false },
+            onAccept = { text ->
+                query {
+                    transaction {
+                        val playlistId = Database.insert(
+                            Playlist(
+                                name = text,
+                                browseId = browseId,
+                                thumbnail = playlistPage?.thumbnail?.url
                             )
-                        }?.let(Database::insertSongPlaylistMaps)
+                        )
+
+                        playlistPage?.songsPage?.items
+                            ?.map(Innertube.SongItem::asMediaItem)
+                            ?.onEach(Database::insert)
+                            ?.mapIndexed { index, mediaItem ->
+                                SongPlaylistMap(
+                                    songId = mediaItem.mediaId,
+                                    playlistId = playlistId,
+                                    position = index
+                                )
+                            }?.let(Database::insertSongPlaylistMaps)
+                    }
                 }
             }
-        }
-    )
+        )
 
     val headerContent: @Composable () -> Unit = {
         if (playlistPage == null) HeaderPlaceholder(modifier = Modifier.shimmer())

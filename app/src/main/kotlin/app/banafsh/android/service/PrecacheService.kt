@@ -103,7 +103,7 @@ class PrecacheService : DownloadService(
         }
     }
 
-    inner class NotificationActionReceiver : ActionReceiver("app.vitune.android.precache") {
+    inner class NotificationActionReceiver : ActionReceiver("app.banafsh.android.precache") {
         val cancel by action { context, _ ->
             runCatching {
                 sendPauseDownloads(

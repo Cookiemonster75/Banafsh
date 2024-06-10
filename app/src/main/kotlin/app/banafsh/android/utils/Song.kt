@@ -2,18 +2,23 @@ package app.banafsh.android.utils
 
 import android.content.ContentUris
 import android.content.Intent
-import android.net.Uri
 import android.provider.MediaStore
+import androidx.annotation.OptIn
 import androidx.core.net.toUri
+import androidx.core.os.bundleOf
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
+import androidx.media3.common.util.UnstableApi
 import app.banafsh.android.models.Song
 import app.banafsh.android.service.LOCAL_KEY_PREFIX
 import app.banafsh.android.service.isLocal
 
-fun MediaItem.getUri(): Uri = if (isLocal) ContentUris.withAppendedId(
-    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-    mediaId.substringAfter(LOCAL_KEY_PREFIX).toLong()
-) else mediaId.toUri()
+fun Song.getUri() = if (isLocal)
+    ContentUris.withAppendedId(
+        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+        id.substringAfter(LOCAL_KEY_PREFIX).toLong()
+    )
+else id.toUri()
 
 fun MediaItem.toSong(): Song {
     val extras = mediaMetadata.extras?.songBundle
@@ -26,6 +31,27 @@ fun MediaItem.toSong(): Song {
         explicit = extras?.explicit == true
     )
 }
+
+val Song.asMediaItem: MediaItem
+    @OptIn(UnstableApi::class)
+    get() = MediaItem.Builder()
+        .setMediaMetadata(
+            MediaMetadata.Builder()
+                .setTitle(title)
+                .setArtist(artistsText)
+                .setArtworkUri(thumbnailUrl?.toUri())
+                .setExtras(
+                    bundleOf(
+                        "durationText" to durationText,
+                        "explicit" to explicit
+                    )
+                )
+                .build()
+        )
+        .setMediaId(id)
+        .setUri(getUri())
+        .setCustomCacheKey(id)
+        .build()
 
 fun createShareSongIndent(mediaItem: MediaItem): Intent = Intent().apply {
     action = Intent.ACTION_SEND

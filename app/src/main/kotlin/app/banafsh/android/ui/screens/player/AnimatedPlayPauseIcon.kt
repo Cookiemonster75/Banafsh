@@ -82,17 +82,20 @@ private fun LottieAnimationWithPlaceholder(
         value = true
     }
 
-    if (ready) LottieAnimation(
-        modifier = modifier,
-        composition = lottieCompositionResult.value,
-        progress = { progress },
-        dynamicProperties = dynamicProperties
-    ) else Image(
-        modifier = modifier,
-        painter = painterResource(placeholder),
-        colorFilter = ColorFilter.tint(tint),
-        contentDescription = contentDescription
-    )
+    if (ready)
+        LottieAnimation(
+            modifier = modifier,
+            composition = lottieCompositionResult.value,
+            progress = { progress },
+            dynamicProperties = dynamicProperties
+        )
+    else
+        Image(
+            modifier = modifier,
+            painter = painterResource(placeholder),
+            colorFilter = ColorFilter.tint(tint),
+            contentDescription = contentDescription
+        )
 }
 
 @Composable

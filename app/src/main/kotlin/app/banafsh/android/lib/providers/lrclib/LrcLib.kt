@@ -32,7 +32,7 @@ object LrcLib {
             }
 
             install(UserAgent) {
-                agent = "ViTune (https://github.com/25huizengek1/ViTune)"
+                agent = "Banafsh (https://github.com/IamRezaMousavi/Banafsh)"
             }
 
             expectSuccess = true

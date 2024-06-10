@@ -164,14 +164,16 @@ fun Player(
                 verticalAlignment = Alignment.Top,
                 modifier = Modifier
                     .let {
-                        if (horizontalSwipeToClose) it.onSwipe(
-                            animateOffset = true,
-                            onSwipeOut = { animationJob ->
-                                animationJob.join()
-                                layoutState.dismissSoft()
-                                onDismiss(binder)
-                            }
-                        ) else it
+                        if (horizontalSwipeToClose)
+                            it.onSwipe(
+                                animateOffset = true,
+                                onSwipeOut = { animationJob ->
+                                    animationJob.join()
+                                    layoutState.dismissSoft()
+                                    onDismiss(binder)
+                                }
+                            )
+                        else it
                     }
                     .clip(shape)
                     .background(colorPalette.surfaceContainer)
@@ -263,7 +265,8 @@ fun Player(
                         modifier = Modifier
                             .clickable(
                                 onClick = {
-                                    if (shouldBePlaying) binder.player.pause() else {
+                                    if (shouldBePlaying) binder.player.pause()
+                                    else {
                                         if (binder.player.playbackState == Player.STATE_IDLE) binder.player.prepare()
                                         binder.player.play()
                                     }
@@ -353,85 +356,89 @@ fun Player(
             )
         }
 
-        if (isLandscape) Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = containerModifier.padding(top = 32.dp)
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .weight(0.66f)
-                    .padding(bottom = 16.dp)
+        if (isLandscape)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = containerModifier.padding(top = 32.dp)
             ) {
-                thumbnailContent(Modifier.padding(horizontal = 16.dp))
-            }
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .weight(0.66f)
+                        .padding(bottom = 16.dp)
+                ) {
+                    thumbnailContent(Modifier.padding(horizontal = 16.dp))
+                }
 
-            controlsContent(
-                Modifier
-                    .padding(vertical = 8.dp)
-                    .fillMaxHeight()
-                    .weight(1f)
-            )
-        } else Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = containerModifier.padding(top = 54.dp)
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.weight(1.25f)
+                controlsContent(
+                    Modifier
+                        .padding(vertical = 8.dp)
+                        .fillMaxHeight()
+                        .weight(1f)
+                )
+            }
+        else
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = containerModifier.padding(top = 54.dp)
             ) {
-                thumbnailContent(Modifier.padding(horizontal = 32.dp, vertical = 8.dp))
-            }
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.weight(1.25f)
+                ) {
+                    thumbnailContent(Modifier.padding(horizontal = 32.dp, vertical = 8.dp))
+                }
 
-            controlsContent(
-                Modifier
-                    .padding(vertical = 8.dp)
-                    .fillMaxWidth()
-                    .weight(1f)
-            )
-        }
+                controlsContent(
+                    Modifier
+                        .padding(vertical = 8.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+                )
+            }
 
         var audioDialogOpen by rememberSaveable { mutableStateOf(false) }
 
-        if (audioDialogOpen) SliderDialog(
-            onDismiss = { audioDialogOpen = false },
-            title = stringResource(R.string.playback_settings)
-        ) {
-            SliderDialogBody(
-                provideState = { remember(speed) { mutableFloatStateOf(speed) } },
-                onSlideComplete = { speed = it },
-                min = 0f,
-                max = 2f,
-                toDisplay = {
-                    if (it <= 0.01f) stringResource(R.string.minimum_speed_value)
-                    else stringResource(R.string.format_multiplier, "%.2f".format(it))
-                },
-                label = stringResource(R.string.playback_speed)
-            )
-            SliderDialogBody(
-                provideState = { remember(pitch) { mutableFloatStateOf(pitch) } },
-                onSlideComplete = { pitch = it },
-                min = 0f,
-                max = 2f,
-                toDisplay = {
-                    if (it <= 0.01f) stringResource(R.string.minimum_speed_value)
-                    else stringResource(R.string.format_multiplier, "%.2f".format(it))
-                },
-                label = stringResource(R.string.playback_pitch)
-            )
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
+        if (audioDialogOpen)
+            SliderDialog(
+                onDismiss = { audioDialogOpen = false },
+                title = stringResource(R.string.playback_settings)
             ) {
-                SecondaryTextButton(
-                    text = stringResource(R.string.reset),
-                    onClick = {
-                        speed = 1f
-                        pitch = 1f
-                    }
+                SliderDialogBody(
+                    provideState = { remember(speed) { mutableFloatStateOf(speed) } },
+                    onSlideComplete = { speed = it },
+                    min = 0f,
+                    max = 2f,
+                    toDisplay = {
+                        if (it <= 0.01f) stringResource(R.string.minimum_speed_value)
+                        else stringResource(R.string.format_multiplier, "%.2f".format(it))
+                    },
+                    label = stringResource(R.string.playback_speed)
                 )
+                SliderDialogBody(
+                    provideState = { remember(pitch) { mutableFloatStateOf(pitch) } },
+                    onSlideComplete = { pitch = it },
+                    min = 0f,
+                    max = 2f,
+                    toDisplay = {
+                        if (it <= 0.01f) stringResource(R.string.minimum_speed_value)
+                        else stringResource(R.string.format_multiplier, "%.2f".format(it))
+                    },
+                    label = stringResource(R.string.playback_pitch)
+                )
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    SecondaryTextButton(
+                        text = stringResource(R.string.reset),
+                        onClick = {
+                            speed = 1f
+                            pitch = 1f
+                        }
+                    )
+                }
             }
-        }
 
         var boostDialogOpen by rememberSaveable { mutableStateOf(false) }
 

@@ -225,23 +225,25 @@ fun SongItem(
                     )
                 }
 
-                if (explicit) Image(
-                    painter = painterResource(R.drawable.explicit),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(colorPalette.text),
-                    modifier = Modifier.size(15.dp)
-                )
+                if (explicit)
+                    Image(
+                        painter = painterResource(R.drawable.explicit),
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(colorPalette.text),
+                        modifier = Modifier.size(15.dp)
+                    )
             }
 
-            if (showDuration) duration?.let {
-                BasicText(
-                    text = duration,
-                    style = typography.xxs.secondary.medium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-            }
+            if (showDuration)
+                duration?.let {
+                    BasicText(
+                        text = duration,
+                        style = typography.xxs.secondary.medium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
         }
     }
 }

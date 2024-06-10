@@ -318,9 +318,7 @@ class PlayerMediaBrowserService : MediaBrowserService(), ServiceConnection {
                                 sortOrder = OrderPreferences.localSongSortOrder,
                                 isLocal = true
                             )
-                            .map { songs ->
-                                songs.filter { it.durationText != "0:00" }
-                            }
+                            .map { songs -> songs.filter { it.durationText != "0:00" } }
                             .first()
 
                     MediaId.PLAYLISTS ->

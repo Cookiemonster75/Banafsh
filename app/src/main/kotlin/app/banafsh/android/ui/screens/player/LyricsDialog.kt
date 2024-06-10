@@ -123,7 +123,8 @@ fun LyricsDialog(
                 durationProvider = player::getDuration,
                 ensureSongInserted = { Database.insert(currentWindow.mediaItem) },
                 onMenuLaunch = onDismiss,
-                modifier = Modifier.height(maxHeight)
+                modifier = Modifier.height(maxHeight),
+                shouldKeepScreenAwake = false // otherwise the keepScreenOn flag resets after dialog closes
             )
         }
     }

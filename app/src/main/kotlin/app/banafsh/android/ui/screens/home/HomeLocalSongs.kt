@@ -79,23 +79,25 @@ fun HomeLocalSongs(onSearchClick: () -> Unit) = with(OrderPreferences) {
         if (hasPermission) context.musicFilesAsFlow().collect()
     }
 
-    if (hasPermission) HomeSongs(
-        onSearchClick = onSearchClick,
-        songProvider = {
-            Database.songs(
-                sortBy = localSongSortBy,
-                sortOrder = localSongSortOrder,
-                isLocal = true
-            ).map { songs ->
-                songs.filter { it.durationText != "0:00" }
-            }
-        },
-        sortBy = localSongSortBy,
-        setSortBy = { localSongSortBy = it },
-        sortOrder = localSongSortOrder,
-        setSortOrder = { localSongSortOrder = it },
-        title = stringResource(R.string.local)
-    ) else {
+    if (hasPermission)
+        HomeSongs(
+            onSearchClick = onSearchClick,
+            songProvider = {
+                Database.songs(
+                    sortBy = localSongSortBy,
+                    sortOrder = localSongSortOrder,
+                    isLocal = true
+                ).map { songs ->
+                    songs.filter { it.durationText != "0:00" }
+                }
+            },
+            sortBy = localSongSortBy,
+            setSortBy = { localSongSortBy = it },
+            sortOrder = localSongSortOrder,
+            setSortOrder = { localSongSortOrder = it },
+            title = stringResource(R.string.local)
+        )
+    else {
         LaunchedEffect(Unit) { launcher.launch(permission) }
 
         Column(
