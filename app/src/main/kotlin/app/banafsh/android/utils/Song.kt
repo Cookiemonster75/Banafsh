@@ -1,7 +1,7 @@
 package app.banafsh.android.utils
 
 import android.content.ContentUris
-import android.content.Intent
+import android.content.Context
 import android.provider.MediaStore
 import androidx.annotation.OptIn
 import androidx.core.net.toUri
@@ -52,21 +52,3 @@ val Song.asMediaItem: MediaItem
         .setUri(getUri())
         .setCustomCacheKey(id)
         .build()
-
-fun createShareSongIndent(mediaItem: MediaItem): Intent = Intent().apply {
-    action = Intent.ACTION_SEND
-    if (mediaItem.isLocal) {
-        type = "audio/*"
-        putExtra(
-            Intent.EXTRA_STREAM,
-            mediaItem.getUri()
-        )
-        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    } else {
-        type = "text/plain"
-        putExtra(
-            Intent.EXTRA_TEXT,
-            "https://music.youtube.com/watch?v=${mediaItem.mediaId}"
-        )
-    }
-}

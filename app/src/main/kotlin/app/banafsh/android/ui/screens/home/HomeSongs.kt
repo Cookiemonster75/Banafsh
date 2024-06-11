@@ -63,14 +63,13 @@ import app.banafsh.android.lib.core.ui.overlay
 import app.banafsh.android.models.Song
 import app.banafsh.android.preferences.AppearancePreferences
 import app.banafsh.android.preferences.OrderPreferences
-import app.banafsh.android.query
 import app.banafsh.android.service.isLocal
 import app.banafsh.android.transaction
 import app.banafsh.android.ui.components.LocalMenuState
-import app.banafsh.android.ui.components.themed.ConfirmationDialog
 import app.banafsh.android.ui.components.themed.FloatingActionsContainerWithScrollToTop
 import app.banafsh.android.ui.components.themed.Header
 import app.banafsh.android.ui.components.themed.HeaderIconButton
+import app.banafsh.android.ui.components.themed.HideSongDialog
 import app.banafsh.android.ui.components.themed.InHistoryMediaItemMenu
 import app.banafsh.android.ui.components.themed.TextField
 import app.banafsh.android.ui.items.SongItem
@@ -346,30 +345,4 @@ fun HomeSongs(
             onClick = onSearchClick
         )
     }
-}
-
-@OptIn(UnstableApi::class)
-@Composable
-fun HideSongDialog(
-    song: Song,
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val binder = LocalPlayerServiceBinder.current
-
-    ConfirmationDialog(
-        text = stringResource(R.string.confirm_hide_song),
-        onDismiss = onDismiss,
-        onConfirm = {
-            onConfirm()
-            query {
-                runCatching {
-                    if (!song.isLocal) binder?.cache?.removeResource(song.id)
-                    Database.delete(song)
-                }
-            }
-        },
-        modifier = modifier
-    )
 }

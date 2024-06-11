@@ -1,6 +1,7 @@
 package app.banafsh.android.ui.components.themed
 
 import androidx.annotation.IntRange
+import androidx.annotation.OptIn
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -42,9 +43,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.media3.common.util.UnstableApi
+import app.banafsh.android.Database
+import app.banafsh.android.LocalPlayerServiceBinder
 import app.banafsh.android.R
 import app.banafsh.android.lib.core.ui.LocalAppearance
 import app.banafsh.android.lib.core.ui.utils.roundedShape
+import app.banafsh.android.models.Song
+import app.banafsh.android.query
+import app.banafsh.android.service.isLocal
 import app.banafsh.android.utils.center
 import app.banafsh.android.utils.drawCircle
 import app.banafsh.android.utils.medium
@@ -161,39 +168,58 @@ fun ConfirmationDialog(
     cancelText: String = stringResource(R.string.cancel),
     confirmText: String = stringResource(R.string.confirm),
     onCancel: () -> Unit = onDismiss
+) = DefaultDialog(
+    onDismiss = onDismiss,
+    modifier = modifier
+) {
+    ConfirmationDialogBody(
+        text = text,
+        onDismiss = onDismiss,
+        onConfirm = onConfirm,
+        cancelText = cancelText,
+        confirmText = confirmText,
+        onCancel = onCancel
+    )
+}
+
+@Suppress("ModifierMissing", "UnusedReceiverParameter")
+@Composable
+fun ColumnScope.ConfirmationDialogBody(
+    text: String,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    cancelText: String = stringResource(R.string.cancel),
+    confirmText: String = stringResource(R.string.confirm),
+    onCancel: () -> Unit = onDismiss
 ) {
     val (_, typography) = LocalAppearance.current
 
-    DefaultDialog(
-        onDismiss = onDismiss,
-        modifier = modifier
+    BasicText(
+        text = text,
+        style = typography.xs.medium.center,
+        modifier = Modifier.padding(all = 16.dp)
+    )
+
+    Row(
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier.fillMaxWidth()
     ) {
-        BasicText(
-            text = text,
-            style = typography.xs.medium.center,
-            modifier = Modifier.padding(all = 16.dp)
+        DialogTextButton(
+            text = cancelText,
+            onClick = onCancel
         )
 
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            DialogTextButton(
-                text = cancelText,
-                onClick = onCancel
-            )
-
-            DialogTextButton(
-                text = confirmText,
-                primary = true,
-                onClick = {
-                    onConfirm()
-                    onDismiss()
-                }
-            )
-        }
+        DialogTextButton(
+            text = confirmText,
+            primary = true,
+            onClick = {
+                onConfirm()
+                onDismiss()
+            }
+        )
     }
 }
+
 
 @Composable
 fun DefaultDialog(
@@ -403,4 +429,30 @@ fun SliderDialog(
             )
         }
     }
+}
+
+@OptIn(UnstableApi::class)
+@Composable
+fun HideSongDialog(
+    song: Song,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val binder = LocalPlayerServiceBinder.current
+
+    ConfirmationDialog(
+        text = stringResource(R.string.confirm_hide_song),
+        onDismiss = onDismiss,
+        onConfirm = {
+            onConfirm()
+            query {
+                runCatching {
+                    if (!song.isLocal) binder?.cache?.removeResource(song.id)
+                    Database.delete(song)
+                }
+            }
+        },
+        modifier = modifier
+    )
 }

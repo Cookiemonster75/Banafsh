@@ -73,7 +73,6 @@ import app.banafsh.android.transaction
 import app.banafsh.android.ui.items.SongItem
 import app.banafsh.android.ui.screens.albumRoute
 import app.banafsh.android.ui.screens.artistRoute
-import app.banafsh.android.ui.screens.home.HideSongDialog
 import app.banafsh.android.utils.addNext
 import app.banafsh.android.utils.asMediaItem
 import app.banafsh.android.utils.createShareSongIndent

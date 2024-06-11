@@ -38,6 +38,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import app.banafsh.android.LocalPlayerAwareWindowInsets
 import app.banafsh.android.R
+import app.banafsh.android.lib.compose.persist.PersistMapCleanup
 import app.banafsh.android.lib.compose.routing.RouteHandler
 import app.banafsh.android.lib.core.ui.LocalAppearance
 import app.banafsh.android.ui.components.themed.Header
@@ -60,6 +61,8 @@ fun SettingsScreen() {
     val saveableStateHolder = rememberSaveableStateHolder()
 
     val (tabIndex, onTabChanged) = rememberSaveable { mutableIntStateOf(0) }
+
+    PersistMapCleanup("settings/")
 
     RouteHandler(listenToGlobalEmitter = true) {
         GlobalRoutes()

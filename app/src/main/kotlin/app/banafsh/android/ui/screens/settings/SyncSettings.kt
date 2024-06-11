@@ -1,5 +1,6 @@
 package app.banafsh.android.ui.screens.settings
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,8 +29,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
+import androidx.credentials.CredentialManager
 import app.banafsh.android.Database
-import app.banafsh.android.Dependencies
+import app.banafsh.android.LocalCredentialManager
 import app.banafsh.android.R
 import app.banafsh.android.lib.compose.persist.persistList
 import app.banafsh.android.lib.core.ui.LocalAppearance
@@ -39,6 +41,7 @@ import app.banafsh.android.models.PipedSession
 import app.banafsh.android.transaction
 import app.banafsh.android.ui.components.themed.CircularProgressIndicator
 import app.banafsh.android.ui.components.themed.ConfirmationDialog
+import app.banafsh.android.ui.components.themed.ConfirmationDialogBody
 import app.banafsh.android.ui.components.themed.DefaultDialog
 import app.banafsh.android.ui.components.themed.DialogTextButton
 import app.banafsh.android.ui.components.themed.IconButton
@@ -54,7 +57,9 @@ import kotlinx.coroutines.launch
 
 @Route
 @Composable
-fun SyncSettings() {
+fun SyncSettings(
+    credentialManager: CredentialManager = LocalCredentialManager.current
+) {
     val coroutineScope = rememberCoroutineScope()
 
     val (colorPalette, typography) = LocalAppearance.current
@@ -64,31 +69,35 @@ fun SyncSettings() {
     val pipedSessions by Database.pipedSessions().collectAsState(initial = listOf())
 
     var linkingPiped by remember { mutableStateOf(false) }
-    if (linkingPiped)
-        DefaultDialog(
-            onDismiss = { linkingPiped = false },
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            var isLoading by rememberSaveable { mutableStateOf(false) }
-            var hasError by rememberSaveable { mutableStateOf(false) }
-            var successful by remember { mutableStateOf(false) }
+    if (linkingPiped) DefaultDialog(
+        onDismiss = { linkingPiped = false },
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        var isLoading by rememberSaveable { mutableStateOf(false) }
+        var hasError by rememberSaveable { mutableStateOf(false) }
+        var successful by remember { mutableStateOf(false) }
 
-            when {
-                successful -> BasicText(
-                    text = stringResource(R.string.piped_session_created_successfully),
-                    style = typography.xs.semiBold.center,
-                    modifier = Modifier.padding(all = 24.dp)
-                )
+        when {
+            successful -> BasicText(
+                text = stringResource(R.string.piped_session_created_successfully),
+                style = typography.xs.semiBold.center,
+                modifier = Modifier.padding(all = 24.dp)
+            )
 
-                hasError -> BasicText(
-                    text = stringResource(R.string.error_piped_link),
-                    style = typography.xs.semiBold.center,
-                    modifier = Modifier.padding(all = 24.dp)
-                )
+            hasError -> ConfirmationDialogBody(
+                text = stringResource(R.string.error_piped_link),
+                onDismiss = { },
+                onCancel = { linkingPiped = false },
+                onConfirm = { hasError = false }
+            )
 
-                isLoading -> CircularProgressIndicator(modifier = Modifier.padding(all = 8.dp))
+            isLoading -> CircularProgressIndicator(modifier = Modifier.padding(all = 8.dp))
 
-                else -> Column(modifier = Modifier.fillMaxWidth()) {
+            else -> Box(modifier = Modifier.fillMaxWidth()) {
+                var backgroundLoading by rememberSaveable { mutableStateOf(false) }
+                if (backgroundLoading) CircularProgressIndicator(modifier = Modifier.align(Alignment.TopEnd))
+
+                Column(modifier = Modifier.fillMaxWidth()) {
                     var instances by persistList<Instance>(tag = "settings/sync/piped/instances")
                     var loadingInstances by rememberSaveable { mutableStateOf(true) }
                     var selectedInstance: Int? by rememberSaveable { mutableStateOf(null) }
@@ -105,12 +114,15 @@ fun SyncSettings() {
                             canSelect = true
                         } ?: run { instancesUnavailable = true }
                         loadingInstances = false
+
+                        backgroundLoading = true
                         runCatching {
-                            Dependencies.credentialManager.get(context)?.let {
+                            credentialManager.get(context)?.let {
                                 username = it.id
                                 password = it.password
                             }
                         }.getOrNull()
+                        backgroundLoading = false
                     }
 
                     BasicText(
@@ -125,8 +137,7 @@ fun SyncSettings() {
                         onValueSelect = { selectedInstance = it },
                         valueText = { idx ->
                             idx?.let { instances.getOrNull(it)?.name }
-                                ?: if (instancesUnavailable)
-                                    stringResource(R.string.error_piped_instances_unavailable)
+                                ?: if (instancesUnavailable) stringResource(R.string.error_piped_instances_unavailable)
                                 else stringResource(R.string.click_to_select)
                         },
                         isEnabled = !instancesUnavailable && canSelect,
@@ -139,7 +150,9 @@ fun SyncSettings() {
                         title = stringResource(R.string.custom_instance),
                         text = null,
                         isChecked = customInstance != null,
-                        onCheckedChange = { customInstance = if (customInstance == null) "" else null },
+                        onCheckedChange = {
+                            customInstance = if (customInstance == null) "" else null
+                        },
                         usePadding = false
                     )
                     customInstance?.let { instance ->
@@ -186,15 +199,13 @@ fun SyncSettings() {
                             username.isNotBlank() && password.isNotBlank(),
                         onClick = {
                             @Suppress("Wrapping") // thank you ktlint
-                            (
-                                customInstance?.let {
-                                    runCatching {
-                                        Url(it)
-                                    }.getOrNull() ?: runCatching {
-                                        Url("https://$it")
-                                    }.getOrNull()
-                                } ?: selectedInstance?.let { instances[it].apiBaseUrl }
-                                )?.let { url ->
+                            (customInstance?.let {
+                                runCatching {
+                                    Url(it)
+                                }.getOrNull() ?: runCatching {
+                                    Url("https://$it")
+                                }.getOrNull()
+                            } ?: selectedInstance?.let { instances[it].apiBaseUrl })?.let { url ->
                                 coroutineScope.launch {
                                     isLoading = true
                                     val session = Piped.login(
@@ -221,7 +232,7 @@ fun SyncSettings() {
                                     successful = true
 
                                     runCatching {
-                                        Dependencies.credentialManager.upsert(
+                                        credentialManager.upsert(
                                             context = context,
                                             username = username,
                                             password = password
@@ -237,6 +248,7 @@ fun SyncSettings() {
                 }
             }
         }
+    }
 
     var deletingPipedSession: Int? by rememberSaveable { mutableStateOf(null) }
     if (deletingPipedSession != null) ConfirmationDialog(
