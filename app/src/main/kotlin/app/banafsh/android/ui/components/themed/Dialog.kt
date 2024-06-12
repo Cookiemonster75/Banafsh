@@ -220,7 +220,6 @@ fun ColumnScope.ConfirmationDialogBody(
     }
 }
 
-
 @Composable
 fun DefaultDialog(
     onDismiss: () -> Unit,

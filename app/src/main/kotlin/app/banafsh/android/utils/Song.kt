@@ -1,7 +1,6 @@
 package app.banafsh.android.utils
 
 import android.content.ContentUris
-import android.content.Context
 import android.provider.MediaStore
 import androidx.annotation.OptIn
 import androidx.core.net.toUri

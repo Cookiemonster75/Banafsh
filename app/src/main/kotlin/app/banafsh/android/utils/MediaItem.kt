@@ -3,7 +3,6 @@
 package app.banafsh.android.utils
 
 import android.content.ContentUris
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore

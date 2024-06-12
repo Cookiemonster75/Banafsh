@@ -3,7 +3,7 @@ kotlin = "2.0.0"
 ksp = "2.0.0-1.0.22"
 
 jvm = "22"
-agp = "8.4.2"
+agp = "8.4.1"
 
 coreKtx = "1.13.1"
 composeBom = "2024.05.00"

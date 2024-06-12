@@ -62,11 +62,9 @@ import androidx.work.Configuration
 import app.banafsh.android.lib.compose.persist.LocalPersistMap
 import app.banafsh.android.lib.compose.persist.PersistMap
 import app.banafsh.android.lib.compose.preferences.PreferencesHolder
-import app.banafsh.android.lib.core.ui.Darkness
 import app.banafsh.android.lib.core.ui.Dimensions
 import app.banafsh.android.lib.core.ui.LocalAppearance
 import app.banafsh.android.lib.core.ui.SystemBarAppearance
-import app.banafsh.android.lib.core.ui.amoled
 import app.banafsh.android.lib.core.ui.appearance
 import app.banafsh.android.lib.core.ui.rippleTheme
 import app.banafsh.android.lib.core.ui.shimmerTheme
