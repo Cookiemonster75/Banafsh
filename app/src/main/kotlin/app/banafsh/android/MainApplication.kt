@@ -103,6 +103,7 @@ import com.kieronquinn.monetcompat.core.MonetCompat
 import com.kieronquinn.monetcompat.interfaces.MonetColorsChangedListener
 import com.valentinilk.shimmer.LocalShimmerTheme
 import dev.kdrag0n.monet.theme.ColorScheme
+import kotlin.system.exitProcess
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -381,6 +382,19 @@ val LocalCredentialManager = staticCompositionLocalOf { Dependencies.credentialM
 
 class MainApplication : Application(), ImageLoaderFactory, Configuration.Provider {
     override fun onCreate() {
+        // setup bug handler activity
+        Thread.setDefaultUncaughtExceptionHandler { thread, error ->
+            val exceptionMessage = Log.getStackTraceString(error)
+            val threadName = thread.name
+            val intent = Intent(this, BugReporterActivity::class.java).apply {
+                putExtra("exception_message", exceptionMessage)
+                putExtra("thread_name", threadName)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            startActivity(intent)
+            exitProcess(10)
+        }
+
         MonetCompat.debugLog = BuildConfig.DEBUG
         super.onCreate()
 

@@ -65,8 +65,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 private val VERSION_NAME = BuildConfig.VERSION_NAME.substringBeforeLast("-")
-private const val REPO_OWNER = "IamRezaMousavi"
-private const val REPO_NAME = "Banafsh"
+const val REPO_OWNER = "IamRezaMousavi"
+const val REPO_NAME = "Banafsh"
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 private val permission = Manifest.permission.POST_NOTIFICATIONS

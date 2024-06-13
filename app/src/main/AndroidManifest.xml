@@ -140,6 +140,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".BugReporterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Banafsh.NoActionBar" />
+
         <service
             android:name=".service.PlayerService"
             android:exported="false"

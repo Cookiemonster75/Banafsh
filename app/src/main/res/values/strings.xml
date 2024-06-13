@@ -186,6 +186,13 @@
     <string name="request_feature">Request a feature or suggest an idea</string>
     <string name="redirect_github">You will be redirected to GitHub</string>
 
+    <string name="crash_report">Crash Report</string>
+    <string name="crash_report_summary">Share Crash Report</string>
+    <string name="crash_report_copy">Copy Report</string>
+    <string name="crash_report_send_file">Send Report File</string>
+    <string name="crash_report_send_file_description">If you want to share the report file click here</string>
+    <string name="crash_report_copied">Report Copied</string>
+
     <string name="color_source">Accent color source</string>
     <string name="color_source_default">Default</string>
     <string name="color_source_dynamic">Dynamic</string>
