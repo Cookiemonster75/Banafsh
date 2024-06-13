@@ -1,3 +1,6 @@
+<!-- markdownlint-disable MD033 -->
+<!-- markdownlint-disable MD041 -->
+<!-- markdownlint-disable MD045 -->
 <div align="center">
     <img src="./app/src/main/ic_launcher-playstore.png" width="128" height="128" style="display: block; margin: 0 auto"/>
     <h1>Banafsh</h1>
@@ -7,13 +10,14 @@
 ---
 
 <p align="center">
-  <img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="30%" />
-  <img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="30%" />
-  <img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="30%" />
-
-  <img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="30%" />
-  <img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="30%" />
-  <img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" width="30%" />
+  <img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="20%" />
+  <img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="20%" />
+  <img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="20%" />
+  <img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="20%" />
+  <img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="20%" />
+  <img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" width="20%" />
+  <img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" width="20%" />
+  <img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/8.png" width="20%" />
 </p>
 
 ## Features
@@ -32,26 +36,23 @@
 - Listen from your car using Android Auto
 - Open YouTube/YouTube Music links (`watch`, `playlist`, `channel`, etc.) with Banafsh
 - Ridiculously lightweight APK
+- Generate Dynamic Material Design 3 Color
 
 ## Installation
 
 [<img src="https://github.com/machiav3lli/oandbackupx/blob/034b226cea5c1b30eb4f6a6f313e4dadcbb0ece4/badge_github.png"
 alt="Get it on GitHub"
 height="80"
-align="center">](https://github.com/25huizengek1/Banafsh/releases/latest)
+align="center">](https://github.com/IamRezaMousavi/Banafsh/releases/latest)
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
 alt="Get it on F-Droid"
 height="80"
-align="center">](https://repo.banafsh.app/)
-
-[<img src="https://github.com/ImranR98/Obtainium/blob/main/assets/graphics/badge_obtainium.png"
-alt="Get it on Obtainium"
-height="54"
-align="center">](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/25huizengek1/Banafsh/)
+align="center">](https://f-droid.org/en/)
 
 ## Acknowledgments
 
+- [**ViTune**](https://github.com/25huizengek1/ViTune): An Android application for seamless music streaming
 - [**YouTube-Internal-Clients**](https://github.com/zerodytrash/YouTube-Internal-Clients): A Python
   script that discovers hidden YouTube API clients. Just a research project.
 - [**ionicons**](https://github.com/ionic-team/ionicons): Premium hand-crafted icons built by Ionic,
