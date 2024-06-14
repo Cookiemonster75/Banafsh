@@ -1,4 +1,4 @@
-package app.banafsh.android.lib.core.materialcompat
+package com.google.android.material.color
 
 import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid12
 
