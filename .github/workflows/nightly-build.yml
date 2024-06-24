@@ -50,9 +50,6 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
 
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
-
     - name: Run android lint
       run: ./gradlew lint
 
@@ -80,12 +77,13 @@ jobs:
         ANDROID_NIGHTLY_KEYSTORE_ALIAS: ${{ secrets.ANDROID_NIGHTLY_KEYSTORE_ALIAS }}
       run: ./gradlew assembleNightly
 
-    - name: Get apk file path
-      id: apkFile
-      run: echo "apkfile=$(find app/build/outputs/apk/nightly/*.apk)" >> $GITHUB_OUTPUT
+    - name: Send apk to telegram
+      run: |
+          mv $(find . -type f -iname *.apk) banafsh-nightly.apk
+          apk_path="banafsh-nightly.apk"
+          curl https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument \
+            -F chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            -F "caption=Size: $(ls -l --block-size=K "$apk_path" | awk '{ print $5 }')" \
+            -F parse_mode=HTML \
+            -F document=@"$apk_path"
 
-    - name: Upload Nightly Build to Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-          name: banafsh-nightly.apk
-          path: ${{ steps.apkFile.outputs.apkfile }}
