@@ -57,7 +57,7 @@ data class ColorPalette(
     }
 }
 
-private val defaultAccentColor = Color(0xff3e44ce)
+private val defaultAccentColor = Color(0xff160330)
 
 val defaultLightPalette = lightColorPalette(defaultAccentColor)
 val defaultDarkPalette = darkColorPalette(defaultAccentColor)
