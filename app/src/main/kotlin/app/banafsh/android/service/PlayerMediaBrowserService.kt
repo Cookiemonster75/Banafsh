@@ -144,8 +144,8 @@ class PlayerMediaBrowserService : MediaBrowserService(), ServiceConnection {
         inline get() = BrowserMediaItem(
             BrowserMediaDescription.Builder()
                 .setMediaId(MediaId.SONGS.id)
-                .setTitle(getString(R.string.songs))
-                .setIconUri(uriFor(R.drawable.musical_notes))
+                .setTitle(getString(R.string.downloaded))
+                .setIconUri(uriFor(R.drawable.download))
                 .build(),
             BrowserMediaItem.FLAG_BROWSABLE
         )
@@ -209,8 +209,8 @@ class PlayerMediaBrowserService : MediaBrowserService(), ServiceConnection {
         inline get() = BrowserMediaItem(
             BrowserMediaDescription.Builder()
                 .setMediaId(MediaId.LOCAL.id)
-                .setTitle(getString(R.string.local))
-                .setIconUri(uriFor(R.drawable.download))
+                .setTitle(getString(R.string.songs))
+                .setIconUri(uriFor(R.drawable.musical_notes))
                 .build(),
             BrowserMediaItem.FLAG_PLAYABLE
         )

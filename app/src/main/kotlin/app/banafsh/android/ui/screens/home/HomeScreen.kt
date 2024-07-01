@@ -105,11 +105,11 @@ fun HomeScreen(onPlaylistUrl: (String) -> Unit) {
                 tabColumnContent = { item ->
                     item(0, stringResource(R.string.quick_picks), R.drawable.sparkles)
                     item(1, stringResource(R.string.discover), R.drawable.globe)
-                    item(2, stringResource(R.string.songs), R.drawable.musical_notes)
-                    item(3, stringResource(R.string.playlists), R.drawable.playlist)
-                    item(4, stringResource(R.string.artists), R.drawable.person)
-                    item(5, stringResource(R.string.albums), R.drawable.disc)
-                    item(6, stringResource(R.string.local), R.drawable.download)
+                    item(2, stringResource(R.string.downloaded), R.drawable.download)
+                    item(3, stringResource(R.string.songs), R.drawable.musical_notes)
+                    item(4, stringResource(R.string.playlists), R.drawable.playlist)
+                    item(5, stringResource(R.string.artists), R.drawable.person)
+                    item(6, stringResource(R.string.albums), R.drawable.disc)
                 }
             ) { currentTabIndex ->
                 saveableStateHolder.SaveableStateProvider(key = currentTabIndex) {
@@ -139,7 +139,11 @@ fun HomeScreen(onPlaylistUrl: (String) -> Unit) {
                             onSearchClick = onSearchClick
                         )
 
-                        3 -> HomePlaylists(
+                        3 -> HomeLocalSongs(
+                            onSearchClick = onSearchClick
+                        )
+
+                        4 -> HomePlaylists(
                             onBuiltInPlaylist = { builtInPlaylistRoute(it) },
                             onPlaylistClick = { localPlaylistRoute(it.id) },
                             onPipedPlaylistClick = { session, playlist ->
@@ -152,17 +156,13 @@ fun HomeScreen(onPlaylistUrl: (String) -> Unit) {
                             onSearchClick = onSearchClick
                         )
 
-                        4 -> HomeArtistList(
+                        5 -> HomeArtistList(
                             onArtistClick = { artistRoute(it.id) },
                             onSearchClick = onSearchClick
                         )
 
-                        5 -> HomeAlbums(
+                        6 -> HomeAlbums(
                             onAlbumClick = { albumRoute(it.id) },
-                            onSearchClick = onSearchClick
-                        )
-
-                        6 -> HomeLocalSongs(
                             onSearchClick = onSearchClick
                         )
                     }
