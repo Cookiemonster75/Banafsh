@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.banafsh.android.Database
 import app.banafsh.android.R
+import app.banafsh.android.TempDatabase
 import app.banafsh.android.lib.core.ui.LocalAppearance
 import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid13
 import app.banafsh.android.lib.core.ui.utils.isCompositionLaunched
@@ -35,6 +36,7 @@ import app.banafsh.android.models.Song
 import app.banafsh.android.preferences.OrderPreferences
 import app.banafsh.android.service.LOCAL_KEY_PREFIX
 import app.banafsh.android.transaction
+import app.banafsh.android.transactionTemp
 import app.banafsh.android.ui.components.themed.SecondaryTextButton
 import app.banafsh.android.ui.screens.Route
 import app.banafsh.android.utils.AudioMediaCursor
@@ -83,10 +85,9 @@ fun HomeLocalSongs(onSearchClick: () -> Unit) = with(OrderPreferences) {
         HomeSongs(
             onSearchClick = onSearchClick,
             songProvider = {
-                Database.songs(
+                TempDatabase.songs(
                     sortBy = localSongSortBy,
-                    sortOrder = localSongSortOrder,
-                    isLocal = true
+                    sortOrder = localSongSortOrder
                 ).map { songs ->
                     songs.filter { it.durationText != "0:00" }
                 }
@@ -158,5 +159,8 @@ fun Context.musicFilesAsFlow(): StateFlow<List<Song>> = flow {
         delay(5.seconds)
     }
 }.distinctUntilChanged()
-    .onEach { songs -> transaction { songs.forEach(Database::insert) } }
+    .onEach { songs ->
+        transactionTemp { songs.forEach(TempDatabase::insert) }
+        transaction { songs.forEach(Database::insert) }
+    }
     .stateIn(mediaScope, SharingStarted.Eagerly, listOf())

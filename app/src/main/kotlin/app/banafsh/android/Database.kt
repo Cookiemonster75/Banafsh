@@ -97,50 +97,24 @@ interface Database {
     fun songsByPlayTimeDesc(limit: Int = -1): Flow<List<Song>>
 
     @Transaction
-    @Query("SELECT * FROM Song WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY title ASC")
+    @Query("SELECT * FROM Song WHERE id IN (:songIds)")
     @RewriteQueriesToDropUnusedColumns
-    fun localSongsByTitleAsc(): Flow<List<Song>>
+    fun songs(songIds: List<String>): List<Song>
 
-    @Transaction
-    @Query("SELECT * FROM Song WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY title DESC")
-    @RewriteQueriesToDropUnusedColumns
-    fun localSongsByTitleDesc(): Flow<List<Song>>
-
-    @Transaction
-    @Query("SELECT * FROM Song WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY dateModified ASC")
-    @RewriteQueriesToDropUnusedColumns
-    fun localSongsByDateAsc(): Flow<List<Song>>
-
-    @Transaction
-    @Query("SELECT * FROM Song WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY dateModified DESC")
-    @RewriteQueriesToDropUnusedColumns
-    fun localSongsByDateDesc(): Flow<List<Song>>
-
-    @Transaction
-    @Query("SELECT * FROM Song WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY totalPlayTimeMs ASC")
-    @RewriteQueriesToDropUnusedColumns
-    fun localSongsByPlayTimeAsc(): Flow<List<Song>>
-
-    @Transaction
-    @Query("SELECT * FROM Song WHERE id LIKE '$LOCAL_KEY_PREFIX%' ORDER BY totalPlayTimeMs DESC")
-    @RewriteQueriesToDropUnusedColumns
-    fun localSongsByPlayTimeDesc(): Flow<List<Song>>
-
-    @Suppress("CyclomaticComplexMethod")
-    fun songs(sortBy: SongSortBy, sortOrder: SortOrder, isLocal: Boolean = false) = when (sortBy) {
+    fun songs(sortBy: SongSortBy, sortOrder: SortOrder) = when (sortBy) {
         SongSortBy.PlayTime -> when (sortOrder) {
-            SortOrder.Ascending -> if (isLocal) localSongsByPlayTimeAsc() else songsByPlayTimeAsc()
-            SortOrder.Descending -> if (isLocal) localSongsByPlayTimeDesc() else songsByPlayTimeDesc()
+            SortOrder.Ascending -> songsByPlayTimeAsc()
+            SortOrder.Descending -> songsByPlayTimeDesc()
         }
 
         SongSortBy.Title -> when (sortOrder) {
-            SortOrder.Ascending -> if (isLocal) localSongsByTitleAsc() else songsByTitleAsc()
-            SortOrder.Descending -> if (isLocal) localSongsByTitleDesc() else songsByTitleDesc()
+            SortOrder.Ascending -> songsByTitleAsc()
+            SortOrder.Descending -> songsByTitleDesc()
         }
 
         SongSortBy.DateAdded -> when (sortOrder) {
-            SortOrder.Ascending -> if (isLocal) localSongsByDateAsc() else songsByRowIdAsc()
-            SortOrder.Descending -> if (isLocal) localSongsByDateDesc() else songsByRowIdDesc()
+            SortOrder.Ascending -> songsByRowIdAsc()
+            SortOrder.Descending -> songsByRowIdDesc()
         }
     }
 

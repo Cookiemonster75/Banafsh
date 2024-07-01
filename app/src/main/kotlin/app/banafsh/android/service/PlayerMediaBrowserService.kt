@@ -19,6 +19,7 @@ import androidx.core.os.bundleOf
 import androidx.media3.common.util.UnstableApi
 import app.banafsh.android.Database
 import app.banafsh.android.R
+import app.banafsh.android.TempDatabase
 import app.banafsh.android.models.Album
 import app.banafsh.android.models.PlaylistPreview
 import app.banafsh.android.models.Song
@@ -312,11 +313,10 @@ class PlayerMediaBrowserService : MediaBrowserService(), ServiceConnection {
                     }
 
                     MediaId.LOCAL ->
-                        Database
+                        TempDatabase
                             .songs(
                                 sortBy = OrderPreferences.localSongSortBy,
-                                sortOrder = OrderPreferences.localSongSortOrder,
-                                isLocal = true
+                                sortOrder = OrderPreferences.localSongSortOrder
                             )
                             .map { songs -> songs.filter { it.durationText != "0:00" } }
                             .first()
