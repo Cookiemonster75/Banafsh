@@ -1,6 +1,7 @@
 package app.banafsh.android.utils
 
 import android.content.ContentUris
+import android.content.Context
 import android.provider.MediaStore
 import androidx.annotation.OptIn
 import androidx.core.net.toUri
@@ -11,6 +12,7 @@ import androidx.media3.common.util.UnstableApi
 import app.banafsh.android.models.Song
 import app.banafsh.android.service.LOCAL_KEY_PREFIX
 import app.banafsh.android.service.isLocal
+import java.io.File
 
 fun Song.getUri() = if (isLocal)
     ContentUris.withAppendedId(
@@ -51,3 +53,14 @@ val Song.asMediaItem: MediaItem
         .setUri(getUri())
         .setCustomCacheKey(id)
         .build()
+
+fun delete(context: Context, song: Song): Boolean {
+    if (!song.path.isNullOrBlank()) {
+        val f = File(song.path)
+        if (f.delete()) {
+            context.contentResolver.delete(song.getUri(), null, null)
+            return true
+        }
+    }
+    return false
+}

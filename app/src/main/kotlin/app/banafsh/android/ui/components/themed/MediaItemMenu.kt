@@ -792,7 +792,8 @@ fun MediaItemMenu(
             onHideFromDatabase?.let {
                 MenuEntry(
                     icon = R.drawable.trash,
-                    text = stringResource(R.string.hide),
+                    text = if (mediaItem.isLocal) stringResource(R.string.delete)
+                    else stringResource(R.string.hide),
                     onClick = onHideFromDatabase
                 )
             }

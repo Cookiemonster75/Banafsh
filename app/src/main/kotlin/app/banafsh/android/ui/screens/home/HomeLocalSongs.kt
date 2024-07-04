@@ -41,6 +41,7 @@ import app.banafsh.android.ui.components.themed.SecondaryTextButton
 import app.banafsh.android.ui.screens.Route
 import app.banafsh.android.utils.AudioMediaCursor
 import app.banafsh.android.utils.hasPermission
+import app.banafsh.android.utils.hasPermissions
 import app.banafsh.android.utils.medium
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -59,8 +60,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 
-private val permission = if (isAtLeastAndroid13) Manifest.permission.READ_MEDIA_AUDIO
+private val readPermission = if (isAtLeastAndroid13) Manifest.permission.READ_MEDIA_AUDIO
 else Manifest.permission.READ_EXTERNAL_STORAGE
+
+private val permissions = arrayOf(readPermission, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
 @Route
 @Composable
@@ -69,12 +72,12 @@ fun HomeLocalSongs(onSearchClick: () -> Unit) = with(OrderPreferences) {
     val (_, typography) = LocalAppearance.current
 
     var hasPermission by remember(isCompositionLaunched()) {
-        mutableStateOf(context.applicationContext.hasPermission(permission))
+        mutableStateOf(context.applicationContext.hasPermissions(permissions))
     }
 
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { hasPermission = it }
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
+        onResult = { hasPermission = it.values.all { it } }
     )
 
     LaunchedEffect(hasPermission) {
@@ -99,7 +102,7 @@ fun HomeLocalSongs(onSearchClick: () -> Unit) = with(OrderPreferences) {
             title = stringResource(R.string.songs)
         )
     else {
-        LaunchedEffect(Unit) { launcher.launch(permission) }
+        LaunchedEffect(Unit) { launcher.launch(permissions) }
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -149,7 +152,8 @@ fun Context.musicFilesAsFlow(): StateFlow<List<Song>> = flow {
                                     "$minutes:${seconds.toString().padStart(2, '0')}"
                                 },
                                 dateModified = dateModified,
-                                thumbnailUrl = albumUri.toString()
+                                thumbnailUrl = albumUri.toString(),
+                                path = path
                             )
                         )
                     }

@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.MediaStore.Audio.Media.ALBUM_ID
 import android.provider.MediaStore.Audio.Media.ARTIST
+import android.provider.MediaStore.Audio.Media.DATA
 import android.provider.MediaStore.Audio.Media.DATE_MODIFIED
 import android.provider.MediaStore.Audio.Media.DURATION
 import android.provider.MediaStore.Audio.Media.IS_MUSIC
@@ -182,6 +183,7 @@ class AudioMediaCursor(cursor: Cursor) : CursorDao(cursor) {
     val duration by int(DURATION)
     val dateModified by long(DATE_MODIFIED)
     val artist by string(ARTIST)
+    val path by string(DATA)
     private val albumId by long(ALBUM_ID)
 
     val albumUri get() = ContentUris.withAppendedId(ALBUM_URI_BASE, albumId)

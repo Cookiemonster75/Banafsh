@@ -38,6 +38,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
@@ -47,12 +48,15 @@ import androidx.media3.common.util.UnstableApi
 import app.banafsh.android.Database
 import app.banafsh.android.LocalPlayerServiceBinder
 import app.banafsh.android.R
+import app.banafsh.android.TempDatabase
 import app.banafsh.android.lib.core.ui.LocalAppearance
 import app.banafsh.android.lib.core.ui.utils.roundedShape
 import app.banafsh.android.models.Song
 import app.banafsh.android.query
+import app.banafsh.android.queryTemp
 import app.banafsh.android.service.isLocal
 import app.banafsh.android.utils.center
+import app.banafsh.android.utils.delete
 import app.banafsh.android.utils.drawCircle
 import app.banafsh.android.utils.medium
 import app.banafsh.android.utils.semiBold
@@ -439,15 +443,25 @@ fun HideSongDialog(
     modifier: Modifier = Modifier
 ) {
     val binder = LocalPlayerServiceBinder.current
+    val context = LocalContext.current
 
     ConfirmationDialog(
-        text = stringResource(R.string.confirm_hide_song),
+        text = if (song.isLocal) stringResource(R.string.confirm_delete_song)
+        else stringResource(R.string.confirm_hide_song),
         onDismiss = onDismiss,
         onConfirm = {
             onConfirm()
-            query {
-                runCatching {
-                    if (!song.isLocal) binder?.cache?.removeResource(song.id)
+            runCatching {
+                if (!song.isLocal) {
+                    binder?.cache?.removeResource(song.id)
+                } else {
+                    if (!delete(context, song)) return@runCatching
+                    queryTemp {
+                        TempDatabase.delete(song)
+                    }
+                }
+
+                query {
                     Database.delete(song)
                 }
             }

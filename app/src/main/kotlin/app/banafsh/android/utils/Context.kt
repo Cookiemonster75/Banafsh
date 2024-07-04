@@ -111,6 +111,9 @@ fun Context.findActivity(): Activity {
     error("Should be called in the context of an Activity")
 }
 
+fun Context.hasPermissions(permissions: Array<String>) =
+    permissions.all { permission -> hasPermission(permission) }
+
 fun Context.hasPermission(permission: String) = ContextCompat.checkSelfPermission(
     applicationContext,
     permission

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "bf42eb131d1a128773d749b9e5028201",
+    "identityHash": "fee48b09836f856f36971192954afe4e",
     "entities": [
       {
         "tableName": "Song",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `artistsText` TEXT, `durationText` TEXT, `thumbnailUrl` TEXT, `dateModified` INTEGER, `likedAt` INTEGER, `totalPlayTimeMs` INTEGER NOT NULL, `loudnessBoost` REAL, `blacklisted` INTEGER NOT NULL DEFAULT false, `explicit` INTEGER NOT NULL DEFAULT false, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `artistsText` TEXT, `durationText` TEXT, `thumbnailUrl` TEXT, `dateModified` INTEGER, `likedAt` INTEGER, `totalPlayTimeMs` INTEGER NOT NULL, `loudnessBoost` REAL, `blacklisted` INTEGER NOT NULL DEFAULT false, `explicit` INTEGER NOT NULL DEFAULT false, `path` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -75,6 +75,12 @@
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "false"
+          },
+          {
+            "fieldPath": "path",
+            "columnName": "path",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -499,7 +505,7 @@
       },
       {
         "tableName": "QueuedSong",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`itemId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `position` INTEGER, `id` TEXT NOT NULL, `title` TEXT NOT NULL, `artistsText` TEXT, `durationText` TEXT, `thumbnailUrl` TEXT, `dateModified` INTEGER, `likedAt` INTEGER, `totalPlayTimeMs` INTEGER NOT NULL, `loudnessBoost` REAL, `blacklisted` INTEGER NOT NULL DEFAULT false, `explicit` INTEGER NOT NULL DEFAULT false)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`itemId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `position` INTEGER, `id` TEXT NOT NULL, `title` TEXT NOT NULL, `artistsText` TEXT, `durationText` TEXT, `thumbnailUrl` TEXT, `dateModified` INTEGER, `likedAt` INTEGER, `totalPlayTimeMs` INTEGER NOT NULL, `loudnessBoost` REAL, `blacklisted` INTEGER NOT NULL DEFAULT false, `explicit` INTEGER NOT NULL DEFAULT false, `path` TEXT)",
         "fields": [
           {
             "fieldPath": "itemId",
@@ -580,6 +586,12 @@
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "false"
+          },
+          {
+            "fieldPath": "song.path",
+            "columnName": "path",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -827,7 +839,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bf42eb131d1a128773d749b9e5028201')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fee48b09836f856f36971192954afe4e')"
     ]
   }
 }
