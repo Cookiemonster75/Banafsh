@@ -79,10 +79,10 @@ jobs:
 
     - name: Send apk to telegram
       run: |
-          mv $(find . -type f -iname *.apk) banafsh-nightly.apk
-          apk_path="banafsh-nightly.apk"
+          apk_path=$(find . -type f -iname *.apk)
           curl https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument \
             -F chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            -F message_thread_id=15 \
             -F "caption=Size: $(ls -l --block-size=K "$apk_path" | awk '{ print $5 }')" \
             -F parse_mode=HTML \
             -F document=@"$apk_path"

@@ -22,6 +22,8 @@ android {
         versionName = project.version.toString()
 
         multiDexEnabled = true
+
+        setProperty("archivesBaseName", "Banafsh-$versionName")
     }
 
     splits {
