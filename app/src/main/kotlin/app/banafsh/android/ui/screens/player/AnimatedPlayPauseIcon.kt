@@ -77,6 +77,7 @@ private fun LottieAnimationWithPlaceholder(
         )
     )
 
+    @Suppress("ProduceStateDoesNotAssignValue")
     val ready by produceState(initialValue = false) {
         lottieCompositionResult.await()
         value = true
