@@ -13,7 +13,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -31,8 +30,6 @@ import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.material.ripple.LocalRippleTheme
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -64,6 +61,7 @@ import app.banafsh.android.lib.compose.persist.PersistMap
 import app.banafsh.android.lib.compose.preferences.PreferencesHolder
 import app.banafsh.android.lib.core.ui.Dimensions
 import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.lib.core.ui.LocalRippleTheme
 import app.banafsh.android.lib.core.ui.SystemBarAppearance
 import app.banafsh.android.lib.core.ui.appearance
 import app.banafsh.android.lib.core.ui.rippleTheme
@@ -235,7 +233,6 @@ class MainActivity : ComponentActivity(), MonetColorsChangedListener {
             }
 
             CompositionLocalProvider(
-                LocalIndication provides rememberRipple(),
                 LocalRippleTheme provides rippleTheme(),
                 LocalShimmerTheme provides shimmerTheme(),
                 LocalPlayerServiceBinder provides vm.binder,

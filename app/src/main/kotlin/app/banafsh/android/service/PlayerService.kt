@@ -114,7 +114,6 @@ import app.banafsh.android.utils.shouldBePlaying
 import app.banafsh.android.utils.songBundle
 import app.banafsh.android.utils.thumbnail
 import app.banafsh.android.utils.timer
-import app.banafsh.android.utils.toSong
 import app.banafsh.android.utils.toast
 import kotlin.math.roundToInt
 import kotlin.system.exitProcess
@@ -576,7 +575,7 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
             Database.insert(
                 mediaItems.mapIndexed { index, mediaItem ->
                     QueuedSong(
-                        song = mediaItem.toSong(),
+                        songId = mediaItem.mediaId,
                         position = if (index == mediaItemIndex) mediaItemPosition else null
                     )
                 }
@@ -599,8 +598,10 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
             handler.post {
                 runCatching {
                     player.setMediaItems(
-                        /* mediaItems = */ queue.map { item ->
-                            item.song.asMediaItem
+                        /* mediaItems = */ Database.songs(
+                            queue.map { it.songId }
+                        ).map {
+                            it.asMediaItem
                                 .apply {
                                     mediaMetadata.extras?.songBundle?.apply {
                                         isFromPersistentQueue = true

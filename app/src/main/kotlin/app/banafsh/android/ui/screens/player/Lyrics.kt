@@ -31,7 +31,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -501,7 +501,7 @@ fun Lyrics(
             modifier = Modifier
                 .padding(all = 4.dp)
                 .clickable(
-                    indication = rememberRipple(bounded = false),
+                    indication = ripple(bounded = false),
                     interactionSource = remember { MutableInteractionSource() },
                     onClick = {
                         onOpenDialog()
@@ -519,7 +519,7 @@ fun Lyrics(
             modifier = Modifier
                 .padding(all = 4.dp)
                 .clickable(
-                    indication = rememberRipple(bounded = false),
+                    indication = ripple(bounded = false),
                     interactionSource = remember { MutableInteractionSource() },
                     onClick = {
                         onMenuLaunch()

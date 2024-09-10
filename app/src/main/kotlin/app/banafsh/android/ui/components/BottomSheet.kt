@@ -8,7 +8,6 @@ import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Indication
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.DraggableState
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
@@ -19,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
@@ -50,7 +50,7 @@ fun BottomSheet(
     collapsedContent: @Composable BoxScope.(Modifier) -> Unit,
     modifier: Modifier = Modifier,
     onDismiss: (() -> Unit)? = null,
-    indication: Indication? = LocalIndication.current,
+    indication: Indication? = ripple(),
     content: @Composable BoxScope.() -> Unit
 ) = Box(
     modifier = modifier
@@ -189,7 +189,7 @@ class BottomSheetState internal constructor(
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
                 if (expanded && available.y < 0) isTopReached = false
 
-                return if (isTopReached && available.y < 0 && source == NestedScrollSource.Drag) {
+                return if (isTopReached && available.y < 0 && source == NestedScrollSource.UserInput) {
                     dispatchRawDelta(available.y)
                     available
                 } else Offset.Zero
@@ -202,7 +202,7 @@ class BottomSheetState internal constructor(
             ): Offset {
                 if (!isTopReached) isTopReached = consumed.y == 0f && available.y > 0
 
-                return if (isTopReached && source == NestedScrollSource.Drag) {
+                return if (isTopReached && source == NestedScrollSource.UserInput) {
                     dispatchRawDelta(available.y)
                     available
                 } else Offset.Zero

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "fee48b09836f856f36971192954afe4e",
+    "identityHash": "9e031eabcd85865fe7bfd89f6fbd7a8e",
     "entities": [
       {
         "tableName": "Song",
@@ -505,7 +505,7 @@
       },
       {
         "tableName": "QueuedSong",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`itemId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `position` INTEGER, `id` TEXT NOT NULL, `title` TEXT NOT NULL, `artistsText` TEXT, `durationText` TEXT, `thumbnailUrl` TEXT, `dateModified` INTEGER, `likedAt` INTEGER, `totalPlayTimeMs` INTEGER NOT NULL, `loudnessBoost` REAL, `blacklisted` INTEGER NOT NULL DEFAULT false, `explicit` INTEGER NOT NULL DEFAULT false, `path` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`itemId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `songId` TEXT NOT NULL, `position` INTEGER)",
         "fields": [
           {
             "fieldPath": "itemId",
@@ -514,83 +514,15 @@
             "notNull": true
           },
           {
+            "fieldPath": "songId",
+            "columnName": "songId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "position",
             "columnName": "position",
             "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "song.id",
-            "columnName": "id",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "song.title",
-            "columnName": "title",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "song.artistsText",
-            "columnName": "artistsText",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "song.durationText",
-            "columnName": "durationText",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "song.thumbnailUrl",
-            "columnName": "thumbnailUrl",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "song.dateModified",
-            "columnName": "dateModified",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "song.likedAt",
-            "columnName": "likedAt",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "song.totalPlayTimeMs",
-            "columnName": "totalPlayTimeMs",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "song.loudnessBoost",
-            "columnName": "loudnessBoost",
-            "affinity": "REAL",
-            "notNull": false
-          },
-          {
-            "fieldPath": "song.blacklisted",
-            "columnName": "blacklisted",
-            "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "false"
-          },
-          {
-            "fieldPath": "song.explicit",
-            "columnName": "explicit",
-            "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "false"
-          },
-          {
-            "fieldPath": "song.path",
-            "columnName": "path",
-            "affinity": "TEXT",
             "notNull": false
           }
         ],
@@ -839,7 +771,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fee48b09836f856f36971192954afe4e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9e031eabcd85865fe7bfd89f6fbd7a8e')"
     ]
   }
 }
