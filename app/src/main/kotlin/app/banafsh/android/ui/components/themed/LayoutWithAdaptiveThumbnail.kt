@@ -13,10 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.lib.core.ui.shimmer
-import app.banafsh.android.lib.core.ui.utils.isLandscape
-import app.banafsh.android.lib.core.ui.utils.px
+import app.banafsh.android.ui.theme.LocalAppearance
+import app.banafsh.android.ui.theme.shimmer
+import app.banafsh.android.ui.theme.utils.isLandscape
+import app.banafsh.android.ui.theme.utils.px
 import app.banafsh.android.utils.thumbnail
 import coil.compose.AsyncImage
 import com.valentinilk.shimmer.shimmer

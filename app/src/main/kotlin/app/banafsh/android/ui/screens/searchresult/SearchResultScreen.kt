@@ -12,16 +12,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.banafsh.android.LocalPlayerServiceBinder
 import app.banafsh.android.R
-import app.banafsh.android.lib.compose.persist.LocalPersistMap
-import app.banafsh.android.lib.compose.persist.PersistMapCleanup
-import app.banafsh.android.lib.compose.routing.RouteHandler
-import app.banafsh.android.lib.core.ui.Dimensions
-import app.banafsh.android.lib.providers.innertube.Innertube
-import app.banafsh.android.lib.providers.innertube.models.bodies.ContinuationBody
-import app.banafsh.android.lib.providers.innertube.models.bodies.SearchBody
-import app.banafsh.android.lib.providers.innertube.requests.searchPage
-import app.banafsh.android.lib.providers.innertube.utils.from
+import app.banafsh.android.persist.LocalPersistMap
+import app.banafsh.android.persist.PersistMapCleanup
 import app.banafsh.android.preferences.UIStatePreferences
+import app.banafsh.android.providers.innertube.Innertube
+import app.banafsh.android.providers.innertube.models.bodies.ContinuationBody
+import app.banafsh.android.providers.innertube.models.bodies.SearchBody
+import app.banafsh.android.providers.innertube.requests.searchPage
+import app.banafsh.android.providers.innertube.utils.from
 import app.banafsh.android.ui.components.LocalMenuState
 import app.banafsh.android.ui.components.themed.Header
 import app.banafsh.android.ui.components.themed.NonQueuedMediaItemMenu
@@ -36,11 +34,13 @@ import app.banafsh.android.ui.items.SongItem
 import app.banafsh.android.ui.items.SongItemPlaceholder
 import app.banafsh.android.ui.items.VideoItem
 import app.banafsh.android.ui.items.VideoItemPlaceholder
+import app.banafsh.android.ui.routing.RouteHandler
 import app.banafsh.android.ui.screens.GlobalRoutes
 import app.banafsh.android.ui.screens.Route
 import app.banafsh.android.ui.screens.albumRoute
 import app.banafsh.android.ui.screens.artistRoute
 import app.banafsh.android.ui.screens.playlistRoute
+import app.banafsh.android.ui.theme.Dimensions
 import app.banafsh.android.utils.asMediaItem
 import app.banafsh.android.utils.forcePlay
 

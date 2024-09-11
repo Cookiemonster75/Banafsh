@@ -17,12 +17,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import app.banafsh.android.R
-import app.banafsh.android.lib.compose.persist.PersistMapCleanup
-import app.banafsh.android.lib.compose.routing.RouteHandler
-import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.persist.PersistMapCleanup
 import app.banafsh.android.ui.components.themed.Scaffold
+import app.banafsh.android.ui.routing.RouteHandler
 import app.banafsh.android.ui.screens.GlobalRoutes
 import app.banafsh.android.ui.screens.Route
+import app.banafsh.android.ui.theme.LocalAppearance
 import app.banafsh.android.utils.secondary
 
 @Route

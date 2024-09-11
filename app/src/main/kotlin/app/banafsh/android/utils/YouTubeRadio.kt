@@ -1,10 +1,10 @@
 package app.banafsh.android.utils
 
 import androidx.media3.common.MediaItem
-import app.banafsh.android.lib.providers.innertube.Innertube
-import app.banafsh.android.lib.providers.innertube.models.bodies.ContinuationBody
-import app.banafsh.android.lib.providers.innertube.models.bodies.NextBody
-import app.banafsh.android.lib.providers.innertube.requests.nextPage
+import app.banafsh.android.providers.innertube.Innertube
+import app.banafsh.android.providers.innertube.models.bodies.ContinuationBody
+import app.banafsh.android.providers.innertube.models.bodies.NextBody
+import app.banafsh.android.providers.innertube.requests.nextPage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

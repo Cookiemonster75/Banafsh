@@ -19,9 +19,9 @@ import androidx.media3.exoplayer.offline.DownloadRequest
 import androidx.media3.exoplayer.offline.DownloadService
 import androidx.media3.exoplayer.scheduler.Requirements
 import androidx.media3.exoplayer.workmanager.WorkManagerScheduler
-import app.banafsh.android.Database
 import app.banafsh.android.R
-import app.banafsh.android.transaction
+import app.banafsh.android.db.Database
+import app.banafsh.android.db.transaction
 import app.banafsh.android.utils.ActionReceiver
 import app.banafsh.android.utils.download
 import app.banafsh.android.utils.intent

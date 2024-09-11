@@ -5,7 +5,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import app.banafsh.android.lib.compose.persist.findActivityNullable
+import app.banafsh.android.persist.findActivityNullable
 
 @Composable
 fun FullScreenState(

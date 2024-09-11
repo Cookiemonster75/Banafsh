@@ -28,21 +28,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import app.banafsh.android.Database
 import app.banafsh.android.LocalPlayerAwareWindowInsets
 import app.banafsh.android.R
-import app.banafsh.android.lib.compose.persist.persistList
-import app.banafsh.android.lib.core.data.enums.ArtistSortBy
-import app.banafsh.android.lib.core.data.enums.SortOrder
-import app.banafsh.android.lib.core.ui.Dimensions
-import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.models.Artist
+import app.banafsh.android.data.enums.ArtistSortBy
+import app.banafsh.android.data.enums.SortOrder
+import app.banafsh.android.data.models.Artist
+import app.banafsh.android.db.Database
+import app.banafsh.android.persist.persistList
 import app.banafsh.android.preferences.OrderPreferences
 import app.banafsh.android.ui.components.themed.FloatingActionsContainerWithScrollToTop
 import app.banafsh.android.ui.components.themed.Header
 import app.banafsh.android.ui.components.themed.HeaderIconButton
 import app.banafsh.android.ui.items.ArtistItem
 import app.banafsh.android.ui.screens.Route
+import app.banafsh.android.ui.theme.Dimensions
+import app.banafsh.android.ui.theme.LocalAppearance
 import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalFoundationApi::class)

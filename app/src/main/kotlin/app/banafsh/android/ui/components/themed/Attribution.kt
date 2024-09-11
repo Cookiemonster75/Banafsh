@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.banafsh.android.LocalPlayerAwareWindowInsets
 import app.banafsh.android.R
-import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.ui.theme.LocalAppearance
 import app.banafsh.android.utils.align
 import app.banafsh.android.utils.disabled
 import app.banafsh.android.utils.secondary

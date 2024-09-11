@@ -22,9 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.lib.core.ui.onOverlay
-import app.banafsh.android.lib.core.ui.overlay
+import app.banafsh.android.ui.theme.LocalAppearance
+import app.banafsh.android.ui.theme.onOverlay
+import app.banafsh.android.ui.theme.overlay
 import app.banafsh.android.utils.center
 import app.banafsh.android.utils.color
 import app.banafsh.android.utils.medium

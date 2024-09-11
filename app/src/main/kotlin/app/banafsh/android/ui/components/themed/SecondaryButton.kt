@@ -14,8 +14,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.lib.core.ui.primaryButton
+import app.banafsh.android.ui.theme.LocalAppearance
+import app.banafsh.android.ui.theme.primaryButton
 
 @Composable
 fun SecondaryButton(

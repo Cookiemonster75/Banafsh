@@ -1,6 +1,5 @@
 package app.banafsh.android.ui.screens.home
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
@@ -45,13 +44,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import app.banafsh.android.LocalPlayerAwareWindowInsets
 import app.banafsh.android.R
-import app.banafsh.android.lib.compose.persist.persist
-import app.banafsh.android.lib.core.ui.Dimensions
-import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.lib.core.ui.shimmer
-import app.banafsh.android.lib.core.ui.utils.isLandscape
-import app.banafsh.android.lib.providers.innertube.Innertube
-import app.banafsh.android.lib.providers.innertube.requests.discoverPage
+import app.banafsh.android.persist.persist
+import app.banafsh.android.providers.innertube.Innertube
+import app.banafsh.android.providers.innertube.requests.discoverPage
 import app.banafsh.android.ui.components.ShimmerHost
 import app.banafsh.android.ui.components.themed.FloatingActionsContainerWithScrollToTop
 import app.banafsh.android.ui.components.themed.Header
@@ -59,13 +54,16 @@ import app.banafsh.android.ui.components.themed.TextPlaceholder
 import app.banafsh.android.ui.items.AlbumItem
 import app.banafsh.android.ui.items.AlbumItemPlaceholder
 import app.banafsh.android.ui.screens.Route
+import app.banafsh.android.ui.theme.Dimensions
+import app.banafsh.android.ui.theme.LocalAppearance
+import app.banafsh.android.ui.theme.shimmer
+import app.banafsh.android.ui.theme.utils.isLandscape
 import app.banafsh.android.utils.center
 import app.banafsh.android.utils.color
 import app.banafsh.android.utils.rememberSnapLayoutInfoProvider
 import app.banafsh.android.utils.secondary
 import app.banafsh.android.utils.semiBold
 
-@OptIn(ExperimentalFoundationApi::class)
 @Route
 @Composable
 fun HomeDiscovery(

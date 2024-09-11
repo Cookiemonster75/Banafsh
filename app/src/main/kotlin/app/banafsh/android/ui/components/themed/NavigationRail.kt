@@ -32,10 +32,10 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import app.banafsh.android.LocalPlayerAwareWindowInsets
-import app.banafsh.android.lib.core.ui.Dimensions
-import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.lib.core.ui.utils.isLandscape
-import app.banafsh.android.lib.core.ui.utils.roundedShape
+import app.banafsh.android.ui.theme.Dimensions
+import app.banafsh.android.ui.theme.LocalAppearance
+import app.banafsh.android.ui.theme.utils.isLandscape
+import app.banafsh.android.ui.theme.utils.roundedShape
 import app.banafsh.android.utils.center
 import app.banafsh.android.utils.color
 import app.banafsh.android.utils.semiBold

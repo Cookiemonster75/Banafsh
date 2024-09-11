@@ -11,7 +11,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.ui.theme.LocalAppearance
 
 /**
  * A simple horizontal divider, derived from Material Design

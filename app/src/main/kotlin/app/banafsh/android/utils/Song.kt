@@ -9,7 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.util.UnstableApi
-import app.banafsh.android.models.Song
+import app.banafsh.android.data.models.Song
 import app.banafsh.android.service.LOCAL_KEY_PREFIX
 import app.banafsh.android.service.isLocal
 import java.io.File

@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import app.banafsh.android.GlobalPreferencesHolder
 import app.banafsh.android.R
-import app.banafsh.android.lib.core.data.enums.CoilDiskCacheSize
-import app.banafsh.android.lib.core.data.enums.ExoPlayerDiskCacheSize
-import app.banafsh.android.lib.providers.innertube.Innertube
+import app.banafsh.android.data.enums.CoilDiskCacheSize
+import app.banafsh.android.data.enums.ExoPlayerDiskCacheSize
+import app.banafsh.android.providers.innertube.Innertube
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours

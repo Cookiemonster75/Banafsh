@@ -8,9 +8,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.lib.providers.innertube.Innertube
-import app.banafsh.android.models.Album
+import app.banafsh.android.data.models.Album
+import app.banafsh.android.providers.innertube.Innertube
+import app.banafsh.android.ui.theme.LocalAppearance
 import app.banafsh.android.utils.semiBold
 
 @Composable

@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
-import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.ui.theme.LocalAppearance
 
 @Composable
 fun Scaffold(

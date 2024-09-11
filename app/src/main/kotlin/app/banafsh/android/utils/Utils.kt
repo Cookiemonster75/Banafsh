@@ -3,10 +3,10 @@ package app.banafsh.android.utils
 import android.net.Uri
 import android.text.format.DateUtils
 import androidx.core.net.toUri
-import app.banafsh.android.lib.providers.innertube.Innertube
-import app.banafsh.android.lib.providers.innertube.models.bodies.ContinuationBody
-import app.banafsh.android.lib.providers.innertube.requests.playlistPage
 import app.banafsh.android.preferences.AppearancePreferences
+import app.banafsh.android.providers.innertube.Innertube
+import app.banafsh.android.providers.innertube.models.bodies.ContinuationBody
+import app.banafsh.android.providers.innertube.requests.playlistPage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 

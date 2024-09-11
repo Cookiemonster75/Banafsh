@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import app.banafsh.android.LocalPlayerServiceBinder
 import app.banafsh.android.R
-import app.banafsh.android.lib.core.data.enums.ExoPlayerDiskCacheSize
+import app.banafsh.android.data.enums.ExoPlayerDiskCacheSize
 import app.banafsh.android.preferences.DataPreferences
 import app.banafsh.android.ui.components.themed.LinearProgressIndicator
 import app.banafsh.android.ui.screens.Route

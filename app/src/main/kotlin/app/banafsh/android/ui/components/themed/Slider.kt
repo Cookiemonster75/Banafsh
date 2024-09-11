@@ -4,7 +4,7 @@ import androidx.annotation.IntRange
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.ui.theme.LocalAppearance
 
 @Composable
 fun Slider(

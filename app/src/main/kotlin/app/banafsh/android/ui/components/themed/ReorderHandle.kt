@@ -5,9 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.banafsh.android.R
-import app.banafsh.android.lib.compose.reordering.ReorderingState
-import app.banafsh.android.lib.compose.reordering.reorder
-import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.ui.reordering.ReorderingState
+import app.banafsh.android.ui.reordering.reorder
+import app.banafsh.android.ui.theme.LocalAppearance
 
 @Composable
 fun ReorderHandle(

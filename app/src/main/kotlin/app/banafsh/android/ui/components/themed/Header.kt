@@ -16,10 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import app.banafsh.android.lib.core.ui.Dimensions
-import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.lib.core.ui.shimmer
 import app.banafsh.android.ui.components.FadingRow
+import app.banafsh.android.ui.theme.Dimensions
+import app.banafsh.android.ui.theme.LocalAppearance
+import app.banafsh.android.ui.theme.shimmer
 import app.banafsh.android.utils.medium
 import kotlin.random.Random
 

@@ -1,13 +1,13 @@
 package app.banafsh.android.ui.screens
 
 import androidx.compose.runtime.Composable
-import app.banafsh.android.lib.compose.routing.Route0
-import app.banafsh.android.lib.compose.routing.Route1
-import app.banafsh.android.lib.compose.routing.Route3
-import app.banafsh.android.lib.compose.routing.Route4
-import app.banafsh.android.lib.compose.routing.RouteHandlerScope
-import app.banafsh.android.lib.core.data.enums.BuiltInPlaylist
-import app.banafsh.android.models.Mood
+import app.banafsh.android.data.enums.BuiltInPlaylist
+import app.banafsh.android.data.models.Mood
+import app.banafsh.android.ui.routing.Route0
+import app.banafsh.android.ui.routing.Route1
+import app.banafsh.android.ui.routing.Route3
+import app.banafsh.android.ui.routing.Route4
+import app.banafsh.android.ui.routing.RouteHandlerScope
 import app.banafsh.android.ui.screens.album.AlbumScreen
 import app.banafsh.android.ui.screens.artist.ArtistScreen
 import app.banafsh.android.ui.screens.mood.MoodScreen

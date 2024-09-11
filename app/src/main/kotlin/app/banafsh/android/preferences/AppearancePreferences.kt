@@ -1,11 +1,11 @@
 package app.banafsh.android.preferences
 
 import app.banafsh.android.GlobalPreferencesHolder
-import app.banafsh.android.lib.core.ui.BuiltInFontFamily
-import app.banafsh.android.lib.core.ui.ColorMode
-import app.banafsh.android.lib.core.ui.ColorSource
-import app.banafsh.android.lib.core.ui.Darkness
-import app.banafsh.android.lib.core.ui.ThumbnailRoundness
+import app.banafsh.android.ui.theme.BuiltInFontFamily
+import app.banafsh.android.ui.theme.ColorMode
+import app.banafsh.android.ui.theme.ColorSource
+import app.banafsh.android.ui.theme.Darkness
+import app.banafsh.android.ui.theme.ThumbnailRoundness
 
 object AppearancePreferences : GlobalPreferencesHolder() {
     var colorSource by enum(ColorSource.Dynamic)

@@ -4,7 +4,7 @@ import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
-import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.ui.theme.LocalAppearance
 
 @Composable
 fun CircularProgressIndicator(

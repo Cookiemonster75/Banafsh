@@ -8,7 +8,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.ui.theme.LocalAppearance
 
 fun TextStyle.style(style: FontStyle) = copy(fontStyle = style)
 fun TextStyle.weight(weight: FontWeight) = copy(fontWeight = weight)

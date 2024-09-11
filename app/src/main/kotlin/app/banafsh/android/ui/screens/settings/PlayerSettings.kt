@@ -20,10 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import app.banafsh.android.LocalPlayerServiceBinder
 import app.banafsh.android.R
-import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid6
 import app.banafsh.android.preferences.PlayerPreferences
 import app.banafsh.android.ui.components.themed.SecondaryTextButton
 import app.banafsh.android.ui.screens.Route
+import app.banafsh.android.ui.theme.utils.isAtLeastAndroid6
 import app.banafsh.android.utils.rememberEqualizerLauncher
 
 @OptIn(UnstableApi::class)

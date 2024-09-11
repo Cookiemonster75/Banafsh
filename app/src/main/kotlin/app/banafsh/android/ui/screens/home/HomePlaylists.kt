@@ -30,25 +30,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import app.banafsh.android.Database
 import app.banafsh.android.LocalPlayerAwareWindowInsets
 import app.banafsh.android.R
-import app.banafsh.android.lib.compose.persist.persist
-import app.banafsh.android.lib.compose.persist.persistList
-import app.banafsh.android.lib.core.data.enums.BuiltInPlaylist
-import app.banafsh.android.lib.core.data.enums.PlaylistSortBy
-import app.banafsh.android.lib.core.data.enums.SortOrder
-import app.banafsh.android.lib.core.ui.Dimensions
-import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.lib.providers.piped.Piped
-import app.banafsh.android.lib.providers.piped.models.PlaylistPreview as PipedPlaylistPreview
-import app.banafsh.android.lib.providers.piped.models.Session
-import app.banafsh.android.models.PipedSession
-import app.banafsh.android.models.Playlist
-import app.banafsh.android.models.PlaylistPreview
+import app.banafsh.android.data.enums.BuiltInPlaylist
+import app.banafsh.android.data.enums.PlaylistSortBy
+import app.banafsh.android.data.enums.SortOrder
+import app.banafsh.android.data.models.PipedSession
+import app.banafsh.android.data.models.Playlist
+import app.banafsh.android.data.models.PlaylistPreview
+import app.banafsh.android.db.Database
+import app.banafsh.android.db.query
+import app.banafsh.android.persist.persist
+import app.banafsh.android.persist.persistList
 import app.banafsh.android.preferences.DataPreferences
 import app.banafsh.android.preferences.OrderPreferences
-import app.banafsh.android.query
+import app.banafsh.android.providers.piped.Piped
+import app.banafsh.android.providers.piped.models.PlaylistPreview as PipedPlaylistPreview
+import app.banafsh.android.providers.piped.models.Session
 import app.banafsh.android.ui.components.themed.FloatingActionsContainerWithScrollToTop
 import app.banafsh.android.ui.components.themed.Header
 import app.banafsh.android.ui.components.themed.HeaderIconButton
@@ -58,6 +56,8 @@ import app.banafsh.android.ui.items.PlaylistItem
 import app.banafsh.android.ui.screens.Route
 import app.banafsh.android.ui.screens.settings.SettingsEntryGroupText
 import app.banafsh.android.ui.screens.settings.SettingsGroupSpacer
+import app.banafsh.android.ui.theme.Dimensions
+import app.banafsh.android.ui.theme.LocalAppearance
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.async
 
@@ -175,7 +175,7 @@ fun HomePlaylists(
                     alternative = true,
                     modifier = Modifier
                         .clickable(onClick = { onBuiltInPlaylist(BuiltInPlaylist.Favorites) })
-                        .animateItemPlacement()
+                        .animateItem(fadeInSpec = null, fadeOutSpec = null)
                 )
             }
 
@@ -189,7 +189,7 @@ fun HomePlaylists(
                     alternative = true,
                     modifier = Modifier
                         .clickable(onClick = { onBuiltInPlaylist(BuiltInPlaylist.Offline) })
-                        .animateItemPlacement()
+                        .animateItem(fadeInSpec = null, fadeOutSpec = null)
                 )
             }
 

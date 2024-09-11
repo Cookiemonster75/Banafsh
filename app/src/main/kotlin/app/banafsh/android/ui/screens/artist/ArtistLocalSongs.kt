@@ -19,14 +19,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import app.banafsh.android.Database
 import app.banafsh.android.LocalPlayerAwareWindowInsets
 import app.banafsh.android.LocalPlayerServiceBinder
 import app.banafsh.android.R
-import app.banafsh.android.lib.compose.persist.persist
-import app.banafsh.android.lib.core.ui.Dimensions
-import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.models.Song
+import app.banafsh.android.data.models.Song
+import app.banafsh.android.db.Database
+import app.banafsh.android.persist.persist
 import app.banafsh.android.ui.components.LocalMenuState
 import app.banafsh.android.ui.components.ShimmerHost
 import app.banafsh.android.ui.components.themed.FloatingActionsContainerWithScrollToTop
@@ -35,6 +33,8 @@ import app.banafsh.android.ui.components.themed.NonQueuedMediaItemMenu
 import app.banafsh.android.ui.components.themed.SecondaryTextButton
 import app.banafsh.android.ui.items.SongItem
 import app.banafsh.android.ui.items.SongItemPlaceholder
+import app.banafsh.android.ui.theme.Dimensions
+import app.banafsh.android.ui.theme.LocalAppearance
 import app.banafsh.android.utils.asMediaItem
 import app.banafsh.android.utils.enqueue
 import app.banafsh.android.utils.forcePlayAtIndex

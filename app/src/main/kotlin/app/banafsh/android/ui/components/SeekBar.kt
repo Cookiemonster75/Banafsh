@@ -52,11 +52,11 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.C
-import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.lib.core.ui.utils.roundedShape
-import app.banafsh.android.models.ui.UiMedia
+import app.banafsh.android.data.models.ui.UiMedia
 import app.banafsh.android.preferences.PlayerPreferences
 import app.banafsh.android.service.PlayerService
+import app.banafsh.android.ui.theme.LocalAppearance
+import app.banafsh.android.ui.theme.utils.roundedShape
 import app.banafsh.android.utils.formatAsDuration
 import app.banafsh.android.utils.semiBold
 import kotlin.math.PI

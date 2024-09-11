@@ -24,12 +24,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.banafsh.android.LocalPlayerAwareWindowInsets
 import app.banafsh.android.R
-import app.banafsh.android.lib.compose.persist.persist
-import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.lib.providers.innertube.Innertube
-import app.banafsh.android.lib.providers.innertube.utils.plus
+import app.banafsh.android.persist.persist
+import app.banafsh.android.providers.innertube.Innertube
+import app.banafsh.android.providers.innertube.utils.plus
 import app.banafsh.android.ui.components.ShimmerHost
 import app.banafsh.android.ui.components.themed.FloatingActionsContainerWithScrollToTop
+import app.banafsh.android.ui.theme.LocalAppearance
 import app.banafsh.android.utils.center
 import app.banafsh.android.utils.secondary
 import kotlinx.coroutines.Dispatchers

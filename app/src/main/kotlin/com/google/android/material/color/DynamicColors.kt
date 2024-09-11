@@ -1,6 +1,6 @@
 package com.google.android.material.color
 
-import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid12
+import app.banafsh.android.ui.theme.utils.isAtLeastAndroid12
 
 @Suppress("unused")
 object DynamicColors {

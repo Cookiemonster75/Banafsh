@@ -14,12 +14,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.lib.core.ui.shimmer
-import app.banafsh.android.lib.core.ui.utils.px
-import app.banafsh.android.lib.providers.innertube.Innertube
-import app.banafsh.android.models.Artist
+import app.banafsh.android.data.models.Artist
+import app.banafsh.android.providers.innertube.Innertube
 import app.banafsh.android.ui.components.themed.TextPlaceholder
+import app.banafsh.android.ui.theme.LocalAppearance
+import app.banafsh.android.ui.theme.shimmer
+import app.banafsh.android.ui.theme.utils.px
 import app.banafsh.android.utils.secondary
 import app.banafsh.android.utils.semiBold
 import app.banafsh.android.utils.thumbnail

@@ -1,6 +1,5 @@
 package app.banafsh.android.utils
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
 import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
@@ -58,7 +57,6 @@ private fun Density.calculateDistanceToDesiredSnapPosition(
     return itemCurrentPosition - desiredDistance
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun rememberSnapLayoutInfoProvider(
     lazyGridState: LazyGridState,

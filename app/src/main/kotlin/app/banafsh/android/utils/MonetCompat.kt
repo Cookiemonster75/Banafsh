@@ -6,8 +6,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import app.banafsh.android.lib.core.ui.ColorPalette
-import app.banafsh.android.lib.core.ui.defaultLightPalette
+import app.banafsh.android.ui.theme.ColorPalette
+import app.banafsh.android.ui.theme.defaultLightPalette
 import com.kieronquinn.monetcompat.core.MonetCompat
 import kotlinx.coroutines.launch
 

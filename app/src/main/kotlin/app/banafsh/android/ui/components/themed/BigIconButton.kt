@@ -16,9 +16,9 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.lib.core.ui.utils.roundedShape
 import app.banafsh.android.ui.modifiers.pressable
+import app.banafsh.android.ui.theme.LocalAppearance
+import app.banafsh.android.ui.theme.utils.roundedShape
 
 @Composable
 fun BigIconButton(

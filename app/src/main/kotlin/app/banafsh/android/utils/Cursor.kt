@@ -17,7 +17,7 @@ import android.provider.MediaStore.Audio.Media.DURATION
 import android.provider.MediaStore.Audio.Media.IS_MUSIC
 import android.provider.MediaStore.Audio.Media.TITLE
 import android.provider.MediaStore.Audio.Media._ID
-import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid10
+import app.banafsh.android.ui.theme.utils.isAtLeastAndroid10
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 

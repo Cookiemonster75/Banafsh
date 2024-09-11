@@ -15,7 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.getSystemService
-import app.banafsh.android.lib.core.ui.utils.isCompositionLaunched
+import app.banafsh.android.ui.theme.utils.isCompositionLaunched
 import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)

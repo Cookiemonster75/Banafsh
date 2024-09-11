@@ -21,8 +21,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
-import app.banafsh.android.lib.core.ui.Appearance
-import app.banafsh.android.lib.core.ui.LocalAppearance
+import app.banafsh.android.ui.theme.Appearance
+import app.banafsh.android.ui.theme.LocalAppearance
 import app.banafsh.android.utils.secondary
 import app.banafsh.android.utils.semiBold
 

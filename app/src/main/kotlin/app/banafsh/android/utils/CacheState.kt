@@ -16,14 +16,14 @@ import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DataSpec
 import androidx.media3.datasource.TransferListener
 import androidx.media3.datasource.cache.CacheDataSource
-import app.banafsh.android.Database
 import app.banafsh.android.LocalPlayerServiceBinder
 import app.banafsh.android.R
-import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.models.Format
+import app.banafsh.android.data.models.Format
+import app.banafsh.android.db.Database
 import app.banafsh.android.service.PrecacheService
 import app.banafsh.android.service.downloadState
 import app.banafsh.android.ui.components.themed.HeaderIconButton
+import app.banafsh.android.ui.theme.LocalAppearance
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.distinctUntilChanged
 

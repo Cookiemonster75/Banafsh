@@ -1,11 +1,11 @@
 package app.banafsh.android.preferences
 
 import app.banafsh.android.GlobalPreferencesHolder
-import app.banafsh.android.lib.core.data.enums.AlbumSortBy
-import app.banafsh.android.lib.core.data.enums.ArtistSortBy
-import app.banafsh.android.lib.core.data.enums.PlaylistSortBy
-import app.banafsh.android.lib.core.data.enums.SongSortBy
-import app.banafsh.android.lib.core.data.enums.SortOrder
+import app.banafsh.android.data.enums.AlbumSortBy
+import app.banafsh.android.data.enums.ArtistSortBy
+import app.banafsh.android.data.enums.PlaylistSortBy
+import app.banafsh.android.data.enums.SongSortBy
+import app.banafsh.android.data.enums.SortOrder
 
 object OrderPreferences : GlobalPreferencesHolder() {
     var songSortOrder by enum(SortOrder.Descending)

@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import app.banafsh.android.lib.core.ui.Dimensions
+import app.banafsh.android.ui.theme.Dimensions
 
 @Composable
 inline fun ItemContainer(

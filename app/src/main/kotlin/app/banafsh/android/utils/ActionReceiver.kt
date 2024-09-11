@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.core.content.ContextCompat
-import app.banafsh.android.lib.core.ui.utils.isAtLeastAndroid6
+import app.banafsh.android.ui.theme.utils.isAtLeastAndroid6
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty

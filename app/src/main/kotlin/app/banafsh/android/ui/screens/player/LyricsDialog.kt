@@ -21,14 +21,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import app.banafsh.android.Database
 import app.banafsh.android.LocalPlayerServiceBinder
-import app.banafsh.android.lib.core.ui.LocalAppearance
-import app.banafsh.android.lib.core.ui.utils.px
+import app.banafsh.android.db.Database
 import app.banafsh.android.service.isLocal
 import app.banafsh.android.ui.modifiers.PinchDirection
 import app.banafsh.android.ui.modifiers.onSwipe
 import app.banafsh.android.ui.modifiers.pinchToToggle
+import app.banafsh.android.ui.theme.LocalAppearance
+import app.banafsh.android.ui.theme.utils.px
 import app.banafsh.android.utils.FullScreenState
 import app.banafsh.android.utils.forceSeekToNext
 import app.banafsh.android.utils.forceSeekToPrevious
