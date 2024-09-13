@@ -595,19 +595,22 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
                 .indexOfFirst { it.position != null }
                 .coerceAtLeast(0)
 
+            val mediaItems = queue
+                .map {
+                    Database.songs(listOf(it.songId)).first()
+                }.map {
+                    it.asMediaItem
+                        .apply {
+                            mediaMetadata.extras?.songBundle?.apply {
+                                isFromPersistentQueue = true
+                            }
+                        }
+                }
+
             handler.post {
                 runCatching {
                     player.setMediaItems(
-                        /* mediaItems = */ Database.songs(
-                            queue.map { it.songId }
-                        ).map {
-                            it.asMediaItem
-                                .apply {
-                                    mediaMetadata.extras?.songBundle?.apply {
-                                        isFromPersistentQueue = true
-                                    }
-                                }
-                        },
+                        /* mediaItems = */ mediaItems,
                         /* startIndex = */ index,
                         /* startPositionMs = */ queue[index].position ?: C.TIME_UNSET
                     )

@@ -110,7 +110,7 @@ abstract class TempDatabaseInitializer protected constructor() : RoomDatabase() 
             .build()
 
         operator fun invoke() {
-            if (!Companion::instance.isInitialized) reload()
+            if (!::instance.isInitialized) reload()
         }
 
         fun reload() = synchronized(this) {

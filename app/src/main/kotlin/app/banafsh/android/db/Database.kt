@@ -637,7 +637,6 @@ abstract class DatabaseInitializer protected constructor() : RoomDatabase() {
     }
 }
 
-@Suppress("unused")
 @TypeConverters
 object Converters {
 
