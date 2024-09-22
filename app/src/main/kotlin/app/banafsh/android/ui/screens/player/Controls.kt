@@ -32,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
 import androidx.media3.common.Player
@@ -68,7 +67,20 @@ fun Controls(
     shouldBePlaying: Boolean,
     position: Long,
     modifier: Modifier = Modifier
-) {
+) = with(PlayerPreferences) {
+    val (colorPalette, typography) = LocalAppearance.current
+
+    var artistInfo: List<Info>? by remember { mutableStateOf(null) }
+    var maxHeight by rememberSaveable { mutableIntStateOf(0) }
+
+    LaunchedEffect(media) {
+        withContext(Dispatchers.IO) {
+            artistInfo = Database
+                .songArtistInfo(media.id)
+                .takeIf { it.isNotEmpty() }
+        }
+    }
+
     var likedAt by remember { mutableStateOf<Long?>(null) }
 
     LaunchedEffect(media) {
@@ -89,29 +101,6 @@ fun Controls(
         targetValueByState = { if (it) 16.dp else 32.dp }
     )
 
-    ClassicControls(
-        media = media,
-        binder = binder,
-        shouldBePlaying = shouldBePlaying,
-        position = position,
-        likedAt = likedAt,
-        playButtonRadius = playButtonRadius,
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun ClassicControls(
-    media: UiMedia,
-    binder: PlayerService.Binder,
-    shouldBePlaying: Boolean,
-    position: Long,
-    likedAt: Long?,
-    playButtonRadius: Dp,
-    modifier: Modifier = Modifier
-) = with(PlayerPreferences) {
-    val (colorPalette) = LocalAppearance.current
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -119,14 +108,81 @@ private fun ClassicControls(
             .padding(horizontal = 32.dp)
     ) {
         Spacer(modifier = Modifier.weight(1f))
-        MediaInfo(media)
+
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            AnimatedContent(
+                targetState = media.title,
+                transitionSpec = {
+                    fadeIn(
+                        animationSpec = tween(durationMillis = 300, delayMillis = 300)
+                    ) togetherWith fadeOut(
+                        animationSpec = tween(durationMillis = 300)
+                    )
+                },
+                label = ""
+            ) { title ->
+                FadingRow(modifier = Modifier.fillMaxWidth(0.75f)) {
+                    BasicText(
+                        text = title,
+                        style = typography.l.bold,
+                        maxLines = 1
+                    )
+                }
+            }
+
+            AnimatedContent(
+                targetState = artistInfo,
+                transitionSpec = {
+                    fadeIn(
+                        animationSpec = tween(durationMillis = 300, delayMillis = 300)
+                    ) togetherWith fadeOut(
+                        animationSpec = tween(durationMillis = 300)
+                    )
+                },
+                label = ""
+            ) { state ->
+                state?.let { artists ->
+                    FadingRow(
+                        modifier = Modifier
+                            .fillMaxWidth(0.75f)
+                            .heightIn(maxHeight.px.dp)
+                    ) {
+                        artists.fastForEachIndexed { i, artist ->
+                            if (i == artists.lastIndex && artists.size > 1) BasicText(
+                                text = " & ",
+                                style = typography.s.semiBold.secondary
+                            )
+                            BasicText(
+                                text = artist.name.orEmpty(),
+                                style = typography.s.semiBold.secondary,
+                                modifier = Modifier.clickable { artistRoute.global(artist.id) }
+                            )
+                            if (i != artists.lastIndex && i + 1 != artists.lastIndex) BasicText(
+                                text = ", ",
+                                style = typography.s.semiBold.secondary
+                            )
+                        }
+                    }
+                } ?: FadingRow(modifier = Modifier.fillMaxWidth(0.75f)) {
+                    BasicText(
+                        text = media.artist,
+                        style = typography.s.semiBold.secondary,
+                        maxLines = 1,
+                        modifier = Modifier.onGloballyPositioned { maxHeight = it.size.height }
+                    )
+                }
+            }
+        }
+
         Spacer(modifier = Modifier.weight(1f))
+
         SeekBar(
             binder = binder,
             position = position,
             media = media,
             alwaysShowDuration = true
         )
+
         Spacer(modifier = Modifier.weight(1f))
 
         Row(
@@ -213,74 +269,5 @@ private fun ClassicControls(
         }
 
         Spacer(modifier = Modifier.weight(1f))
-    }
-}
-
-@Composable
-private fun MediaInfo(media: UiMedia) {
-    val (_, typography) = LocalAppearance.current
-
-    var artistInfo: List<Info>? by remember { mutableStateOf(null) }
-    var maxHeight by rememberSaveable { mutableIntStateOf(0) }
-
-    LaunchedEffect(media) {
-        withContext(Dispatchers.IO) {
-            artistInfo = Database
-                .songArtistInfo(media.id)
-                .takeIf { it.isNotEmpty() }
-        }
-    }
-
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        AnimatedContent(
-            targetState = media.title,
-            transitionSpec = { fadeIn() togetherWith fadeOut() },
-            label = ""
-        ) { title ->
-            FadingRow(modifier = Modifier.fillMaxWidth(0.75f)) {
-                BasicText(
-                    text = title,
-                    style = typography.l.bold,
-                    maxLines = 1
-                )
-            }
-        }
-
-        AnimatedContent(
-            targetState = artistInfo,
-            transitionSpec = { fadeIn() togetherWith fadeOut() },
-            label = ""
-        ) { state ->
-            state?.let { artists ->
-                FadingRow(
-                    modifier = Modifier
-                        .fillMaxWidth(0.75f)
-                        .heightIn(maxHeight.px.dp)
-                ) {
-                    artists.fastForEachIndexed { i, artist ->
-                        if (i == artists.lastIndex && artists.size > 1) BasicText(
-                            text = " & ",
-                            style = typography.s.semiBold.secondary
-                        )
-                        BasicText(
-                            text = artist.name.orEmpty(),
-                            style = typography.s.semiBold.secondary,
-                            modifier = Modifier.clickable { artistRoute.global(artist.id) }
-                        )
-                        if (i != artists.lastIndex && i + 1 != artists.lastIndex) BasicText(
-                            text = ", ",
-                            style = typography.s.semiBold.secondary
-                        )
-                    }
-                }
-            } ?: FadingRow(modifier = Modifier.fillMaxWidth(0.75f)) {
-                BasicText(
-                    text = media.artist,
-                    style = typography.s.semiBold.secondary,
-                    maxLines = 1,
-                    modifier = Modifier.onGloballyPositioned { maxHeight = it.size.height }
-                )
-            }
-        }
     }
 }

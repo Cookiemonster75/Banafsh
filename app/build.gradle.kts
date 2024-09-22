@@ -20,7 +20,7 @@ android {
         minSdk = 21
         targetSdk = 34
 
-        versionCode = System.getenv("ANDROID_VERSION_CODE")?.toIntOrNull() ?: 5
+        versionCode = 1
         versionName = project.version.toString()
 
         multiDexEnabled = true
@@ -83,11 +83,11 @@ android {
     }
 
     kotlinOptions {
-        freeCompilerArgs += listOf("-Xcontext-receivers")
+        freeCompilerArgs += "-Xcontext-receivers"
     }
 
     packaging {
-        resources.excludes.add("META-INF/**/*")
+        resources.excludes += "META-INF/**/*"
     }
 
     androidResources {
