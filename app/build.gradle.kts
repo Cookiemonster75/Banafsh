@@ -12,13 +12,13 @@ android {
     val appId = "${project.group}.android"
 
     namespace = appId
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = appId
 
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
 
         versionCode = 1
         versionName = project.version.toString()
